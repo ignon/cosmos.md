@@ -1,12 +1,12 @@
-import Editor from './components/Editor'
+import EditorContainer from './components/EditorContainer'
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <Editor />
-      </header>
-    </div>
+    // <div className="App">
+    //   <header className="App-header">
+        <EditorContainer />
+    //   </header>
+    // </div>
   );
 }
 

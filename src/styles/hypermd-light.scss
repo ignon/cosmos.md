@@ -1,95 +1,64 @@
 @font-face {
-    font-family: 'MS Comic Sans';
+    font-family: 'HyperMD-Bullets';
     src: url('data:application/x-font-woff;charset=utf-8;base64,d09GRk9UVE8AAATYAAsAAAAABrQAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAABDRkYgAAADLAAAAVkAAAFgkDDiyEZGVE0AAASsAAAAGwAAABx9TbkrR0RFRgAABIgAAAAiAAAAJgAnACpPUy8yAAABZAAAAEcAAABgVTNgQ2NtYXAAAALUAAAAQwAAAUoBRQLkaGVhZAAAAQgAAAAzAAAANgrgpUBoaGVhAAABPAAAAB4AAAAkBOsD+WhtdHgAAATIAAAAEAAAABALoAL5bWF4cAAAAVwAAAAGAAAABgAEUABuYW1lAAABrAAAASYAAAITC0mo3nBvc3QAAAMYAAAAEwAAACD/gwAzeJxjYGRgYABil5kPquP5bb4ycLMwgMCVWRq+ENpyHoMxAwNTNFMEkMvBwAQSBQAX2QkFAHicY2BkYGAyZtjFEMNsxQAETNEMjAyogAUAMnAB7AAAAABQAAAEAAB4nGNgYTZlnMDAysDANIvpDAMDQz+EZnzFYMTIARRlYOVkgAFGBiQQkOaawtDAoMWgy2z835ghhsn4vxuKGgUgZAQARsULIwB4nIWOMWvDMBSET4mT4g6lhC7dtBQSiI1kSgNZAw506FBIlk52YhyDsIPiDIGO/T39Lf01nXtyRJYOMcjv09O9ewfgDt8QOH+PePYsECL33MMNPj338YQfzwFCcet5gHvx4nnI/geVIgh5S7opxwIjvHnuca/x3McrvjwH1Px6HkCKB89DjMQSCzTY4wSLCiV2aCExxgYT1gQKGjNMyQYZlTmOwKLZn2xV7lo53kxkovRsKk3W5HxaoaZDxWNQYMtprOq2ak2xJb6zV9LBeVlei/JoMkJKZzfnqqWi6HbH3C4x5/nveu5rKiL+o0tSpE3dpo0tC5nESs7lZTtZq0hHLu61nGv2LA58d7kkvZ173FWXCevCHqqmlkrpWCklrxj+AequT5gAAHicY2BgYGaAYBkGRgYQcAHyGMF8FgYNIM0GpBkZmBi0GXT//wfytUD0/+v/r0HVAwEjGwOCQxAwMoHtG2YAAPijCSYAeJxjYGYAg/8NDMYMWAAAKBQBtgB4nEWOsUsCYRjG38+7y/O8zoxOIi8RXBLE0iWCtkYjLLBoNMsSJC2sKILIFuuDKIhKbBKDwDFovAgC5eb8AwqaCqql740TzBZ7nuU3Pb+HAM8DIUSKreZSufTSYgiIBQhE0AHoJqhZcJDDft7zbKm0ZM4zXW7JvEcC2+bsMKUdkK06xQ98FzQoOTSAHg3KTg1UjUR6gfsbHAAfBCYy2e311PJKzjuU8HvDI6HRgDcdzyxsdOz/N9qxgwwK8IT4ssflb6pjVCe6zuo6p7swiHfNYJfePFAxyurNqFXBBG6pGWYTYmvZZGFONO3nwtlUNX6/I86bnFAsXNILekurpcqN+DIuFK9PK7TdfHm3In7VhHQ1dZWkebp/tHcoKjiGYXxTJ0236Ywx54xhumrMxdRHU30QFPbaIJ/M4NgJ2lRmPJlGl/JT60O/SmWpITVkmRl2Zsjdv2uJiQgAAAB4nGNgZGBg4AFiMQY5BiYGRiBkBmIWoAgTEDNCMAAIgwBSAAB4nGNgYGBkAIIrkuH2YHqWhi+EtpwHADfuBa0AAgAAMwMzAOgDOgDiAzMA/A==') format('woff');
     font-weight: normal;
     font-style: normal;
 }
 
-.cm-s-hypermd-dracula {
-    $fs: 10pt;  //default font-size
+.cm-s-hypermd-light {
+    $fs: 12pt;  //default font-size
 
-    $blue:   #8be9fd;
-    // $green:  #50fa7b; 
-    $orange: #ffb86c;
-    $pink:   #ff79c6;
-    $purple: #bd93f9;
-    // $red:    #ff5555;
-    // $yellow: #f1fa8c;
+    $editor-background: #FFF;
+    $editor-color: #000;
 
-    // $dark-blue:    #29454B;
-    // $dark-yellow:  #606438;
-    // $background2:  #333545;
-    // $foreground2:  #BDCAD4;
-    // $search-input: #e4e9ed;
-    // $search-hover: #d5dadf;
-    // $bullet-outer: #6c6f75;
-    // $bullet-inner: #D8DEE9;
-    // $column-title: #818D9B;
-    
-    $current-line: #44475a;
-    $editor-background: #282a36;
-    // $other-background: #333545;
-    $editor-color: #f8f8f2;
-    
-    $link-color: $purple;
-    $link-url-color: $purple;
-    
-    $code-color: $orange;
-    $code-background-color: $current-line;
-    $code-border-color: $current-line;
-
-    $cursor-color: $editor-color;
-    
-    $line-height: 1.3;
-    $line-margin:  10px;
+    $line-height: 1.5;
+    $line-margin: 10px;
     $line-padding: 5px;
-    
+
     $footnote-padding: 40px;
-    
+
     $quote-margin: 2px;
     $quote-padding: 20px;
-    
+
     $list-margin: 10px;
     $list-indent: 30px;
     $list-bullet-width: 30px;
     $list-margin-after-line: .3em;
-    
+
     $table-border-style: 1px solid #999;
     $table-row1-height: 8px;
     $table-sep-width: 15px;
     $table-sep-image: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mOc+R8AAjcBmvywMWoAAAAASUVORK5CYII=';
     $table-row-1-image: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAACCAQAAAAziH6sAAAADklEQVR42mOc+Z9x5n8ACTkDM4ikM1IAAAAASUVORK5CYII=';
-    
+
     $codeblock-border: 1px solid #CCC;
     $codeblock-padding: 5px;
-    
+
     $hashtag-fontsize: 0.84em;
     $hashtag-padding-x: 6px;
     $hashtag-padding-y: 0.1em;
     $hashtag-radius: 8px;
-    
+
     $hr-color: #999;
     $hr-image: $table-row-1-image;
     $hr-padding: 5px;
-    
-    font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, 'Hiragino Sans GB', 'WenQuanYi Micro Hei', 'Noto Sans CJK SC', 'Microsoft YaHei', STHeiti, 'Microsoft Jhenghei', sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+
+    font-family: -apple-system, BlinkMacSystemFont, "Open Sans", "Helvetica Neue", Helvetica, Arial, 'Hiragino Sans GB', 'WenQuanYi Micro Hei', 'Noto Sans CJK SC', 'Microsoft YaHei', STHeiti, 'Microsoft Jhenghei', sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
     -webkit-font-smoothing: antialiased;
-    
+
     %monospace {
-      font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
+        font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
     }
-    
+
     //------------------------------------------------------------------
-    
+
     line-height: $line-height;
     font-size: $fs;
     background: $editor-background;
     color: $editor-color;
 
-    .CodeMirror-cursor { border-left: solid thin $cursor-color; }
-    
     /// Fold-HTML
-    
+
     .CodeMirror-linewidget,
     .hmd-fold-html {
         table {
@@ -122,27 +91,29 @@
 
     /// CodeMirror
 
-    span.cm-meta { color: #f8f8f2; }
-    span.cm-keyword { color: #ff79c6; }
-    span.cm-atom { color: #bd93f9; }
-    span.cm-number { color: #bd93f9; }
-    span.cm-def { color: #50fa7b; }
-    span.cm-variable { color: #50fa7b; }
-    span.cm-variable-2 { color: white; }
-    span.cm-variable-3, span.cm-type { color: #ffb86c; }
-    span.cm-property { color: #66d9ef; }
-    span.cm-operator { color: #ff79c6; }
-    span.cm-comment { color: #6272a4; }
-    span.cm-string, span.cm-string-2 { color: #f1fa8c; }
-    span.cm-qualifier { color: #50fa7b; }
-    span.cm-builtin { color: #50fa7b; }
-    span.cm-bracket { color: #cc7; } // bracket
-    span.cm-tag { color: #ff79c6; }
-    span.cm-attribute { color: #50fa7b; }
-
+    .cm-header, .cm-strong {font-weight: 600;}
+    span.cm-quote { color: #666; }
+    span.cm-meta { color: #FF1717; }
+    span.cm-keyword { line-height: 1em; font-weight: bold; color: #7F0055; }
+    span.cm-atom { color: #219; }
+    span.cm-number { color: #164; }
+    span.cm-def { color: #00f; }
+    span.cm-variable { color: black; }
+    span.cm-variable-2 { color: #0000C0; }
+    span.cm-variable-3 { color: #0000C0; }
+    span.cm-property { color: black; }
+    span.cm-operator { color: black; }
+    span.cm-comment { color: #4F9F5F; }
+    span.cm-string { color: #2A00FF; }
+    span.cm-string-2 { color: #f50; }
+    span.cm-qualifier { color: #555; }
+    span.cm-builtin { color: #30a; }
+    span.cm-bracket { color: #cc7; }
+    span.cm-tag { color: #170; }
+    span.cm-attribute { color: #00c; }
     span.cm-url { color: #4af }
     span.cm-link {
-        color: $link-color;
+        color: #4078c0;
         text-decoration: none;
         &:hover {
             text-decoration: underline
@@ -228,9 +199,9 @@
             margin-left: 0 !important;
         }
 
-        &.HyperMD-header-1 { font-weight: 600; font-size: $fs * 1.0 }
-        &.HyperMD-header-2 { font-weight: 600; font-size: $fs * 1.0 }
-        &.HyperMD-header-3 { font-size: $fs * 1.0 }
+        &.HyperMD-header-1 { font-weight: 600; font-size: $fs * 2 }
+        &.HyperMD-header-2 { font-weight: 600; font-size: $fs * 1.5 }
+        &.HyperMD-header-3 { font-size: $fs * 1.2 }
 
         &.HyperMD-header-1,
         &.HyperMD-header-2 {
@@ -408,7 +379,7 @@
     pre.HyperMD-codeblock {
         @extend %monospace;
         line-height: 1.2;
-        color: $code-color;
+        color: #922;
 
         // &.hmd-codeblock-indent {
         span.cm-inline-code {
@@ -424,7 +395,7 @@
     div.HyperMD-codeblock-bg {
         left: $line-padding - $codeblock-padding;
         right: $line-padding - $codeblock-padding;
-        background-color: pink;
+        background-color: #FAFAFA;
         border-left: $codeblock-border;
         border-right: $codeblock-border;
     }
@@ -443,7 +414,7 @@
 
     div.HyperMD-codeblock-begin-bg,
     div.HyperMD-codeblock-end-bg {
-        background-color: $code-background-color;
+        background-color: #F3F3F3;
     }
 
 
@@ -466,7 +437,7 @@
         span.cm-url,
         span.cm-link,
         .cm-link + .CodeMirror-widget,
-        span.cm-hashtag
+        span.cm-hashtag,
         {
             cursor: pointer;
         }
@@ -529,14 +500,14 @@
 
     span.cm-inline-code {
         @extend %monospace;
-        color: $code-color;
+        color: #922;
         font-size: 90%;
 
         &:not(.cm-formatting):not(.cm-hmd-indented-code) {
-            background-color: $code-background-color;
+            background-color: rgba(#eee, .5);
             border-radius: 4px;
             vertical-align: baseline;
-            border: $code-border-color solid 1px;
+            border: #ccc solid 1px;
             padding: 1px .4em;
         }
 
