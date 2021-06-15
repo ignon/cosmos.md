@@ -9,11 +9,16 @@ import 'codemirror'
 import '../styles/hypermd-dracula.scss'
 import './vim'
 import 'hypermd/powerpack/fold-emoji-with-emojione'
-import 'hypermd/powerpack/fold-emoji-with-twemoji'
+// import 'hypermd/powerpack/fold-emoji-with-twemoji'
+import 'codemirror/mode/yaml/yaml'
+import 'codemirror/mode/htmlmixed/htmlmixed' // for embedded HTML
+import 'codemirror/mode/stex/stex' // for Math TeX Formular
+
 import 'emojione'
-import 'twemoji'
 import 'turndown'
 
+// import 'twemoji/dist/twemoji.amd'
+// import 'hypermd/powerpack/fold-emoji-with-twemoji'
 // import 'hypermd/core';
 // import 'hypermd/mode/hypermd';
 
@@ -27,6 +32,8 @@ import 'turndown'
 // import 'hypermd/addon/insert-file';
 // import 'hypermd/addon/mode-loader';
 // import 'hypermd/addon/table-align';
+
+// import completeEmoji from 'hypermd/goods/complete-emoji'
 
 import axios from 'axios'
 
@@ -54,12 +61,19 @@ const Editor = () => {
     indentWithTabs: false,
     lineWrapping: true,
     // mode: 'hypermd',
-    mode: 'hypermd',
+    mode: {
+      name: 'hypermd',
+      hashtag: true,
+      front_matter: true,
+      math: true
+    },
     theme: 'hypermd-dracula',
     hmdFold: {
       image: true,
       link: true,
       math: true,
+      html: true, // injections and stuff!!!!
+      emoji: true
     },
     hmdHideToken: true,
     hmdCursorDebounce: true,
@@ -67,7 +81,12 @@ const Editor = () => {
     hmdClick: true,
     hmdHover: true,
     hmdTableAlign: true,
-    hmdFoldHtml: { enabled: true }
+    // extraKeys: {
+    //   "Ctrl-Space": "autocomplete",   // Use Ctrl+Space to
+    // },
+    // hintOptions: {
+    //   hint: completeEmoji.createHintFunc()
+    // },
     // keyMap: "vim",
     // autoFocus: true
     // gutters: []
