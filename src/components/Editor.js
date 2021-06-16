@@ -15,15 +15,17 @@ import 'hypermd/powerpack/fold-emoji-with-emojione'
 import 'codemirror/mode/yaml/yaml'
 import 'codemirror/mode/htmlmixed/htmlmixed' // for embedded HTML
 import 'codemirror/mode/stex/stex' // for Math TeX Formular
+import 'codemirror/mode/markdown/markdown';
+import 'codemirror/mode/javascript/javascript';
 
 import 'emojione'
 import 'turndown'
 import 'katex'
-import mathjax from 'mathjax'
+// import mathjax from 'mathjax'
 
-mathjax.init({
-  loader: {load: ['input/tex', 'output/svg']}
-})
+// mathjax.init({
+//   loader: {load: ['input/tex', 'output/svg']}
+// })
 
 
 // import 'twemoji/dist/twemoji.amd'
@@ -56,7 +58,7 @@ const Editor = () => {
 
   useEffect(() => {
     axios
-      .get('https://raw.githubusercontent.com/laobubu/HyperMD/master/README.md')
+      .get('https://raw.githubusercontent.com/vuejs/rfcs/master/README.md')
       .then(response => {
         setText(response.data)
       })
@@ -65,7 +67,7 @@ const Editor = () => {
   const editorRef = useRef()
 
   const options = {
-    lineNumbers: false,
+    // lineNumbers: true,
     smartIndent: true,
     tabSize: 4,
     indentWithTabs: false,
@@ -77,7 +79,7 @@ const Editor = () => {
       front_matter: true,
       math: true
     },
-    theme: 'hypermd-dracula',
+    theme: 'hypermd-light',
     hmdFold: {
       image: true,
       link: true,
