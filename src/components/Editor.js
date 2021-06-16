@@ -1,5 +1,6 @@
-import { useState, useRef, useEffect } from 'react'
 import React from 'react'
+import { useState, useRef, useEffect } from 'react'
+import axios from 'axios'
 import CodeMirror from 'codemirror'
 import { Controlled as ReactCodeMirror } from 'react-codemirror2'
 import 'hypermd'
@@ -10,12 +11,20 @@ import '../styles/hypermd-dracula.scss'
 import './vim'
 import 'hypermd/powerpack/fold-emoji-with-emojione'
 // import 'hypermd/powerpack/fold-emoji-with-twemoji'
+
 import 'codemirror/mode/yaml/yaml'
 import 'codemirror/mode/htmlmixed/htmlmixed' // for embedded HTML
 import 'codemirror/mode/stex/stex' // for Math TeX Formular
 
 import 'emojione'
 import 'turndown'
+import 'katex'
+import mathjax from 'mathjax'
+
+mathjax.init({
+  loader: {load: ['input/tex', 'output/svg']}
+})
+
 
 // import 'twemoji/dist/twemoji.amd'
 // import 'hypermd/powerpack/fold-emoji-with-twemoji'
@@ -35,7 +44,8 @@ import 'turndown'
 
 // import completeEmoji from 'hypermd/goods/complete-emoji'
 
-import axios from 'axios'
+// 2/twemoji.amd.js
+
 
 const Editor = () => {
   const [text, setText] = useState(`
