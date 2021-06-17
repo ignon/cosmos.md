@@ -49,11 +49,14 @@ import 'katex'
 // 2/twemoji.amd.js
 
 
+// "hypermd": "git+ssh://git@github.com/ignon/HyperMD.git",
+
+
 const Editor = () => {
   const [text, setText] = useState(`
-# Otsikko
-*moi*
-**hei**
+    # Otsikko
+    *moi*
+    **hei**
   `)
 
   useEffect(() => {
