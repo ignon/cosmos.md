@@ -1,15 +1,17 @@
 const parseNote = (args) => {
   const { title, text, zettelId } = args
 
-  const hashtags = parseHashtags(text)
+  const tags = parseTags(text)
   const wikilinks = parseWikilinks(text)
 
-  console.log('HASHTAGS: ', hashtags, '\nWIKILINKS: ', wikilinks)
 
   return {
-    ...args,
-    hashtags,
-    wikilinks
+    title,
+    zettelId,
+    tags,
+    wikilinks,
+    backlinks: [],
+    text,
   }
 }
 
@@ -24,21 +26,34 @@ const matchGroupsGlobal = (text, regex, groupIndex) => {
   return output
 }
 
-const parseHashtags = (text) => {
+const sortAndRemoveDuplicates = (list) => {
+  return list
+    .sort()
+    .filter((item, pos, arr) => !pos || item !== arr[pos - 1])
+}
+
+const parseTags = (text) => {
   const hashtagRegex = /#([\w_-]+)/gi
 
   const hashtags = matchGroupsGlobal(text, hashtagRegex, 1)
-  return hashtags;
+  const tags = sortAndRemoveDuplicates(hashtags)
+
+  console.log('tags', tags)
+  return tags;
 }
 
 const parseWikilinks = (text) => {
   const wikilinkRegex = /\[\[([\w_-]+)\]]/gi
 
-  const wikilinks = matchGroupsGlobal(text, wikilinkRegex, 1)
+  let wikilinkTitles = matchGroupsGlobal(text, wikilinkRegex, 1)
+  wikilinkTitles = sortAndRemoveDuplicates(wikilinkTitles)
+  const wikilinks = wikilinkTitles.map(title => ({ title, zettelId: null }))
+
   return wikilinks;
 }
 
 module.exports = {
-  parseHashtags,
+  parseNote,
+  parseTags,
   parseWikilinks
 }
