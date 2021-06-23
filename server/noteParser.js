@@ -29,16 +29,15 @@ const matchGroupsGlobal = (text, regex, groupIndex) => {
 const sortAndRemoveDuplicates = (list) => {
   return list
     .sort()
-    .filter((item, pos, arr) => !pos || item !== arr[pos - 1])
+    .filter((item, pos, arr) => !pos || item?.toLowerCase() !== arr[pos - 1]?.toLowerCase())
 }
 
 const parseTags = (text) => {
-  const hashtagRegex = /#([\w_-]+)/gi
+  const tagRegex = /#([\w_-]+)/gi
 
-  const hashtags = matchGroupsGlobal(text, hashtagRegex, 1)
-  const tags = sortAndRemoveDuplicates(hashtags)
+  let tags = matchGroupsGlobal(text, tagRegex, 1)
+  tags = sortAndRemoveDuplicates(tags)
 
-  console.log('tags', tags)
   return tags;
 }
 

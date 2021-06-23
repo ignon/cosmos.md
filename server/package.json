@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
+    "start": "node --harmony index.js",
     "dev": "nodemon index.js",
     "test": "jest ."
   },
@@ -12,8 +12,13 @@
   "license": "ISC",
   "dependencies": {
     "apollo-server": "^2.25.1",
+    "dateformat": "^4.5.1",
     "graphql": "^15.5.1",
     "jest": "^27.0.5",
+    "lodash": "^4.17.21",
     "nodemon": "^2.0.7"
+  },
+  "engines": {
+    "node": ">= 14.17.1"
   }
 }

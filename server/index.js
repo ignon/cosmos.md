@@ -2,22 +2,17 @@ const { v1: uuid } = require('uuid')
 const { ApolloServer, gql } = require('apollo-server')
 const { UniqueDirectiveNamesRule } = require('graphql')
 const { parseNote } = require('./noteParser')
+const _ = require('lodash')
 
 let notes = [
   {
     title: 'ApolloServer',
     zettelId: '202106221711',
-    // tags: ['backend', 'node', 'graphql'],
-    // wikilinks: ['GraphQL', 'ApolloClient'],
-    // backlinks: [{ title: 'GraphQL', zettelId: '202106221713' }],
     text: 'Apollo Server is an GraphQL server compatible with any [[GraphQL]] client, including [[ApolloClient]]. #backend #node #graphql',
   },
   {
     title: 'GraphQL',
     zettelId: '202106221713',
-    // tags: ['backend', 'node'],
-    // wikilinks: ['ApolloClient'],
-    // backlinks: [{ title: 'GraphQL', zettelId: '202106221713' }],
     text: 'GraphQL is a query language for APIs. Used with tools like [[ApolloClient]] and [[ApolloServer]]. #backend #node'
   }
 ]
@@ -26,22 +21,33 @@ notes = notes
   .map(note => parseNote(note))
   .map(note => ({ ...note, id: uuid() }))
 
-console.log('notes 1', JSON.stringify(notes, null, 4))
+
+const queryBacklinks = (noteTitle) => {
+  const linksToNote = (note, title) => {
+    const noteMentions = note.wikilinks
+      .filter(noteRef => noteRef.title === noteTitle).length
+    
+    return (noteMentions > 0)
+  }
+
+  return notes
+    .filter(n => linksToNote(n, noteTitle))
+    .map(({ title }) => ({
+      title,
+      zettelId: null
+    }))
+}
+
+
 
 notes = notes.map(note => {
-  const { title } = note
-
   return {
     ...note,
-    backlinks: notes
-      .filter(
-        n => n.wikilinks.map(({ title }).includes(title)
-      ))
-      
+    backlinks: queryBacklinks(note.title)
   }
 })
 
-console.log('notes 2', JSON.stringify(notes, null, 4))
+console.log('notes', JSON.stringify(notes, null, 4))
 
 const typeDefs = gql`
   type Note {
@@ -49,8 +55,8 @@ const typeDefs = gql`
     title: String!
     zettelId: String!
     tags: [String!]!
-    wikilinks: [String!]!
-    backlinks: [NoteRef!]
+    wikilinks: [NoteRef]!
+    backlinks: [NoteRef]!
     text: String! # Required?
   }
 
@@ -62,13 +68,20 @@ const typeDefs = gql`
   type Query {
     noteCount: Int!
     allNotes: [Note!]!
-    findNote(title: String!): Note
+    findNote(query: String!): Note
+    findNotes(title: String, zettelId: String, tag: String): [Note]!
   }
 
   type Mutation {
     addNote(
       title: String!
+      text: String!
       zettelId: String
+    ): Note
+
+    editNote(
+      title: String!
+      zettelId: String!
       text: String!
     ): Note
   }
@@ -78,12 +91,52 @@ const resolvers = {
   Query: {
     noteCount: () => notes.length,
     allNotes: () => notes,
-    findNote: (root, args) => notes.find(n => n.title === args.title),
+    findNotes: (root, args) => {
+      const { tag, title, zettelId } = args
+
+      const titleMatch = title ? notes.find(n => n.title === title) : null
+      const zettelIdMatch = zettelId ? notes.find(n => n.zettelId === zettelId) : null
+      const tagMatches = tag ? notes.filter(note => note.tags.includes(tag)) : []
+      const backlinkMatches = title ? notes.filter(note => Boolean(note.backlinks.find(n => n.title))) : []
+
+      const matches = [titleMatch, zettelIdMatch, ...tagMatches, ...backlinkMatches]
+        .filter(match => Boolean(match))
+
+      return _.uniq(matches)
+    },
+    findNote: (root, args) => {
+      const { title, zettelId, query } = args
+
+      if (query) {
+        const titleRegex = /^[\w+-\.]+$/
+        const zettelIdRegex = /^\d+$/
+
+        if (query.match(zettelIdRegex)) {
+          const note = notes.find(n => n.zettelId === query)
+          if (note) {
+            return note
+          }
+        }
+
+        if (query.match(titleRegex)) {
+          return notes.find(n => n.title === query)
+        }
+
+        return null
+      }
+    }
+  },
+  Note: {
+    backlinks: (root) => queryBacklinks(root.title),
   },
   Mutation: {
     addNote: (root, args) => {
-      // console.log(args)
-      const note = parseNote(args)
+      const note = {
+        ...parseNote(args),
+        backlinks: queryBacklinks(root.title)
+      }
+
+      notes.concat(note)
       return note
     }
   }
