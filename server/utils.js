@@ -12,4 +12,20 @@ const getZettelId = (dateString=null) => {
   return zettelId
 }
 
-module.exports = { getZettelId }
+const queryBacklinks = (notes, noteTitle) => {
+  const linksToNote = (note, title) => {
+    const noteMentions = note.wikilinks
+      .filter(noteRef => noteRef.title === noteTitle).length
+    
+    return (noteMentions > 0)
+  }
+
+  return notes
+    .filter(n => linksToNote(n, noteTitle))
+    .map(({ title }) => ({
+      title,
+      zettelId: null
+    }))
+}
+
+module.exports = { getZettelId, queryBacklinks }

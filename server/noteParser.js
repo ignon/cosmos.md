@@ -1,9 +1,55 @@
+const { buildSchemaFromTypeDefinitions } = require('graphql-tools')
+const YAML = require('yaml')
+const { getZettelId } = require('./utils')
+
+const yamlRegex = /^---\n([\s\S]+)\n---/
+
+
 const parseNote = (args) => {
-  const { title, text, zettelId } = args
+  let { title, text, zettelId } = args
 
   const tags = parseTags(text)
   const wikilinks = parseWikilinks(text)
+  
+  let yaml = parseYAML(text)
+  const textHasYaml = (yaml)
 
+
+  // If file doesn't have YAML metadata, one is created
+  if (!yaml) {
+    yaml = {}
+  }
+
+  // If YAML doesn't have zettelId, set it based on GraphQL query
+  // YAML zettelId is just for the possible file syncing from Dropbox etc in future (so that text files are identifiable)
+  // This is to avoid user from overwriting documents if they accidentally copy YAML metadata with zettelID to other text file
+  // GraphQL is prioritized over YAML read from note
+  if (!yaml.zettelId) {
+    yaml.zettelId = zettelId
+  }
+
+  // zettelId must be sent with addNote/editNote request, either as YAML or as request parameters
+  if (!zettelId && !yaml.zettelId) {
+    throw new Error('zettelId must be set either in GraphQL request or in YAML metadata')
+  }
+
+
+  // GraphQL is prioritized over YAML read from note
+  // This is to avoid users from overwriting documents if
+  // they accidentally copy YAML metadata with zettelID to other text file
+  // In web editor
+  if (zettelId !== yaml.zettelId) {
+    yaml.zettelId = zettelId
+    text = text.replace()
+  }
+
+  const yamlString = YAML.stringify(yaml)
+  const markdownYAML = `---\n${yamlString}---\n`
+
+  // Note YAML metadata is updated (to overwrite zettelId and maintain indentation)
+  text = (textHasYaml)
+    ? text.replace(yamlRegex, markdownYAML)
+    : `${markdownYAML}\n${text}`
 
   return {
     title,
@@ -11,7 +57,8 @@ const parseNote = (args) => {
     tags,
     wikilinks,
     backlinks: [],
-    text,
+    text
+    // yamlData: yaml
   }
 }
 
@@ -51,8 +98,22 @@ const parseWikilinks = (text) => {
   return wikilinks;
 }
 
+const parseYAML = (text) => {
+  const match = text.match(yamlRegex)
+
+  if (!match || match.length < 2) {
+    return null
+  }
+
+  const yamlText = match[1]
+  const yaml = YAML.parse(yamlText)
+
+  return yaml
+}
+
 module.exports = {
   parseNote,
   parseTags,
-  parseWikilinks
+  parseWikilinks,
+  parseYAML
 }

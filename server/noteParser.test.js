@@ -1,4 +1,4 @@
-const { parseTags, parseWikilinks } = require('./noteParser')
+const { parseTags, parseWikilinks, parseYAML } = require('./noteParser')
 
 test('parsing tags works (and tags are sorted)', () => {
   const hashtags = parseTags('#node is an #javascript runtime built on #chrome')
@@ -17,4 +17,16 @@ test('parsing wikilinks works (and they are sorted)', () => {
   const wikilinkTitles = wikilinks.map(noteRef => noteRef.title)
 
   expect(wikilinkTitles).toEqual(['note', 'wikilinks'])
+})
+
+
+test('parsing zettelId from YAML works', () => {
+  const zettelId = '2021063117500000'
+  const title = 'GraphQL'
+  const noteText = `---\ntitle: ${title}\nzettelId: ${zettelId}\n---\n\nText body---`
+
+  const yaml = parseYAML(noteText)
+
+  expect(yaml.title).toBe(title)
+  expect(yaml.zettelId.toString()).toBe(zettelId)
 })
