@@ -1,6 +1,6 @@
-const { v1: uuid } = require('uuid')
-const { parseNote } = require('./noteParser')
-const { queryBacklinks } = require('./utils')
+import { v1 as uuid } from 'uuid'
+import { parseNote } from './noteParser'
+import { queryBacklinks } from './utils'
 
 
 let notes = [
@@ -26,4 +26,4 @@ notes = notes.map(note => ({
 
 // console.log('notes', JSON.stringify(notes, null, 4))
 
-module.exports = notes
+export default notes

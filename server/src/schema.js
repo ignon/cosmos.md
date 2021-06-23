@@ -1,10 +1,10 @@
-const { makeExecutableSchema } = require('apollo-server')
-const typeDefs = require('./typeDefs')
-const resolvers = require('./resolvers')
+import { makeExecutableSchema } from 'apollo-server'
+import typeDefs from './typeDefs'
+import resolvers from './resolvers'
 
 const schema = makeExecutableSchema({
   typeDefs: [typeDefs],
   resolvers
 })
 
-module.exports = schema
+export default schema

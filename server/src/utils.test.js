@@ -1,4 +1,4 @@
-const { getZettelId } = require('./utils')
+import { getZettelId } from './utils'
 
 
 test('getZettelId works', () => {
@@ -8,3 +8,5 @@ test('getZettelId works', () => {
 
   expect(zettelId).toBe('19880331000000')
 })
+
+export default {}

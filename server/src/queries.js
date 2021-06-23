@@ -1,6 +1,6 @@
-const { gql } = require('apollo-server')
+import { gql } from 'apollo-server'
 
-const ALL_NOTES = gql`
+export const ALL_NOTES = gql`
   query ALL_NOTES {
     allNotes {
       title,
@@ -9,7 +9,7 @@ const ALL_NOTES = gql`
   }
 `
 
-const ADD_NOTE = gql`
+export const ADD_NOTE = gql`
   mutation addNote($title: String!, $zettelId: String, $text: String!){
     addNote(
       title: $title
@@ -25,8 +25,8 @@ const ADD_NOTE = gql`
     }
   }
 `
-
-module.exports = {
-  ALL_NOTES,
-  ADD_NOTE
-}
+export const CLEAR_NOTES = gql`
+  mutation clearNotes {
+    response
+  }
+`

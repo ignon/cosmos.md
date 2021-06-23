@@ -1,11 +1,9 @@
-const { buildSchemaFromTypeDefinitions } = require('graphql-tools')
-const YAML = require('yaml')
-const { getZettelId } = require('./utils')
+import YAML from 'yaml'
 
 const yamlRegex = /^---\n([\s\S]+)\n---/
 
 
-const parseNote = (args) => {
+export const parseNote = (args) => {
   let { title, text, zettelId } = args
 
   const tags = parseTags(text)
@@ -73,13 +71,13 @@ const matchGroupsGlobal = (text, regex, groupIndex) => {
   return output
 }
 
-const sortAndRemoveDuplicates = (list) => {
+export const sortAndRemoveDuplicates = (list) => {
   return list
     .sort()
     .filter((item, pos, arr) => !pos || item?.toLowerCase() !== arr[pos - 1]?.toLowerCase())
 }
 
-const parseTags = (text) => {
+export const parseTags = (text) => {
   const tagRegex = /#([\w_-]+)/gi
 
   let tags = matchGroupsGlobal(text, tagRegex, 1)
@@ -88,7 +86,7 @@ const parseTags = (text) => {
   return tags;
 }
 
-const parseWikilinks = (text) => {
+export const parseWikilinks = (text) => {
   const wikilinkRegex = /\[\[([\w_-]+)\]]/gi
 
   let wikilinkTitles = matchGroupsGlobal(text, wikilinkRegex, 1)
@@ -98,7 +96,7 @@ const parseWikilinks = (text) => {
   return wikilinks;
 }
 
-const parseYAML = (text) => {
+export const parseYAML = (text) => {
   const match = text.match(yamlRegex)
 
   if (!match || match.length < 2) {
@@ -109,11 +107,4 @@ const parseYAML = (text) => {
   const yaml = YAML.parse(yamlText)
 
   return yaml
-}
-
-module.exports = {
-  parseNote,
-  parseTags,
-  parseWikilinks,
-  parseYAML
 }

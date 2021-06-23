@@ -1,4 +1,4 @@
-const dateFormat = require('dateformat')
+import dateFormat from 'dateformat'
 
 
 const getZettelId = (dateString=null) => {
@@ -28,4 +28,4 @@ const queryBacklinks = (notes, noteTitle) => {
     }))
 }
 
-module.exports = { getZettelId, queryBacklinks }
+export default { getZettelId, queryBacklinks }

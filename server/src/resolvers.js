@@ -1,13 +1,10 @@
-const _ = require('lodash')
-const { v1: uuid } = require('uuid')
-const { queryBacklinks } = require('./utils')
-const { parseNote } = require('./noteParser')
-const { NODE_ENV, NODE_ENVS } = require('./config')
-const mockNotes = require('./notes')
+import { uniq } from 'lodash'
+import { v1 as uuid } from 'uuid'
+import { queryBacklinks } from './utils'
+import { parseNote } from './noteParser'
+import { NODE_ENV, NODE_ENVS } from './config'
+import mockNotes from './notes'
 const notes = [] // (NODE_ENV === NODE_ENVS.DEVELOPMENT) ? mockNotes : []
-
-console.log('Notes: ', notes)
-console.log('NODE_ENV: ', NODE_ENV)
 
 
 const resolvers = {
@@ -26,7 +23,7 @@ const resolvers = {
       const matches = [titleMatch, zettelIdMatch, ...tagMatches, ...backlinkMatches]
         .filter(match => Boolean(match))
 
-      return _.uniq(matches)
+      return uniq(matches)
     },
     findNote: (root, args) => {
       const { title, zettelId, query } = args
@@ -83,8 +80,13 @@ const resolvers = {
       notes[noteIndex] = note
 
       return note
+    },
+    clearNotes: (root, args) => {
+      if (process.env.NODE_ENV === NODE_ENVS.TEST) {
+        notes = []
+      }
     }
   }
 }
 
-module.exports = resolvers
+export default resolvers

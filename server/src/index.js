@@ -1,5 +1,5 @@
-const { ApolloServer } = require('apollo-server')
-const schema = require('./schema')
+import { ApolloServer } from 'apollo-server'
+import schema from './schema.js'
 
 const server = new ApolloServer({ schema })
 

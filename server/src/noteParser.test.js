@@ -1,4 +1,5 @@
-const { parseTags, parseWikilinks, parseYAML } = require('./noteParser')
+import { parseTags, parseWikilinks, parseYAML } from './noteParser'
+
 
 test('parsing tags works (and tags are sorted)', () => {
   const hashtags = parseTags('#node is an #javascript runtime built on #chrome')
