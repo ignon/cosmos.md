@@ -4,9 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node --harmony src/index.js",
-    "dev": "nodemon src/index.js",
-    "test": "jest ."
+    "start": "cross-env NODE_ENV=production node --harmony src/index.js",
+    "dev": "cross-env NODE_ENV=development nodemon src/index.js",
+    "test": "cross-env NODE_ENV=development jest ."
   },
   "author": "",
   "license": "ISC",
@@ -14,7 +14,9 @@
     "@types/jest": "^26.0.23",
     "@types/node": "^15.12.4",
     "apollo-server": "^2.25.1",
+    "cross-env": "^7.0.3",
     "dateformat": "^4.5.1",
+    "dotenv": "^10.0.0",
     "graphql": "^15.5.1",
     "jest": "^27.0.5",
     "lodash": "^4.17.21",

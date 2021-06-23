@@ -1,7 +1,14 @@
+const _ = require('lodash')
 const { v1: uuid } = require('uuid')
 const { queryBacklinks } = require('./utils')
 const { parseNote } = require('./noteParser')
-const notes = require('./notes')
+const { NODE_ENV, NODE_ENVS } = require('./config')
+const mockNotes = require('./notes')
+const notes = [] // (NODE_ENV === NODE_ENVS.DEVELOPMENT) ? mockNotes : []
+
+console.log('Notes: ', notes)
+console.log('NODE_ENV: ', NODE_ENV)
+
 
 const resolvers = {
   Query: {
@@ -11,9 +18,10 @@ const resolvers = {
       const { tag, title, zettelId } = args
 
       const titleMatch = title ? notes.find(n => n.title === title) : null
+      console.log('notelist', notes)
       const zettelIdMatch = zettelId ? notes.find(n => n.zettelId === zettelId) : null
-      const tagMatches = tag ? notes.filter(note => note.tags.includes(tag)) : []
-      const backlinkMatches = title ? notes.filter(note => Boolean(note.backlinks.find(n => n.title))) : []
+      const tagMatches = [] //tag ? notes.filter(note => note.tags.includes(tag)) : []
+      const backlinkMatches = [] //title ? notes.filter(note => Boolean(note.backlinks.find(n => n.title))) : []
 
       const matches = [titleMatch, zettelIdMatch, ...tagMatches, ...backlinkMatches]
         .filter(match => Boolean(match))
@@ -51,7 +59,7 @@ const resolvers = {
       const note = {
         _id: uuid(),
         ...parseNote(args),
-        backlinks: queryBacklinks(args.title)
+        backlinks: queryBacklinks(notes, args.title)
       }
 
       if (notes.find(n => n.zettelId === note.zettelId)) {

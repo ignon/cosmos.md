@@ -24,6 +24,6 @@ notes = notes.map(note => ({
 }))
 
 
-console.log('notes', JSON.stringify(notes, null, 4))
+// console.log('notes', JSON.stringify(notes, null, 4))
 
 module.exports = notes
