@@ -1,6 +1,6 @@
 import { v1 as uuid } from 'uuid'
-import { parseNote } from './noteParser'
-import { queryBacklinks } from './utils'
+import { parseNote } from './noteParser.js'
+import { queryBacklinks } from './utils.js'
 
 
 let notes = [

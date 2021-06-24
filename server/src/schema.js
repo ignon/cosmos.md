@@ -1,6 +1,6 @@
 import { makeExecutableSchema } from 'apollo-server'
-import typeDefs from './typeDefs'
-import resolvers from './resolvers'
+import typeDefs from './typeDefs.js'
+import resolvers from './resolvers.js'
 
 const schema = makeExecutableSchema({
   typeDefs: [typeDefs],

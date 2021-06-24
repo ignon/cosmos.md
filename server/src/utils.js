@@ -1,7 +1,7 @@
 import dateFormat from 'dateformat'
 
 
-const getZettelId = (dateString=null) => {
+export const getZettelId = (dateString=null) => {
   const date = (dateString)
     ? new Date(dateString)
     : new Date()
@@ -12,7 +12,7 @@ const getZettelId = (dateString=null) => {
   return zettelId
 }
 
-const queryBacklinks = (notes, noteTitle) => {
+export const queryBacklinks = (notes, noteTitle) => {
   const linksToNote = (note, title) => {
     const noteMentions = note.wikilinks
       .filter(noteRef => noteRef.title === noteTitle).length
@@ -27,5 +27,3 @@ const queryBacklinks = (notes, noteTitle) => {
       zettelId: null
     }))
 }
-
-export default { getZettelId, queryBacklinks }

@@ -1,9 +1,9 @@
-import { uniq } from 'lodash'
+import _ from 'lodash'
 import { v1 as uuid } from 'uuid'
-import { queryBacklinks } from './utils'
-import { parseNote } from './noteParser'
-import { NODE_ENV, NODE_ENVS } from './config'
-import mockNotes from './notes'
+import { queryBacklinks } from './utils.js'
+import { parseNote } from './noteParser.js'
+import config from './config.js'
+import mockNotes from './notes.js'
 const notes = [] // (NODE_ENV === NODE_ENVS.DEVELOPMENT) ? mockNotes : []
 
 
@@ -23,7 +23,7 @@ const resolvers = {
       const matches = [titleMatch, zettelIdMatch, ...tagMatches, ...backlinkMatches]
         .filter(match => Boolean(match))
 
-      return uniq(matches)
+      return _.uniq(matches)
     },
     findNote: (root, args) => {
       const { title, zettelId, query } = args
@@ -81,11 +81,11 @@ const resolvers = {
 
       return note
     },
-    clearNotes: (root, args) => {
-      if (process.env.NODE_ENV === NODE_ENVS.TEST) {
-        notes = []
-      }
-    }
+    // clearNotes: (root, args) => {
+    //   if (process.env.NODE_ENV === config.NODE_ENVS.TEST) {
+    //     notes = []
+    //   }
+    // }
   }
 }
 

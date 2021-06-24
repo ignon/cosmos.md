@@ -9,7 +9,7 @@ const NODE_ENVS = {
   TEST: 'test'
 }
 
-module.exports = {
+export default {
   PORT,
   NODE_ENV,
   NODE_ENVS

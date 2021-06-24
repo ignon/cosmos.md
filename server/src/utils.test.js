@@ -1,4 +1,4 @@
-import { getZettelId } from './utils'
+import { getZettelId } from './utils.js'
 
 
 test('getZettelId works', () => {

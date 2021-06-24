@@ -1,4 +1,4 @@
-import { parseTags, parseWikilinks, parseYAML } from './noteParser'
+import { parseTags, parseWikilinks, parseYAML } from './noteParser.js'
 
 
 test('parsing tags works (and tags are sorted)', () => {
