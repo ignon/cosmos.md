@@ -1,7 +1,7 @@
 import _ from 'lodash'
-import schema from './schema'
-import { ApolloServer } from 'apollo-server'
-import { ALL_NOTES, ADD_NOTE } from './queries'
+import schema from './schema.js'
+import { ApolloServer } from 'apollo-server.js'
+import { ALL_NOTES, ADD_NOTE } from './queries.js'
 
 /**
  * There are multiple ways to test backend:

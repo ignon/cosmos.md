@@ -2,9 +2,10 @@ import _ from 'lodash'
 import { v1 as uuid } from 'uuid'
 import { queryBacklinks } from './utils.js'
 import { parseNote } from './noteParser.js'
-import config from './config.js'
-import mockNotes from './notes.js'
+import Note from './models/Note.js'
+// import mockNotes from './notes.js'
 const notes = [] // (NODE_ENV === NODE_ENVS.DEVELOPMENT) ? mockNotes : []
+
 
 
 const resolvers = {
@@ -25,7 +26,7 @@ const resolvers = {
 
       return _.uniq(matches)
     },
-    findNote: (root, args) => {
+    findNote: async (root, args) => {
       const { title, zettelId, query } = args
 
       if (query) {
@@ -54,17 +55,17 @@ const resolvers = {
     addNote: (root, args) => {
       console.log(root, args)
       const note = {
-        _id: uuid(),
         ...parseNote(args),
         backlinks: queryBacklinks(notes, args.title)
       }
 
-      if (notes.find(n => n.zettelId === note.zettelId)) {
-        throw new Error('Zettel Id must be unique')
-      }
+      const newNote = new Note(note)
 
-      notes.push(note)
-      return note
+      return newNote
+        .save()
+        .then(savedNote => {
+          return newNote.toJSON()
+        })
     },
     editNote: (root, args) => {
       const note = {
