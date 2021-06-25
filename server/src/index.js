@@ -12,7 +12,7 @@ mongoose.connect(url, {
   useCreateIndex: true
 })
   .then(result => {
-    console.log('connected to MongoDB')
+    console.log('connected to MongoDB', url)
   })
   .catch(error => {
     console.log('error connecting to MongoDB:', error.message)

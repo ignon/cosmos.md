@@ -1,0 +1,107 @@
+POST http://localhost:4000/
+Content-Type: application/json
+X-REQUEST-TYPE: GraphQL
+
+mutation addNote($title: String!, $zettelId: String, $text: String!){
+  addNote(
+    title: $title
+    zettelId: $zettelId
+    text: $text
+  ) {
+    title
+    zettelId
+    text
+    tags
+    # wikilinks { title zettelId }
+    # backlinks { title zettelId }
+  }
+}
+
+{
+    "title": "communism43122121",
+    "zettelId": "123421412",
+    "text": "moikkelis"
+}
+
+###
+
+POST http://localhost:4000/
+Content-Type: application/json
+X-REQUEST-TYPE: GraphQL
+
+mutation editNote($title: String!, $zettelId: String, $text: String!){
+  editNote(
+    title: $title
+    zettelId: $zettelId
+    text: $text
+  ) {
+    title
+    zettelId
+    text
+    tags
+    # wikilinks { title zettelId }
+    # backlinks { title zettelId }
+  }
+}
+
+{
+  "title": "communism123",
+  "zettelId": "1234",
+  "text": "moikkelis #life"
+}
+
+###
+POST http://localhost:4000/
+Content-Type: application/json
+X-REQUEST-TYPE: GraphQL
+
+query allNotes {
+  allNotes {
+    title
+    zettelId
+    tags
+    text
+  }
+}
+
+###
+
+POST http://localhost:4000/
+Content-Type: application/json
+X-REQUEST-TYPE: GraphQL
+
+query findNote($query: String!) {
+  findNote(query: $query) {
+    title
+    zettelId
+    tags
+    text
+  }
+}
+
+{
+  "query": "1234"
+}
+
+###
+
+POST http://localhost:4000/
+Content-Type: application/json
+X-REQUEST-TYPE: GraphQL
+
+query findNotes($title: String, $zettelId: String, $tag: String) {
+  findNotes(
+    title: $title
+    zettelId: $zettelId
+    tag: $tag
+  ) {
+    title
+    zettelId
+    tags
+    text
+  }
+}
+
+{
+  "zettelId": "1234"
+}
