@@ -20,6 +20,13 @@ test('parsing wikilinks works (and they are sorted)', () => {
   expect(wikilinkTitles).toEqual(['note', 'wikilinks'])
 })
 
+test('parsing wikilinks works (and they are sorted)', () => {
+  const wikilinks = parseWikilinks('[[note]]')
+  const wikilinkTitles = wikilinks.map(noteRef => noteRef.title)
+
+  expect(wikilinkTitles).toEqual(['note'])
+})
+
 
 test('parsing zettelId from YAML works', () => {
   const zettelId = '2021063117500000'

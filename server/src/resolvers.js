@@ -1,9 +1,9 @@
 import _ from 'lodash'
-import { v1 as uuid } from 'uuid'
 import { queryBacklinks } from './utils.js'
 import { parseNote } from './noteParser.js'
 import Note from './models/Note.js'
 import { UserInputError } from 'apollo-server-errors'
+import mongoose from 'mongoose'
 // import mockNotes from './notes.js'
 const notes = [] // (NODE_ENV === NODE_ENVS.DEVELOPMENT) ? mockNotes : []
 
@@ -16,80 +16,79 @@ const resolvers = {
       return Note.find({})
     },
     findNotes: (_, { tag, title, zettelId }) => {
-      // const titleMatch = title ? notes.find(n => n.title === title) : null
-      // const zettelIdMatch = zettelId ? notes.find(n => n.zettelId === zettelId) : null
-      // const tagMatches = [] //tag ? notes.filter(note => note.tags.includes(tag)) : []
-      // const backlinkMatches = [] //title ? notes.filter(note => Boolean(note.backlinks.find(n => n.title))) : []
-
-      // const matches = [titleMatch, zettelIdMatch, ...tagMatches, ...backlinkMatches]
-      //   .filter(match => Boolean(match))
-
-      console.log(zettelId)
-
       const mongoQuery = { $or: [] }
       if (zettelId) mongoQuery.$or.push({ zettelId })
       if (title) mongoQuery.$or.push({ title })
       if (tag) mongoQuery.$or.push({ tags: { $in: tag } })
 
-      console.log(mongoQuery)
+      if (mongoQuery.$or.length === 0) {
+        return []
+      }
 
       return Note.find(mongoQuery)
     },
     findNote: async (_, { query }) => {
-      const zettelIdRegex = /^\d+$/ // All characters numbers
+      const zettelIdRegex = /^\d+$/
       const isValidZettelId = zettelIdRegex.test(query)
 
       const mongoQuery = (isValidZettelId)
         ? { $or: [{ zettelId: query }, { title: query }] }
         : { title: query }
 
-
       return Note.findOne(mongoQuery)
-        .then(result => {
-          console.log('RESULT', result)
-          return result
-        })
-        .catch(error => {
-          return error
-        })
     },
   },
   Note: {
-    backlinks: (root) => queryBacklinks(notes, root.title),
+    backlinks: async ({ zettelId, title }) => {
+      const backlinks = await Note.find({
+        $or: [
+          { zettelId },
+          { $and: [ { title }, { zettelId: null }]}
+        ]
+      })
+
+      return backlinks
+    },
+    wikilinks: ({ wikilinks }) => {
+      return wikilinks ?? []
+    }
   },
   Mutation: {
-    addNote: (root, args) => {
-      console.log(root, args)
-      const note = {
-        ...parseNote(args),
-        backlinks: queryBacklinks(notes, args.title)
-      }
+    addNote: (_, args) => {
+      const note = parseNote(args)
 
       const newNote = new Note(note)
-
-      return newNote
-        .save()
-        .then(savedNote => {
-          return newNote.toJSON()
-        })
+      return newNote.save()
     },
-    editNote: (root, args) => {
-      const note = {
-        ...parseNote(args),
-        backlinks: queryBacklinks(notes, args.title)
+    editNote: async (_, args) => {
+      const note = parseNote(args)
+      const { zettelId, title } = note
+
+      const wikilinkTitles = note.wikilinks.map(ref => ref.title)
+
+      const wikilinks = await Note.find({
+        title: {
+          $in: wikilinkTitles
+        }
+      }).select('title zettelId -_id')
+
+      // match: title && zettelId===null
+      // zettelId === zettelId
+      // How do we handle deleteNote and remove references?
+      const backlinks = await Note.find({
+        $or: [
+          { zettelId },
+          { $and: [ { title }, { zettelId: null }]}
+        ]
+      })
+
+      const populatedNote = {
+        ...note,
+        wikilinks
       }
 
-      const { zettelId } = note
-
-      return Note.findOneAndUpdate({ zettelId }, note, { new: true })
-        .then(result => {
-          if (result) {
-            return result
-          } 
-          throw new UserInputError('Note with corresponding id doesn\'t exist')
-        })
-      // notes[noteIndex] = note
-      // return note
+      const newNote = await Note.findOneAndUpdate({ zettelId }, populatedNote, { new: true })
+      return newNote
     },
     // clearNotes: (root, args) => {
     //   if (process.env.NODE_ENV === config.NODE_ENVS.TEST) {

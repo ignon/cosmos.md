@@ -15,23 +15,27 @@ const zettelId = {
   minlength: 5
 }
 
+const text = {
+  type: String,
+  required: true
+}
+
 const schema = new mongoose.Schema({
   title,
   zettelId,
   tags: [String],
-  text: String
+  text,
   // backlinks: [NoteRef],
-  // wikilinks: [{
-  //   title,
-  //   zettelId
-  // }],
+  wikilinks: [{
+    title,
+    zettelId
+  }],
 })
 
 schema.plugin(uniqueValidator)
 
 schema.set('toJSON', {
   transform: (obj, json) => {
-    // json.id = obj._id
     delete obj._id
     delete obj.__v
   }

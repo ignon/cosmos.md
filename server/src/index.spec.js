@@ -1,6 +1,6 @@
 import _ from 'lodash'
 import schema from './schema.js'
-import { ApolloServer } from 'apollo-server.js'
+import { ApolloServer } from 'apollo-server'
 import { ALL_NOTES, ADD_NOTE } from './queries.js'
 
 /**

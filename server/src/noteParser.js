@@ -31,7 +31,6 @@ export const parseNote = (args) => {
     throw new Error('zettelId must be set either in GraphQL request or in YAML metadata')
   }
 
-
   // GraphQL is prioritized over YAML read from note
   // This is to avoid users from overwriting documents if
   // they accidentally copy YAML metadata with zettelID to other text file
@@ -91,8 +90,8 @@ export const parseWikilinks = (text) => {
 
   let wikilinkTitles = matchGroupsGlobal(text, wikilinkRegex, 1)
   wikilinkTitles = sortAndRemoveDuplicates(wikilinkTitles)
-  const wikilinks = wikilinkTitles.map(title => ({ title, zettelId: null }))
 
+  const wikilinks = wikilinkTitles.map(title => ({ title, zettelId: null }))
   return wikilinks;
 }
 

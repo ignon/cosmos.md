@@ -12,15 +12,15 @@ mutation addNote($title: String!, $zettelId: String, $text: String!){
     zettelId
     text
     tags
-    # wikilinks { title zettelId }
+    wikilinks { title zettelId }
     # backlinks { title zettelId }
   }
 }
 
 {
-    "title": "communism43122121",
-    "zettelId": "123421412",
-    "text": "moikkelis"
+  "title": "moikkelis",
+  "zettelId": "1234212312",
+  "text": "[[heips]] #life"
 }
 
 ###
@@ -39,15 +39,15 @@ mutation editNote($title: String!, $zettelId: String, $text: String!){
     zettelId
     text
     tags
-    # wikilinks { title zettelId }
+    wikilinks { title zettelId }
     # backlinks { title zettelId }
   }
 }
 
 {
-  "title": "communism123",
-  "zettelId": "1234",
-  "text": "moikkelis #life"
+  "title": "communism1232",
+  "zettelId": "12342",
+  "text": "[[moikkelis]] #life"
 }
 
 ###
@@ -61,6 +61,14 @@ query allNotes {
     zettelId
     tags
     text
+    wikilinks {
+      title
+      zettelId
+    }
+    backlinks {
+      title
+      zettelId
+    }
   }
 }
 
@@ -80,7 +88,7 @@ query findNote($query: String!) {
 }
 
 {
-  "query": "1234"
+  "query": "moikkelis"
 }
 
 ###
@@ -103,5 +111,7 @@ query findNotes($title: String, $zettelId: String, $tag: String) {
 }
 
 {
-  "zettelId": "1234"
+  # "zettelId": "1234"
+  # "title": "communism",
+  # "tag": "life"
 }
