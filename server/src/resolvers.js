@@ -1,12 +1,17 @@
-import _ from 'lodash'
+import __ from 'lodash'
 import { queryBacklinks } from './utils.js'
 import { parseNote } from './noteParser.js'
 import Note from './models/Note.js'
 import { UserInputError } from 'apollo-server-errors'
 import mongoose from 'mongoose'
-// import mockNotes from './notes.js'
 const notes = [] // (NODE_ENV === NODE_ENVS.DEVELOPMENT) ? mockNotes : []
 
+
+const combineWikilinks = (parsedWikilinks, wikilinksInDb) => ( 
+  Object.values(
+    __.keyBy([ ...parsedWikilinks, ...wikilinksInDb ], 'title')
+  )
+)
 
 
 const resolvers = {
@@ -39,15 +44,23 @@ const resolvers = {
     },
   },
   Note: {
-    backlinks: async ({ zettelId, title }) => {
-      const backlinks = await Note.find({
+    backlinks: ({ zettelId, title }) => {
+      return Note.find({
         $or: [
-          { zettelId },
-          { $and: [ { title }, { zettelId: null }]}
+          { 'wikilinks.zettelId': zettelId },
+          { wikilinks: { title, zettelId: null } }
         ]
-      })
+      }).select('title zettelId -_id')
 
-      return backlinks
+      // $or: [
+      //   { 'wikilinks.zettelId': zettelId },
+      //   {
+      //     $and: [
+      //       { 'wikilinks.title': title },
+      //       { 'wikilinks.zettelId': null }
+      //     ]
+      //   }
+      // ]
     },
     wikilinks: ({ wikilinks }) => {
       return wikilinks ?? []
@@ -56,9 +69,9 @@ const resolvers = {
   Mutation: {
     addNote: (_, args) => {
       const note = parseNote(args)
-
-      const newNote = new Note(note)
-      return newNote.save()
+      return note
+      // const newNote = new Note(note)
+      // return newNote.save()
     },
     editNote: async (_, args) => {
       const note = parseNote(args)
@@ -66,21 +79,13 @@ const resolvers = {
 
       const wikilinkTitles = note.wikilinks.map(ref => ref.title)
 
-      const wikilinks = await Note.find({
+      const wikilinksInDb = await Note.find({
         title: {
           $in: wikilinkTitles
         }
       }).select('title zettelId -_id')
 
-      // match: title && zettelId===null
-      // zettelId === zettelId
-      // How do we handle deleteNote and remove references?
-      const backlinks = await Note.find({
-        $or: [
-          { zettelId },
-          { $and: [ { title }, { zettelId: null }]}
-        ]
-      })
+      const wikilinks = combineWikilinks(note.wikilinks, wikilinksInDb)
 
       const populatedNote = {
         ...note,

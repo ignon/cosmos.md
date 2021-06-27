@@ -7,7 +7,7 @@
   "scripts": {
     "start": "cross-env NODE_ENV=production node src/index.js",
     "dev": "cross-env NODE_ENV=development nodemon src/index.js",
-    "test": "cross-env NODE_ENV=development jest .",
+    "test": "cross-env NODE_ENV=development jest . --runInBand --detectOpenHandles",
     "mongoshell:local": "mongo",
     "mongoshell:remote": "npx env-cmd mongo --host=$MONGODB_URI",
     "mongoserver:start": "sudo systemctl start mongod",

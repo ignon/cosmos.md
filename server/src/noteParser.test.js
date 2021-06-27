@@ -3,13 +3,12 @@ import { parseTags, parseWikilinks, parseYAML } from './noteParser.js'
 
 test('parsing tags works (and tags are sorted)', () => {
   const hashtags = parseTags('#node is an #javascript runtime built on #chrome')
-  console.log(hashtags)
   expect(hashtags).toEqual(['node', 'javascript', 'chrome'].sort())
 })
 
 test('duplicate tags are removed', () => {
   const hashtags = parseTags('#node is an #javascript runtime built on #chrome #chrome')
-  console.log(hashtags)
+
   expect(hashtags).toEqual(['node', 'javascript', 'chrome'].sort())
 })
 

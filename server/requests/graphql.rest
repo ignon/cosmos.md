@@ -47,7 +47,7 @@ mutation editNote($title: String!, $zettelId: String, $text: String!){
 {
   "title": "communism1232",
   "zettelId": "12342",
-  "text": "[[moikkelis]] #life"
+  "text": "[[moikkelis]] [[anarchy]] #life"
 }
 
 ###
