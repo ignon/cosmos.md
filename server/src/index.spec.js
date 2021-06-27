@@ -116,7 +116,7 @@ describe('when notes exists', () => {
     expect(tags).toEqual(['backend', 'node', 'graphql'].sort())
 
     expect(wikilinks.map(ref => ref.title)).toEqual(['ApolloServer', 'GraphQL'])
-    expect(_.find(wikilinks, { zettelId: null })).toBeFalsy()
+    // expect(_.find(wikilinks, { zettelId: null })).toBeFalsy()
     // expect(backlinks.map(ref => ref.title)).toEqual(['ApolloServer', 'GraphQL'])
     // expect(backlinks.find(ref => (!ref.zettelId))).toBeFalsy()
   })

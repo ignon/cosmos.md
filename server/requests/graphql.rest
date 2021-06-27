@@ -18,9 +18,9 @@ mutation addNote($title: String!, $zettelId: String, $text: String!){
 }
 
 {
-  "title": "moikkelis",
-  "zettelId": "1234212312",
-  "text": "[[heips]] #life"
+  "title": "communism121232",
+  "zettelId": "123425123",
+  "text": "[[moikkelis]] [[anarchy]] #life"
 }
 
 ###
@@ -45,7 +45,7 @@ mutation editNote($title: String!, $zettelId: String, $text: String!){
 }
 
 {
-  "title": "communism1232",
+  "title": "communism12323",
   "zettelId": "12342",
   "text": "[[moikkelis]] [[anarchy]] #life"
 }

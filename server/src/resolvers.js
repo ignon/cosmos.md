@@ -3,7 +3,8 @@ import { queryBacklinks } from './utils.js'
 import { parseNote } from './noteParser.js'
 import Note from './models/Note.js'
 import { UserInputError } from 'apollo-server-errors'
-import mongoose from 'mongoose'
+import logger from './utils/logger.js'
+
 const notes = [] // (NODE_ENV === NODE_ENVS.DEVELOPMENT) ? mockNotes : []
 
 
@@ -13,6 +14,32 @@ const combineWikilinks = (parsedWikilinks, wikilinksInDb) => (
   )
 )
 
+const getWikilinksInDatabse = async (wikilinkTitles) => {
+  const wikilinks = await Note.find({
+    title: {
+      $in: wikilinkTitles
+    }
+  }).select('title zettelId -_id')
+
+
+  return wikilinks
+}
+
+
+const populateNote = async (note) => {
+  const { zettelId, title } = note
+
+  const wikilinkTitles = note.wikilinks.map(ref => ref.title)
+  const wikilinksInDb = await getWikilinksInDatabse(wikilinkTitles)
+  const wikilinks = combineWikilinks(note.wikilinks, wikilinksInDb)
+
+  const populatedNote = {
+    ...note,
+    wikilinks
+  }
+
+  return populatedNote
+}
 
 
 const resolvers = {
@@ -52,56 +79,38 @@ const resolvers = {
           { wikilinks: { title, zettelId: null } }
         ]
       }).select('title zettelId -_id')
-
-      // $or: [
-      //   { 'wikilinks.zettelId': zettelId },
-      //   {
-      //     $and: [
-      //       { 'wikilinks.title': title },
-      //       { 'wikilinks.zettelId': null }
-      //     ]
-      //   }
-      // ]
     },
     wikilinks: ({ wikilinks }) => {
       return wikilinks ?? []
     }
   },
   Mutation: {
-    addNote: (_, args) => {
+    addNote: async (_, args) => {
       const note = parseNote(args)
+      const populatedNote = await populateNote(note)
 
-      const newNote = new Note(note)
+      logger.info(populatedNote)
+
+      const newNote = new Note(populatedNote)
       return newNote.save()
         .then(result => result.toJSON())
     },
     editNote: async (_, args) => {
       const note = parseNote(args)
-      const { zettelId, title } = note
+      const populatedNote = await populateNote(note)
 
-      const wikilinkTitles = note.wikilinks.map(ref => ref.title)
-
-      const wikilinksInDb = await Note.find({
-        title: {
-          $in: wikilinkTitles
-        }
-      }).select('title zettelId -_id')
-
-      const wikilinks = combineWikilinks(note.wikilinks, wikilinksInDb)
-
-      const populatedNote = {
-        ...note,
-        wikilinks
-      }
+      const { zettelId } = populatedNote
 
       const newNote = await Note.findOneAndUpdate({ zettelId }, populatedNote, { new: true })
+        .then(result => result.toJSON())
+        .catch(logger.info)
+
+      if (!newNote) {
+        throw new UserInputError(`Note with zettelId: '${zettelId}' doesn't exist`)
+      }
+
       return newNote
-    },
-    // clearNotes: (root, args) => {
-    //   if (process.env.NODE_ENV === config.NODE_ENVS.TEST) {
-    //     notes = []
-    //   }
-    // }
+    }
   }
 }
 
