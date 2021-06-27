@@ -1,6 +1,19 @@
 import mongoose from 'mongoose'
 import uniqueValidator from 'mongoose-unique-validator'
 
+var wikilinkSchema = mongoose.Schema({
+  title: {
+    type: String,
+    required: true,
+    unique: false
+  },
+  zettelId: {
+    type: String,
+    required: false
+  }
+}, { _id : false });
+
+
 const title = {
   type: String,
   unique: true,
@@ -25,19 +38,19 @@ const schema = new mongoose.Schema({
   zettelId,
   tags: [String],
   text,
-  // backlinks: [NoteRef],
-  wikilinks: [{
-    title,
-    zettelId
-  }],
+  wikilinks: [wikilinkSchema],
 })
 
 schema.plugin(uniqueValidator)
 
 schema.set('toJSON', {
   transform: (obj, json) => {
-    delete obj._id
-    delete obj.__v
+    delete json._id
+    delete json.__v
+
+    // for(const link of json.wikilinks) {
+    //   delete link._id
+    // }
   }
 })
 

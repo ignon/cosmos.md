@@ -24,6 +24,4 @@ notes = notes.map(note => ({
 }))
 
 
-// console.log('notes', JSON.stringify(notes, null, 4))
-
 export default notes

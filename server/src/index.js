@@ -1,6 +1,7 @@
 import server from './server.js'
+import logger from './utils/logger.js'
 
 
 server.listen().then(({ url }) => {
-  console.log(`Server ready at ${url}`)
+  logger.info(`Server ready at ${url}`)
 })

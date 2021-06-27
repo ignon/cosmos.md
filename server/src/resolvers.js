@@ -14,6 +14,7 @@ const combineWikilinks = (parsedWikilinks, wikilinksInDb) => (
 )
 
 
+
 const resolvers = {
   Query: {
     noteCount: () => notes.length,
@@ -69,9 +70,10 @@ const resolvers = {
   Mutation: {
     addNote: (_, args) => {
       const note = parseNote(args)
-      return note
-      // const newNote = new Note(note)
-      // return newNote.save()
+
+      const newNote = new Note(note)
+      return newNote.save()
+        .then(result => result.toJSON())
     },
     editNote: async (_, args) => {
       const note = parseNote(args)
