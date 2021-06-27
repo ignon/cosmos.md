@@ -85,20 +85,12 @@ describe('when notes exists', () => {
     expect(data.allNotes).toHaveLength(notes.length)
   })
 
-  test('test', () => {
-    expect(true).toBe(true)
-  })
-
-  test('adding note works', async () => {
+  test('wikilinks get parsed on save, wikilinks are populated from DB and unexistent wikilinks get zettelID: null', async () => {
     const note = {
       title: 'ApolloClient',
       zettelId: '202106222712',
-      text: '[[GraphQL]] client for [[ApolloServer]]. #backend #node #graphql',
+      text: '[[NonExistentNote]]  [[GraphQL]] [[ApolloServer]]',
     }
-
-    const all = await getNotesInDatabase()
-    const allTitles = _.map(all, 'wikilinks')
-    console.log('Notes in database:', allTitles)
 
     const result = await server.executeOperation({
       query: ADD_NOTE,
@@ -108,17 +100,34 @@ describe('when notes exists', () => {
     const addedNote = result.data.addNote
     const { title, zettelId, text, tags, wikilinks, backlinks } = addedNote
 
-    // console.log((JSON.stringify(addedNote, null, 4)))
-
     expect(title).toBe(note.title)
     expect(zettelId).toBe(note.zettelId)
-    expect(text).toContain(note.text)
-    expect(tags).toEqual(['backend', 'node', 'graphql'].sort())
 
-    expect(wikilinks.map(ref => ref.title)).toEqual(['ApolloServer', 'GraphQL'])
-    // expect(_.find(wikilinks, { zettelId: null })).toBeFalsy()
-    // expect(backlinks.map(ref => ref.title)).toEqual(['ApolloServer', 'GraphQL'])
-    // expect(backlinks.find(ref => (!ref.zettelId))).toBeFalsy()
+    const wikilinkTitles = wikilinks.map(w => w.title)
+    expect(wikilinkTitles).toEqual(['ApolloServer', 'GraphQL', 'NonExistentNote'])
+
+    const nonExistentNote = wikilinks.find(w => w.title === 'NonExistentNote')
+    expect(nonExistentNote.zettelId).toBe(null)
+
+    expect(wikilinks).toEqual([
+      ...notes.map(({ title, zettelId }) => ({ title, zettelId })),
+      { title: 'NonExistentNote', zettelId: null }
+    ])
+
+    const notesInDatabase = await getNotesInDatabase()
+    const notesThatHaveWikilinkToOurNote = notesInDatabase
+      .filter(
+        note => (note.wikilinks.find(w => w.title === 'ApolloClient'))
+      )
+      .map(({ title, zettelId }) => ({ title, zettelId }))
+
+    expect(backlinks).toEqual(notesThatHaveWikilinkToOurNote)
+
+
+    const backlinkTitles = backlinks.map(ref => ref.title)
+    expect(backlinkTitles).toEqual(['ApolloServer', 'GraphQL'])
+
+
   })
 })
 

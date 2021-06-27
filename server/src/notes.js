@@ -14,14 +14,7 @@ let notes = [
     zettelId: '202106221713',
     text: 'GraphQL is a query language for APIs. Used with tools like [[ApolloClient]] and [[ApolloServer]]. #backend #node'
   }
-].map(note => parseNote(note))
- .map(note => ({ ...note, _id: uuid() }))
- 
-
-notes = notes.map(note => ({
-  ...note,
-  backlinks: queryBacklinks(notes, note.title)
-}))
+]
 
 
 export default notes

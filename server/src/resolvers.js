@@ -21,7 +21,6 @@ const getWikilinksInDatabse = async (wikilinkTitles) => {
     }
   }).select('title zettelId -_id')
 
-
   return wikilinks
 }
 
@@ -89,9 +88,8 @@ const resolvers = {
       const note = parseNote(args)
       const populatedNote = await populateNote(note)
 
-      logger.info(populatedNote)
-
       const newNote = new Note(populatedNote)
+
       return newNote.save()
         .then(result => result.toJSON())
     },
