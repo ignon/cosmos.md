@@ -54,7 +54,12 @@ export const parseNote = (args) => {
     tags,
     wikilinks,
     backlinks: [],
-    text
+    text,
+    noteRef: {
+      title,
+      zettelId,
+      tags
+    }
     // yamlData: yaml
   }
 }

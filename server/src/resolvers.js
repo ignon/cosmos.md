@@ -4,6 +4,7 @@ import { parseNote } from './noteParser.js'
 import Note from './models/Note.js'
 import { UserInputError } from 'apollo-server-errors'
 import logger from './utils/logger.js'
+// import DataLoader = require('dataloader')
 
 const notes = [] // (NODE_ENV === NODE_ENVS.DEVELOPMENT) ? mockNotes : []
 
@@ -73,7 +74,12 @@ const resolvers = {
     },
   },
   Note: {
-    backlinks: ({ zettelId, title }) => {
+    backlinks: async (root, args, context) => {
+      const { zettelId, title } = root
+      // const { backlinks } = context.loaders
+      // const noteRef = { zettelId, title }
+      // return await backlinks.load(noteRef)
+
       return Note.find({
         $and: [
           { userId: 'arde' },

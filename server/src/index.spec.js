@@ -25,6 +25,11 @@ let notes = [
     title: 'GraphQL',
     zettelId: '202106221713',
     text: 'GraphQL is a query language for APIs. Used with tools like [[ApolloClient]] and [[ApolloServer]]. #backend #node'
+  },
+  {
+    title: 'Redis',
+    zettelId: '202106221715',
+    text: '[[JWT]] #gottagofast'
   }
 ]
 
@@ -121,8 +126,12 @@ describe('when notes exists', () => {
       const nonExistentNote = wikilinks.find(w => w.title === 'NonExistentNote')
       expect(nonExistentNote.zettelId).toBe(null)
 
+      const apolloServer = notes.find(n => n.title === 'ApolloServer')
+      const graphQL = notes.find(n => n.title === 'GraphQL')
+      const expectedWikilinks = []
+
       expect(wikilinks).toEqual([
-        ...notes.map(({ title, zettelId }) => ({ title, zettelId })),
+        ...[apolloServer, graphQL].map(({ title, zettelId }) => ({ title, zettelId })),
         { title: 'NonExistentNote', zettelId: null }
       ])
     })

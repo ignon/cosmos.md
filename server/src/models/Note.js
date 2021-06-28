@@ -18,14 +18,12 @@ var wikilinkSchema = mongoose.Schema({
 
 const title = {
   type: String,
-  unique: true,
   required: true,
   minlength: 1,
 }
 
 const zettelId = {
   type: String,
-  unique: true,
   required: true,
   minlength: 5
 }
@@ -46,10 +44,27 @@ const schema = new mongoose.Schema({
   tags: [String],
   text,
   wikilinks: [wikilinkSchema],
+  noteRef: {
+    title: { type: String, required: true },
+    zettelId: { type: String, required: true },
+    tags: [{ type: String, required: true }],
+  }
 })
 
 schema.plugin(uniqueValidator)
-schema.plugin(explain)
+
+schema.index({ userId: 1, title: 1 }, { unique: 1 })
+schema.index({ userId: 1, zettelId: 1 }, { unique: 1 })
+schema.index({ userId: 1, noteRef: 1 })
+schema.index({ userId: 1, tags: 1})
+schema.index({ userId: 1, wikilinks: 1})
+
+// unique: 0 for slightly faster indexing
+// schema.index({ userId: 1, zettelId: 1, title: 1 }, { unique: 0 })
+
+
+
+// schema.plugin(explain)
 
 schema.set('toJSON', {
   transform: (_obj, json) => {
