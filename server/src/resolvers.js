@@ -75,9 +75,14 @@ const resolvers = {
   Note: {
     backlinks: ({ zettelId, title }) => {
       return Note.find({
-        $or: [
-          { 'wikilinks.zettelId': zettelId },
-          { wikilinks: { title, zettelId: null } }
+        $and: [
+          { userId: 'arde' },
+          {
+            $or: [
+              { 'wikilinks.zettelId': zettelId },
+              { wikilinks: { title, zettelId: null } }
+            ]
+          }
         ]
       }).select('title zettelId -_id')
     },
@@ -88,6 +93,7 @@ const resolvers = {
   Mutation: {
     addNote: async (_, args) => {
       console.log(args)
+
       const note = parseNote(args.note)
       const populatedNote = await populateNote(note)
 

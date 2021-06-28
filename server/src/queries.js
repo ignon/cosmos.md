@@ -10,12 +10,8 @@ export const ALL_NOTES = gql`
 `
 
 export const ADD_NOTE = gql`
-  mutation addNote($title: String!, $zettelId: String, $text: String!){
-    addNote(
-      title: $title
-      zettelId: $zettelId
-      text: $text
-    ) {
+  mutation addNote($note: NoteArgs){
+    addNote(note: $note) {
       title
       zettelId
       text

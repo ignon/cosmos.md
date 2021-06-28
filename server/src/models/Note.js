@@ -1,5 +1,7 @@
 import mongoose from 'mongoose'
 import uniqueValidator from 'mongoose-unique-validator'
+import explain from 'mongoose-explain'
+
 
 var wikilinkSchema = mongoose.Schema({
   title: {
@@ -38,7 +40,8 @@ const schema = new mongoose.Schema({
   zettelId,
   userId: {
     type: String,
-    required: true
+    required: true,
+    index: true
   },
   tags: [String],
   text,
@@ -46,9 +49,10 @@ const schema = new mongoose.Schema({
 })
 
 schema.plugin(uniqueValidator)
+schema.plugin(explain)
 
 schema.set('toJSON', {
-  transform: (obj, json) => {
+  transform: (_obj, json) => {
     delete json._id
     delete json.__v
 
