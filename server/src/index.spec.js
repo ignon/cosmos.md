@@ -45,11 +45,13 @@ describe('ApolloServer', () => {
 
       const result = await server.executeOperation({
         query: ADD_NOTE,
-        variables: note
+        variables: { note }
       })
 
+      console.log(result)
+
       const addedNote = result.data.addNote
-      const { title, zettelId, text, tags, wikilinks, backlinks } = addedNote
+      const { title, zettelId, text, tags, wikilinks } = addedNote
 
       expect(title).toBe(note.title)
       expect(zettelId).toBe(note.zettelId)
@@ -69,7 +71,7 @@ describe('when notes exists', () => {
     for (const note of notes) {
       const result = await server.executeOperation({
         query: ADD_NOTE,
-        variables: note
+        variables: { note }
       })
 
       expect(result.data.addNote).toBeTruthy()
@@ -85,48 +87,61 @@ describe('when notes exists', () => {
     expect(data.allNotes).toHaveLength(notes.length)
   })
 
-  test('wikilinks get parsed on save, wikilinks are populated from DB and unexistent wikilinks get zettelID: null', async () => {
+  describe('note creation, wikilinks and backlinks get created', () => {
+    let addedNote; 
     const note = {
       title: 'ApolloClient',
       zettelId: '202106222712',
       text: '[[NonExistentNote]]  [[GraphQL]] [[ApolloServer]]',
     }
 
-    const result = await server.executeOperation({
-      query: ADD_NOTE,
-      variables: note
+    beforeAll(async () => {
+      const result = await server.executeOperation({
+        query: ADD_NOTE,
+        variables: { note }
+      })
+
+      addedNote = result.data.addNote
     })
 
-    const addedNote = result.data.addNote
-    const { title, zettelId, text, tags, wikilinks, backlinks } = addedNote
+    test('basic stuff', () => {
+      const { title, zettelId } = addedNote
 
-    expect(title).toBe(note.title)
-    expect(zettelId).toBe(note.zettelId)
-
-    const wikilinkTitles = wikilinks.map(w => w.title)
-    expect(wikilinkTitles).toEqual(['ApolloServer', 'GraphQL', 'NonExistentNote'])
-
-    const nonExistentNote = wikilinks.find(w => w.title === 'NonExistentNote')
-    expect(nonExistentNote.zettelId).toBe(null)
-
-    expect(wikilinks).toEqual([
-      ...notes.map(({ title, zettelId }) => ({ title, zettelId })),
-      { title: 'NonExistentNote', zettelId: null }
-    ])
-
-    const notesInDatabase = await getNotesInDatabase()
-    const notesThatHaveWikilinkToOurNote = notesInDatabase
-      .filter(
-        note => (note.wikilinks.find(w => w.title === 'ApolloClient'))
-      )
-      .map(({ title, zettelId }) => ({ title, zettelId }))
-
-    expect(backlinks).toEqual(notesThatHaveWikilinkToOurNote)
+      expect(title).toBe(note.title)
+      expect(zettelId).toBe(note.zettelId)
+    })
 
 
-    const backlinkTitles = backlinks.map(ref => ref.title)
-    expect(backlinkTitles).toEqual(['ApolloServer', 'GraphQL'])
+    test('wikilinks work', async () => {
+      const { wikilinks } = addedNote
 
+      const wikilinkTitles = _.map(wikilinks, 'title')
+      expect(wikilinkTitles).toEqual(['ApolloServer', 'GraphQL', 'NonExistentNote'])
+
+      const nonExistentNote = wikilinks.find(w => w.title === 'NonExistentNote')
+      expect(nonExistentNote.zettelId).toBe(null)
+
+      expect(wikilinks).toEqual([
+        ...notes.map(({ title, zettelId }) => ({ title, zettelId })),
+        { title: 'NonExistentNote', zettelId: null }
+      ])
+    })
+
+    test('backlinks work', async () => {
+      const { backlinks } = addedNote
+
+      const notesInDatabase = await getNotesInDatabase()
+      const notesThatHaveWikilinkToOurNote = notesInDatabase
+        .filter(
+          note => (note.wikilinks.find(w => w.title === 'ApolloClient'))
+        )
+        .map(({ title, zettelId }) => ({ title, zettelId }))
+
+      expect(backlinks).toEqual(notesThatHaveWikilinkToOurNote)
+
+      const backlinkTitles = backlinks.map(ref => ref.title)
+      expect(backlinkTitles).toEqual(['ApolloServer', 'GraphQL'])
+    })
 
   })
 })

@@ -7,6 +7,8 @@ import logger from './utils/logger.js'
 
 const notes = [] // (NODE_ENV === NODE_ENVS.DEVELOPMENT) ? mockNotes : []
 
+// Queried from apollo context later...
+const userId = 'arde'
 
 const combineWikilinks = (parsedWikilinks, wikilinksInDb) => ( 
   Object.values(
@@ -85,29 +87,54 @@ const resolvers = {
   },
   Mutation: {
     addNote: async (_, args) => {
-      const note = parseNote(args)
+      console.log(args)
+      const note = parseNote(args.note)
       const populatedNote = await populateNote(note)
+
+      // User received from apollo contect
+      populatedNote.userId = userId
 
       const newNote = new Note(populatedNote)
 
       return newNote.save()
         .then(result => result.toJSON())
     },
+    addNotes: async (_, args) => {
+      const notes = args
+
+      // This creates problems IF backlinks are SAVED to MongoDB
+      // This creates problems WHEN notes not yet updated are saved
+      // as wikilinks (zettelID=null when not yet saved)
+      // Should use some kind of data-loader
+      const populatedNotes = notes.map(async (n) => await populateNote(n))
+    },
     editNote: async (_, args) => {
-      const note = parseNote(args)
+      console.log(args)
+      const note = parseNote(args.note)
       const populatedNote = await populateNote(note)
 
-      const { zettelId } = populatedNote
+      // User received from apollo contect
+      populatedNote.userId = userId
 
-      const newNote = await Note.findOneAndUpdate({ zettelId }, populatedNote, { new: true })
-        .then(result => result.toJSON())
-        .catch(logger.info)
+      const { zettelId, title } = populatedNote
 
-      if (!newNote) {
+      const oldNote = await Note.findOne({ zettelId })
+      if (!oldNote) {
+        throw new Error(`Note with zettelId ${zettelId} doesn't exist`)
+      }
+
+      if (oldNote.title !== title) {
+        logger.info('Updating notes which have wikilink to this note')
+        // wikilinks.forEach(() => update())
+      }
+
+      const updatedNote = await Note.findOneAndUpdate({ zettelId }, populatedNote, { new: true })
+
+      if (!updatedNote) {
         throw new UserInputError(`Note with zettelId: '${zettelId}' doesn't exist`)
       }
 
-      return newNote
+      return updatedNote.toJSON()
     }
   }
 }

@@ -2,12 +2,8 @@ POST http://localhost:4000/
 Content-Type: application/json
 X-REQUEST-TYPE: GraphQL
 
-mutation addNote($title: String!, $zettelId: String, $text: String!){
-  addNote(
-    title: $title
-    zettelId: $zettelId
-    text: $text
-  ) {
+mutation addNote($note: NoteArgs){
+  addNote(note: $note) {
     title
     zettelId
     text
@@ -18,9 +14,11 @@ mutation addNote($title: String!, $zettelId: String, $text: String!){
 }
 
 {
-  "title": "communism1212322",
-  "zettelId": "1234251231",
-  "text": "[[moikkelis]] [[anarchy]] #life"
+  "note": {
+    "title": "communism12124",
+    "zettelId": "48739120",
+    "text": "[[moikkelis]] [[anarchy]] #life"
+  }
 }
 
 ###
@@ -29,25 +27,26 @@ POST http://localhost:4000/
 Content-Type: application/json
 X-REQUEST-TYPE: GraphQL
 
-mutation editNote($title: String!, $zettelId: String, $text: String!){
+mutation editNote($note: NoteArgs){
   editNote(
-    title: $title
-    zettelId: $zettelId
-    text: $text
+    note: $note
   ) {
     title
     zettelId
     text
     tags
+    userId
     wikilinks { title zettelId }
     # backlinks { title zettelId }
   }
 }
 
 {
-  "title": "communism12323",
-  "zettelId": "12342",
-  "text": "[[moikkelis]] [[anarchy]] #life"
+  "note": {
+    "title": "communism12124",
+    "zettelId": "48739120",
+    "text": "[[moikkelis]] [[anarchy]] #life"
+  }
 }
 
 ###

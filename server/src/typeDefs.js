@@ -2,6 +2,9 @@
 
 import { gql } from 'apollo-server'
 
+const noteArgs = `
+`
+
 const typeDefs = gql`
   type Note {
     id: ID!
@@ -11,10 +14,17 @@ const typeDefs = gql`
     wikilinks: [NoteRef]!
     backlinks: [NoteRef]!
     text: String! # Required?
+    userId: String
   }
 
   type NoteRef {
     title: String!
+    zettelId: String
+  }
+
+  input NoteArgs {
+    title: String!
+    text: String!
     zettelId: String
   }
 
@@ -27,16 +37,12 @@ const typeDefs = gql`
 
   type Mutation {
     addNote(
-      title: String!
-      text: String!
-      zettelId: String
+      note: NoteArgs
     ): Note
 
-    editNote(
-      title: String!
-      zettelId: String
-      text: String!
-    ): Note
+    addNotes(notes: [NoteArgs]): [Note]
+
+    editNote(note: NoteArgs): Note
   }
 `
 

@@ -36,6 +36,10 @@ const text = {
 const schema = new mongoose.Schema({
   title,
   zettelId,
+  userId: {
+    type: String,
+    required: true
+  },
   tags: [String],
   text,
   wikilinks: [wikilinkSchema],
