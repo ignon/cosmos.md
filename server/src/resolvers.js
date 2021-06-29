@@ -6,48 +6,12 @@ import { UserInputError } from 'apollo-server-errors'
 import logger from './utils/logger.js'
 // import DataLoader = require('dataloader')
 
-const notes = [] // (NODE_ENV === NODE_ENVS.DEVELOPMENT) ? mockNotes : []
-
-// Queried from apollo context later...
 const userId = 'arde'
-
-// const combineWikilinks = (parsedWikilinks, wikilinksInDb) => ( 
-//   Object.values(
-//     __.keyBy([ ...parsedWikilinks, ...wikilinksInDb ], 'title')
-//   )
-// )
-
-// const getWikilinksInDatabse = async (wikilinkTitles) => {
-//   // const wikilinks = await Note.find({
-//   //   title: {
-//   //     $in: wikilinkTitles
-//   //   }
-//   // }).select('title zettelId -_id')
-//   const wikilinks = await Note.find({ wikilinks: title }, { title: 1, zettelId: 1, _id: 0 })
-
-//   return wikilinks.map(({title, }))
-// }
-
-
-// const populateNote = async (note) => {
-//   const { zettelId, title } = note
-
-//   const wikilinkTitles = note.wikilinks.map(ref => ref.title)
-//   const wikilinksInDb = await getWikilinksInDatabse(wikilinkTitles)
-//   const wikilinks = combineWikilinks(note.wikilinks, wikilinksInDb)
-
-//   const populatedNote = {
-//     ...note,
-//     wikilinks
-//   }
-
-//   return populatedNote
-// }
-
+// FIX NOTECOUNT
 
 const resolvers = {
   Query: {
-    noteCount: () => notes.length,
+    // noteCount: () => Notes.document.length
     allNotes: () => {
       return Note.find({})
     },
@@ -78,19 +42,6 @@ const resolvers = {
     backlinks: async ({ title }, args, context) => {
       const { backlinks } = context.loaders
       return await backlinks.load(title)
-
-      // return Note.find({ wikilinks: title })
-      // return Note.find({
-      //   $and: [
-      //     { userId: 'arde' },
-      //     {
-      //       $or: [
-      //         { 'wikilinks.zettelId': zettelId },
-      //         { wikilinks: { title, zettelId: null } }
-      //       ]
-      //     }
-      //   ]
-      // }).select('title zettelId -_id')
     },
     wikilinks: ({ wikilinks }) => {
       return wikilinks ?? []
@@ -100,6 +51,8 @@ const resolvers = {
     addNote: async (_, args) => {
       const note = parseNote(args.note)
       note.userId = userId
+
+      console.log('adding note', note.title)
 
       const newNote = new Note(note)
 

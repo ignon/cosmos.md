@@ -48,8 +48,7 @@ const url = config.MONGODB_URI
               { userId: 'arde' },
               { wikilinks: { $in: titles } }
             ]
-          }).select('title wikilinks zettelId -_id')
-            
+          }).select('title wikilinks -_id')
             
           console.log('TITLES', titles)
           console.log('BACKLINK NOTES', backlinkNotes)
@@ -57,7 +56,7 @@ const url = config.MONGODB_URI
           backlinkNotes.forEach(note => {
             note.wikilinks.forEach(wikilink => {
               if (backlinkMap[wikilink]) {
-                backlinkMap[wikilink].push(note)
+                backlinkMap[wikilink].push(note.title)
               }
             })
           })

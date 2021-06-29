@@ -117,14 +117,11 @@ describe('when notes exists', () => {
       const notesInDatabase = await getNotesInDatabase()
       const notesThatHaveWikilinkToOurNote = notesInDatabase
         .filter(note => note.wikilinks.includes('ApolloClient'))
-        .map(({ title, zettelId }) => ({ title, zettelId }))
+        .map(({ title }) =>  title)
 
       expect(backlinks).toEqual(notesThatHaveWikilinkToOurNote)
-
-      const backlinkTitles = backlinks.map(ref => ref.title)
-      expect(backlinkTitles).toEqual(['ApolloServer', 'GraphQL'])
+      expect(backlinks).toEqual(['ApolloServer', 'GraphQL'])
     })
-
   })
 })
 

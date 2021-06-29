@@ -12,7 +12,7 @@ const typeDefs = gql`
     zettelId: String!
     tags: [String!]!
     wikilinks: [String]!
-    backlinks: [NoteRef]!
+    backlinks: [String]!
     text: String! # Required?
     userId: String
   }
