@@ -8,15 +8,15 @@ mutation addNote($note: NoteArgs){
     zettelId
     text
     tags
-    wikilinks { title zettelId }
-    # backlinks { title zettelId }
+    wikilinks
+    backlinks { title zettelId }
   }
 }
 
 {
   "note": {
-    "title": "communism12124",
-    "zettelId": "48739120",
+    "title": "ApolloClient",
+    "zettelId": "4321213423",
     "text": "[[moikkelis]] [[anarchy]] #life"
   }
 }
@@ -36,7 +36,7 @@ mutation editNote($note: NoteArgs){
     text
     tags
     userId
-    wikilinks { title zettelId }
+    wikilinks # { title zettelId }
     # backlinks { title zettelId }
   }
 }
@@ -60,10 +60,7 @@ query allNotes {
     zettelId
     tags
     text
-    wikilinks {
-      title
-      zettelId
-    }
+    wikilinks # { title zettelId }
     backlinks {
       title
       zettelId

@@ -11,7 +11,7 @@ const typeDefs = gql`
     title: String!
     zettelId: String!
     tags: [String!]!
-    wikilinks: [NoteRef]!
+    wikilinks: [String]!
     backlinks: [NoteRef]!
     text: String! # Required?
     userId: String

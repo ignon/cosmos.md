@@ -16,7 +16,7 @@ export const ADD_NOTE = gql`
       zettelId
       text
       tags
-      wikilinks { title zettelId }
+      wikilinks # { title zettelId }
       backlinks { title zettelId }
     }
   }

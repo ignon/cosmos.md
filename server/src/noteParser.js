@@ -55,6 +55,7 @@ export const parseNote = (args) => {
     wikilinks,
     backlinks: [],
     text,
+    userId: null,
     noteRef: {
       title,
       zettelId,
@@ -96,8 +97,8 @@ export const parseWikilinks = (text) => {
   let wikilinkTitles = matchGroupsGlobal(text, wikilinkRegex, 1)
   wikilinkTitles = sortAndRemoveDuplicates(wikilinkTitles)
 
-  const wikilinks = wikilinkTitles.map(title => ({ title, zettelId: null }))
-  return wikilinks;
+  // const wikilinks = wikilinkTitles.map(title => ({ title, zettelId: null }))
+  return wikilinkTitles;
 }
 
 export const parseYAML = (text) => {

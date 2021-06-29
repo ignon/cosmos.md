@@ -15,7 +15,7 @@ import { getNotesInDatabase } from './utils/test_helper.js'
  * 3. Ingegration tests with front end
  */
 
-let notes = [
+const notes = [
   {
     title: 'ApolloServer',
     zettelId: '202106221711',
@@ -33,61 +33,54 @@ let notes = [
   }
 ]
 
-beforeAll(async () => {
-  await Note.deleteMany({})
-})
+
+const serverExecute = async (query, variables=null) => {
+  return await server.executeOperation({
+    query,
+    variables
+  })
+}
 
 
-describe('ApolloServer', () => {
+describe('database is empty', () => {
 
-  describe('database is empty', () => {
-    test('adding note works', async () => {
-      const note = {
-        title: 'ApolloClient',
-        zettelId: '202106222712',
-        text: '[[GraphQL]] client for [[ApolloServer]]. #backend #node #graphql',
-      }
+  beforeAll(async () => {
+    await Note.deleteMany({})
+  })
 
-      const result = await server.executeOperation({
-        query: ADD_NOTE,
-        variables: { note }
-      })
+  test('adding note works', async () => {
+    const note = {
+      title: 'ApolloClientTest',
+      zettelId: '202106222712',
+      text: '[[GraphQL]] client for [[ApolloServer]]. #backend #node #graphql',
+    }
 
-      console.log(result)
+    const result = await serverExecute(ADD_NOTE, { note })
 
-      const addedNote = result.data.addNote
-      const { title, zettelId, text, tags, wikilinks } = addedNote
+    const addedNote = result.data.addNote
+    const { title, zettelId, text, tags, wikilinks } = addedNote
 
-      expect(title).toBe(note.title)
-      expect(zettelId).toBe(note.zettelId)
-      expect(text).toContain(note.text)
-      expect(tags).toEqual(['backend', 'node', 'graphql'].sort())
-
-      expect(wikilinks.map(ref => ref.title)).toEqual(['ApolloServer', 'GraphQL'])
-    })
+    expect(title).toBe(note.title)
+    expect(zettelId).toBe(note.zettelId)
+    expect(text).toContain(note.text)
+    expect(tags).toEqual(['backend', 'node', 'graphql'].sort())
+    expect(wikilinks).toEqual(['ApolloServer', 'GraphQL'])
   })
 })
 
 
 describe('when notes exists', () => {
-  beforeEach(async () => {
+  beforeAll(async () => {
     await Note.deleteMany({})
 
     for (const note of notes) {
-      const result = await server.executeOperation({
-        query: ADD_NOTE,
-        variables: { note }
-      })
-
+      const result = await serverExecute(ADD_NOTE, { note })
       expect(result.data.addNote).toBeTruthy()
     }
   })
 
   test('getting notes works', async () => {
-    const { data } = await server.executeOperation({
-      query: ALL_NOTES
-    })
-    
+    const { data } = await serverExecute(ALL_NOTES)
     expect(data.allNotes).toBeInstanceOf(Array)
     expect(data.allNotes).toHaveLength(notes.length)
   })
@@ -101,11 +94,7 @@ describe('when notes exists', () => {
     }
 
     beforeAll(async () => {
-      const result = await server.executeOperation({
-        query: ADD_NOTE,
-        variables: { note }
-      })
-
+      const result = await serverExecute(ADD_NOTE, { note })
       addedNote = result.data.addNote
     })
 
@@ -119,21 +108,7 @@ describe('when notes exists', () => {
 
     test('wikilinks work', async () => {
       const { wikilinks } = addedNote
-
-      const wikilinkTitles = _.map(wikilinks, 'title')
-      expect(wikilinkTitles).toEqual(['ApolloServer', 'GraphQL', 'NonExistentNote'])
-
-      const nonExistentNote = wikilinks.find(w => w.title === 'NonExistentNote')
-      expect(nonExistentNote.zettelId).toBe(null)
-
-      const apolloServer = notes.find(n => n.title === 'ApolloServer')
-      const graphQL = notes.find(n => n.title === 'GraphQL')
-      const expectedWikilinks = []
-
-      expect(wikilinks).toEqual([
-        ...[apolloServer, graphQL].map(({ title, zettelId }) => ({ title, zettelId })),
-        { title: 'NonExistentNote', zettelId: null }
-      ])
+      expect(wikilinks).toEqual(['ApolloServer', 'GraphQL', 'NonExistentNote'])
     })
 
     test('backlinks work', async () => {
@@ -141,9 +116,7 @@ describe('when notes exists', () => {
 
       const notesInDatabase = await getNotesInDatabase()
       const notesThatHaveWikilinkToOurNote = notesInDatabase
-        .filter(
-          note => (note.wikilinks.find(w => w.title === 'ApolloClient'))
-        )
+        .filter(note => note.wikilinks.includes('ApolloClient'))
         .map(({ title, zettelId }) => ({ title, zettelId }))
 
       expect(backlinks).toEqual(notesThatHaveWikilinkToOurNote)
@@ -152,6 +125,26 @@ describe('when notes exists', () => {
       expect(backlinkTitles).toEqual(['ApolloServer', 'GraphQL'])
     })
 
+  })
+})
+
+describe('deletion works', () => {
+  beforeAll(async () => {
+    await Note.deleteMany({})
+  })
+
+  test('deleting duplicate notes fails', async () => {
+    const note = {
+      title: 'ApolloClient',
+      zettelId: '202106222712',
+      text: '[[NonExistentNote]]  [[GraphQL]] [[ApolloServer]]',
+    }
+
+    const result = await serverExecute(ADD_NOTE, { note })
+    expect(result.data.addNote.title).toBe('ApolloClient')
+
+    const result2 = await serverExecute(ADD_NOTE, { note })
+    expect(result2.errors[0].message).toContain('duplicate key')
   })
 })
 

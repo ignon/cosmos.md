@@ -3,17 +3,17 @@ import uniqueValidator from 'mongoose-unique-validator'
 import explain from 'mongoose-explain'
 
 
-var wikilinkSchema = mongoose.Schema({
-  title: {
-    type: String,
-    required: true,
-    unique: false
-  },
-  zettelId: {
-    type: String,
-    required: false
-  }
-}, { _id : false });
+// var wikilinkSchema = mongoose.Schema({
+//   title: {
+//     type: String,
+//     required: true,
+//     unique: false
+//   },
+//   zettelId: {
+//     type: String,
+//     required: false
+//   }
+// }, { _id : false });
 
 
 const title = {
@@ -43,7 +43,7 @@ const schema = new mongoose.Schema({
   },
   tags: [String],
   text,
-  wikilinks: [wikilinkSchema],
+  wikilinks: [String],
   noteRef: {
     title: { type: String, required: true },
     zettelId: { type: String, required: true },

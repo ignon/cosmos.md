@@ -14,16 +14,16 @@ test('duplicate tags are removed', () => {
 
 test('parsing wikilinks works (and they are sorted)', () => {
   const wikilinks = parseWikilinks('zettel [[note]] text can also contain [[wikilinks]]')
-  const wikilinkTitles = wikilinks.map(noteRef => noteRef.title)
+  // const wikilinkTitles = wikilinks.map(noteRef => noteRef.title)
 
-  expect(wikilinkTitles).toEqual(['note', 'wikilinks'])
+  expect(wikilinks).toEqual(['note', 'wikilinks'])
 })
 
 test('parsing wikilinks works (and they are sorted)', () => {
   const wikilinks = parseWikilinks('[[note]]')
-  const wikilinkTitles = wikilinks.map(noteRef => noteRef.title)
+  // const wikilinkTitles = wikilinks.map(noteRef => noteRef.title)
 
-  expect(wikilinkTitles).toEqual(['note'])
+  expect(wikilinks).toEqual(['note'])
 })
 
 

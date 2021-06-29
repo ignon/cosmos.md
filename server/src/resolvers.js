@@ -11,37 +11,38 @@ const notes = [] // (NODE_ENV === NODE_ENVS.DEVELOPMENT) ? mockNotes : []
 // Queried from apollo context later...
 const userId = 'arde'
 
-const combineWikilinks = (parsedWikilinks, wikilinksInDb) => ( 
-  Object.values(
-    __.keyBy([ ...parsedWikilinks, ...wikilinksInDb ], 'title')
-  )
-)
+// const combineWikilinks = (parsedWikilinks, wikilinksInDb) => ( 
+//   Object.values(
+//     __.keyBy([ ...parsedWikilinks, ...wikilinksInDb ], 'title')
+//   )
+// )
 
-const getWikilinksInDatabse = async (wikilinkTitles) => {
-  const wikilinks = await Note.find({
-    title: {
-      $in: wikilinkTitles
-    }
-  }).select('title zettelId -_id')
+// const getWikilinksInDatabse = async (wikilinkTitles) => {
+//   // const wikilinks = await Note.find({
+//   //   title: {
+//   //     $in: wikilinkTitles
+//   //   }
+//   // }).select('title zettelId -_id')
+//   const wikilinks = await Note.find({ wikilinks: title }, { title: 1, zettelId: 1, _id: 0 })
 
-  return wikilinks
-}
+//   return wikilinks.map(({title, }))
+// }
 
 
-const populateNote = async (note) => {
-  const { zettelId, title } = note
+// const populateNote = async (note) => {
+//   const { zettelId, title } = note
 
-  const wikilinkTitles = note.wikilinks.map(ref => ref.title)
-  const wikilinksInDb = await getWikilinksInDatabse(wikilinkTitles)
-  const wikilinks = combineWikilinks(note.wikilinks, wikilinksInDb)
+//   const wikilinkTitles = note.wikilinks.map(ref => ref.title)
+//   const wikilinksInDb = await getWikilinksInDatabse(wikilinkTitles)
+//   const wikilinks = combineWikilinks(note.wikilinks, wikilinksInDb)
 
-  const populatedNote = {
-    ...note,
-    wikilinks
-  }
+//   const populatedNote = {
+//     ...note,
+//     wikilinks
+//   }
 
-  return populatedNote
-}
+//   return populatedNote
+// }
 
 
 const resolvers = {
@@ -74,23 +75,22 @@ const resolvers = {
     },
   },
   Note: {
-    backlinks: async (root, args, context) => {
-      const { zettelId, title } = root
-      // const { backlinks } = context.loaders
-      // const noteRef = { zettelId, title }
-      // return await backlinks.load(noteRef)
+    backlinks: async ({ title }, args, context) => {
+      const { backlinks } = context.loaders
+      return await backlinks.load(title)
 
-      return Note.find({
-        $and: [
-          { userId: 'arde' },
-          {
-            $or: [
-              { 'wikilinks.zettelId': zettelId },
-              { wikilinks: { title, zettelId: null } }
-            ]
-          }
-        ]
-      }).select('title zettelId -_id')
+      // return Note.find({ wikilinks: title })
+      // return Note.find({
+      //   $and: [
+      //     { userId: 'arde' },
+      //     {
+      //       $or: [
+      //         { 'wikilinks.zettelId': zettelId },
+      //         { wikilinks: { title, zettelId: null } }
+      //       ]
+      //     }
+      //   ]
+      // }).select('title zettelId -_id')
     },
     wikilinks: ({ wikilinks }) => {
       return wikilinks ?? []
@@ -98,15 +98,10 @@ const resolvers = {
   },
   Mutation: {
     addNote: async (_, args) => {
-      console.log(args)
-
       const note = parseNote(args.note)
-      const populatedNote = await populateNote(note)
+      note.userId = userId
 
-      // User received from apollo contect
-      populatedNote.userId = userId
-
-      const newNote = new Note(populatedNote)
+      const newNote = new Note(note)
 
       return newNote.save()
         .then(result => result.toJSON())
@@ -123,7 +118,7 @@ const resolvers = {
     editNote: async (_, args) => {
       console.log(args)
       const note = parseNote(args.note)
-      const populatedNote = await populateNote(note)
+      const populatedNote = note //await populateNote(note)
 
       // User received from apollo contect
       populatedNote.userId = userId
