@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import { ApolloServer } from 'apollo-server'
+import { ApolloServer } from 'apollo-server-express'
 import schema from './schema.js'
 import mongoose from 'mongoose'
 import config from './config.js'
@@ -29,7 +29,7 @@ const url = config.MONGODB_URI
 
   const server = new ApolloServer({
     schema,
-    playground: (config.NODE_ENV === 'development'),
+    playground: false, //(config.NODE_ENV === 'development'),
     introspection: true,
     context: {
       loaders: {

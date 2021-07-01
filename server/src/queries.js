@@ -3,8 +3,9 @@ import { gql } from 'apollo-server'
 export const ALL_NOTES = gql`
   query ALL_NOTES {
     allNotes {
-      title,
+      title
       zettelId
+      tags
     }
   }
 `

@@ -33,13 +33,13 @@ const notes = [
   }
 ]
 
-
 const serverExecute = async (query, variables=null) => {
   return await server.executeOperation({
     query,
     variables
   })
 }
+
 
 
 describe('database is empty', () => {
@@ -126,19 +126,16 @@ describe('when notes exists', () => {
 })
 
 describe('deletion works', () => {
-  beforeAll(async () => {
-    await Note.deleteMany({})
-  })
-
   test('deleting duplicate notes fails', async () => {
     const note = {
-      title: 'ApolloClient',
-      zettelId: '202106222712',
-      text: '[[NonExistentNote]]  [[GraphQL]] [[ApolloServer]]',
+      title: 'ApolloClient2',
+      zettelId: '1278397129',
+      text: '[[NonExistentNote]] [[GraphQL]] [[ApolloServer]]',
     }
 
     const result = await serverExecute(ADD_NOTE, { note })
-    expect(result.data.addNote.title).toBe('ApolloClient')
+    console.log(result)
+    expect(result.data.addNote.title).toBe('ApolloClient2')
 
     const result2 = await serverExecute(ADD_NOTE, { note })
     expect(result2.errors[0].message).toContain('duplicate key')

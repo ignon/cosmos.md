@@ -13,7 +13,7 @@ const typeDefs = gql`
     tags: [String!]!
     wikilinks: [String]!
     backlinks: [String]!
-    text: String! # Required?
+    text: String!
     userId: String
   }
 
