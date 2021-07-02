@@ -6,7 +6,7 @@ import { AuthenticationError, UserInputError } from 'apollo-server-errors'
 import logger from './utils/logger.js'
 import bcrypt from 'bcrypt'
 import { requireAuth } from './middleware/middlewareCheck.js'
-import config from './config.js'
+import config from './utils/config.js'
 import jwt from 'jsonwebtoken'
 
 const userId = 'arde'
@@ -19,7 +19,6 @@ const generateToken = ({ username, id }) => {
 
 const resolvers = {
   Query: {
-    // noteCount: () => Notes.document.length
     allNotes: (_, args, ctx) => {
       requireAuth(ctx)
 

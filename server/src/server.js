@@ -2,7 +2,7 @@ import _ from 'lodash'
 import { ApolloServer } from 'apollo-server-express'
 import schema from './schema.js'
 import mongoose from 'mongoose'
-import config from './config.js'
+import config from './utils/config.js'
 import logger from './utils/logger.js'
 import backlinks from './dataloaders/backlinks.js'
 

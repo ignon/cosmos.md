@@ -1,6 +1,6 @@
 import server from './server.js'
 import logger from './utils/logger.js'
-import config from './config.js'
+import config from './utils/config.js'
 import app from './app.js'
 
 

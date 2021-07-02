@@ -1,7 +1,6 @@
+// import session from 'express-session'
 import express from 'express'
-import session from 'express-session'
-import { gql } from 'apollo-server'
-import config from './config.js'
+import config from './utils/config.js'
 import cookieParser from 'cookie-parser'
 
 import passport from 'passport'
@@ -9,16 +8,21 @@ import { ExtractJwt, Strategy as JWTStrategy } from 'passport-jwt'
 
 const options = {
   secretOrKey: config.JWT_TOKEN,
-  jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken()
+  jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+  // issuer: 'arde.arde.com', audience: 'create.md'
 }
 
 const myJWTStrategy = new JWTStrategy(options, async (payload, done) => {
-  console.log('JWTStrategy payload:', payload)
   const { id, username } = payload
-  const user = { id, username }
 
-  return done(null, user)
+  if (id && username) {
+    const user = { id, username }
+    return done(null, user)
+  }
+
+  return done(null, false)
 })
+
 
 passport.use('jwt', myJWTStrategy)
 passport.initialize()
@@ -33,7 +37,6 @@ app.use(express.urlencoded({ extended: true }))
 
 app.use('/graphql', (req, res, next) => {
   passport.authenticate('jwt', { session: false }, (err, user, info) => {
-    console.log('USER LOGGED IN:', user)
     if (user) {
       req.userId = user.id
     }
