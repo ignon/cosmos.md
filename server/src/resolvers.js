@@ -1,21 +1,35 @@
 import __ from 'lodash'
-import { queryBacklinks } from './utils.js'
 import { parseNote } from './noteParser.js'
 import Note from './models/Note.js'
-import { UserInputError } from 'apollo-server-errors'
+import User from './models/User.js'
+import { AuthenticationError, UserInputError } from 'apollo-server-errors'
 import logger from './utils/logger.js'
-// import DataLoader = require('dataloader')
+import bcrypt from 'bcrypt'
+import { requireAuth } from './middleware/middlewareCheck.js'
+import config from './config.js'
+import jwt from 'jsonwebtoken'
 
 const userId = 'arde'
-// FIX NOTECOUNT
+
+const generateToken = ({ username, id }) => {
+  const tokenUser = { username, id }
+  return jwt.sign(tokenUser, config.JWT_TOKEN, { expiresIn: 60*60 })
+}
+
 
 const resolvers = {
   Query: {
     // noteCount: () => Notes.document.length
-    allNotes: () => {
-      return Note.find({})
+    allNotes: (_, args, ctx) => {
+      requireAuth(ctx)
+
+      const { userId } = ctx
+      console.log('all notes ', userId )
+      return Note.find({ userId })
     },
-    findNotes: (_, { tag, title, zettelId }) => {
+    findNotes: (_, { tag, title, zettelId }, ctx) => {
+      requireAuth(ctx)
+
       const mongoQuery = { $or: [] }
       if (zettelId) mongoQuery.$or.push({ zettelId })
       if (title) mongoQuery.$or.push({ title })
@@ -27,7 +41,9 @@ const resolvers = {
 
       return Note.find(mongoQuery)
     },
-    findNote: async (_, { query }) => {
+    findNote: async (_, { query }, ctx) => {
+      requireAuth(ctx)
+
       const zettelIdRegex = /^\d+$/
       const isValidZettelId = zettelIdRegex.test(query)
 
@@ -48,9 +64,11 @@ const resolvers = {
     }
   },
   Mutation: {
-    addNote: async (_, args) => {
+    addNote: async (_, args, ctx) => {
+      requireAuth(ctx)
+
       const note = parseNote(args.note)
-      note.userId = userId
+      note.userId = ctx.userId
 
       console.log('adding note', note.title)
 
@@ -60,6 +78,8 @@ const resolvers = {
         .then(result => result.toJSON())
     },
     addNotes: async (_, args) => {
+      requireAuth(ctx)
+
       const notes = args
 
       // This creates problems IF backlinks are SAVED to MongoDB
@@ -69,7 +89,8 @@ const resolvers = {
       const populatedNotes = notes.map(async (n) => await populateNote(n))
     },
     editNote: async (_, args) => {
-      console.log(args)
+      requireAuth(ctx)
+
       const note = parseNote(args.note)
       const populatedNote = note //await populateNote(note)
 
@@ -85,7 +106,6 @@ const resolvers = {
 
       if (oldNote.title !== title) {
         logger.info('Updating notes which have wikilink to this note')
-        // wikilinks.forEach(() => update())
       }
 
       const updatedNote = await Note.findOneAndUpdate({ zettelId }, populatedNote, { new: true })
@@ -95,6 +115,52 @@ const resolvers = {
       }
 
       return updatedNote.toJSON()
+    },
+    register: async (_, args) => {
+      const { username, password } = args
+
+      const saltRounds = 10
+      const passwordHash = await bcrypt.hash(password, saltRounds)
+
+      const user = new User({
+        username,
+        passwordHash
+      })
+
+      return user.save()
+        .then(result => {
+          const token = generateToken(user.toJSON())
+          return { token }
+        })
+    },
+    login: async (_, args) => {
+      const { username, password } = args
+      const user = await User.findOne({ username })
+
+      const passwordCorrect = user === null
+        ? false
+        : await bcrypt.compare(password, user.passwordHash)
+
+
+      if (!user || !passwordCorrect) {
+        throw new AuthenticationError('Invalid username or password')
+      }
+
+
+      if (user) {
+        const token = generateToken(user)
+        return { token }
+      }
+      // if (!user || args.password !== 'secret') {
+      //   throw new UserInputError('wrong credentials')
+      // }
+
+      // const userForToken = {
+      //   username: newUsername,
+      //   id: user._id
+      // }
+
+      return user
     }
   }
 }

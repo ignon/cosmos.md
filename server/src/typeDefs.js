@@ -17,6 +17,10 @@ const typeDefs = gql`
     userId: String
   }
 
+  type Token {
+    token: String!
+  }
+
   type NoteRef {
     title: String!
     zettelId: String
@@ -43,6 +47,16 @@ const typeDefs = gql`
     addNotes(notes: [NoteArgs]): [Note]
 
     editNote(note: NoteArgs): Note
+
+    register(
+      username: String!
+      password: String!
+    ): Token
+
+    login(
+      username: String!
+      password: String!
+    ): Token
   }
 `
 

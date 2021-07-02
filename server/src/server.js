@@ -4,68 +4,34 @@ import schema from './schema.js'
 import mongoose from 'mongoose'
 import config from './config.js'
 import logger from './utils/logger.js'
-import DataLoader from 'dataloader'
-import Note from './models/Note.js'
+import backlinks from './dataloaders/backlinks.js'
 
 const { NODE_ENV, NODE_ENVS } = config
 
-
 const url = config.MONGODB_URI
 
-// const MyApolloServer = () => {
-  mongoose.connect(url, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    useFindAndModify: false,
-    useCreateIndex: true,
-    autoIndex: NODE_ENV !== NODE_ENVS.PRODUCTION
+mongoose.connect(url, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  useFindAndModify: false,
+  useCreateIndex: true,
+  autoIndex: NODE_ENV !== NODE_ENVS.PRODUCTION
+})
+  .then(result => {
+    logger.info('connected to MongoDB', url)
   })
-    .then(result => {
-      logger.info('connected to MongoDB', url)
-    })
-    .catch(error => {
-      logger.info('error connecting to MongoDB:', error.message)
-    })
-
-  const server = new ApolloServer({
-    schema,
-    playground: false, //(config.NODE_ENV === 'development'),
-    introspection: true,
-    context: {
-      loaders: {
-        backlinks: new DataLoader(async (titles) => {
-
-          console.log(titles)
-
-          const backlinkMap = {}
-          
-          titles.forEach(t =>
-            backlinkMap[t] = []
-          )
-            
-          const backlinkNotes = await Note.find({
-            $and: [
-              { userId: 'arde' },
-              { wikilinks: { $in: titles } }
-            ]
-          }).select('title wikilinks -_id')
-            
-          console.log('TITLES', titles)
-          console.log('BACKLINK NOTES', backlinkNotes)
-
-          backlinkNotes.forEach(note => {
-            note.wikilinks.forEach(wikilink => {
-              if (backlinkMap[wikilink]) {
-                backlinkMap[wikilink].push(note.title)
-              }
-            })
-          })
-
-          const backlinks = titles.map(title => backlinkMap[title]) 
-          return backlinks
-        })
-      }
-    }
+  .catch(error => {
+    logger.info('error connecting to MongoDB:', error.message)
   })
+
+const server = new ApolloServer({
+  schema,
+  playground: false,
+  introspection: true,
+  context: ({ req={} }) => ({
+    userId: req.userId,
+    loaders: { backlinks }
+  })
+})
 
 export default server

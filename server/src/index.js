@@ -1,12 +1,5 @@
-import server from './server.js'
-import logger from './utils/logger.js'
 import config from './config.js'
-import app from './app.js'
+import startApolloServer from './startApolloServer.js'
 
-
-await server.start()
-server.applyMiddleware({ app })
-
-app.listen({ port: config.PORT })
-
-logger.info(`Server ready at port ${config.PORT}`)
+const port = config.PORT || 4000
+startApolloServer(port)

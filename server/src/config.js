@@ -4,6 +4,8 @@ dotenv.config()
 const PORT = process.env.PORT ?? 4000
 const NODE_ENV = process.env.NODE_ENV
 const MONGODB_URI = process.env.MONGODB_URI
+const JWT_TOKEN = process.env.JWT_TOKEN
+
 
 const NODE_ENVS = {
   PRODUCTION: 'production',
@@ -16,5 +18,6 @@ export default {
   PORT,
   NODE_ENV,
   NODE_ENVS,
-  MONGODB_URI
+  MONGODB_URI,
+  JWT_TOKEN
 }
