@@ -1,6 +1,6 @@
 import _ from 'lodash'
 import { ApolloServer } from 'apollo-server-express'
-import schema from './schema.js'
+import schema from './schema/schema.js'
 import mongoose from 'mongoose'
 import config from './utils/config.js'
 import logger from './utils/logger.js'

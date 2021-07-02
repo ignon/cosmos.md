@@ -1,9 +1,4 @@
-// https://www.apollographql.com/blog/backend/schema-design/modularizing-your-graphql-schema-code/
-
 import { gql } from 'apollo-server'
-
-const noteArgs = `
-`
 
 const typeDefs = gql`
   type Note {
@@ -17,10 +12,6 @@ const typeDefs = gql`
     userId: String
   }
 
-  type Token {
-    token: String!
-  }
-
   type NoteRef {
     title: String!
     zettelId: String
@@ -32,14 +23,14 @@ const typeDefs = gql`
     zettelId: String
   }
 
-  type Query {
+  extend type Query {
     noteCount: Int!
     allNotes: [Note!]!
     findNote(query: String!): Note
     findNotes(title: String, zettelId: String, tag: String): [Note]!
   }
 
-  type Mutation {
+  extend type Mutation {
     addNote(
       note: NoteArgs
     ): Note
@@ -47,16 +38,6 @@ const typeDefs = gql`
     addNotes(notes: [NoteArgs]): [Note]
 
     editNote(note: NoteArgs): Note
-
-    register(
-      username: String!
-      password: String!
-    ): Token
-
-    login(
-      username: String!
-      password: String!
-    ): Token
   }
 `
 

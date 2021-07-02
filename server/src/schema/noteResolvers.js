@@ -1,20 +1,10 @@
 import __ from 'lodash'
-import { parseNote } from './noteParser.js'
-import Note from './models/Note.js'
-import User from './models/User.js'
+import { parseNote } from '../markdown/noteParser.js'
+import Note from '../models/Note.js'
+import User from '../models/User.js'
 import { AuthenticationError, UserInputError } from 'apollo-server-errors'
-import logger from './utils/logger.js'
-import bcrypt from 'bcrypt'
-import { requireAuth } from './middleware/middlewareCheck.js'
-import config from './utils/config.js'
-import jwt from 'jsonwebtoken'
-
-const userId = 'arde'
-
-const generateToken = ({ username, id }) => {
-  const tokenUser = { username, id }
-  return jwt.sign(tokenUser, config.JWT_TOKEN, { expiresIn: 60*60 })
-}
+import logger from '../utils/logger.js'
+import { requireAuth } from '../middleware/middlewareCheck.js'
 
 
 const resolvers = {
@@ -91,12 +81,9 @@ const resolvers = {
       requireAuth(ctx)
 
       const note = parseNote(args.note)
-      const populatedNote = note //await populateNote(note)
+      note.userId = ctx.userId
 
-      // User received from apollo contect
-      populatedNote.userId = userId
-
-      const { zettelId, title } = populatedNote
+      const { zettelId, title } = note
 
       const oldNote = await Note.findOne({ zettelId })
       if (!oldNote) {
@@ -107,7 +94,7 @@ const resolvers = {
         logger.info('Updating notes which have wikilink to this note')
       }
 
-      const updatedNote = await Note.findOneAndUpdate({ zettelId }, populatedNote, { new: true })
+      const updatedNote = await Note.findOneAndUpdate({ zettelId }, note, { new: true })
 
       if (!updatedNote) {
         throw new UserInputError(`Note with zettelId: '${zettelId}' doesn't exist`)
