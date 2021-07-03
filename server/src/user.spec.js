@@ -48,8 +48,6 @@ describe('basics', () => {
     const result = await executeQuery(LOGIN, user)
     const token = result.data.login.token
 
-    console.log('RECEIVED TOKEN', token)
-
     expect(typeof token).toBe('string')
 
     const requestNoAuth = await api
@@ -66,7 +64,6 @@ describe('basics', () => {
       .expect(200)
       .expect('Content-Type', /application\/json/)
 
-    console.log(requestWithAuth.body)
     const notes = requestWithAuth.body.data.allNotes
     expect(notes).toEqual([])
   })

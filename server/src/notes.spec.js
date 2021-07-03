@@ -1,11 +1,12 @@
 import _ from 'lodash'
-import schema from './schema.js'
+import schema from './schema/schema.js'
 import { ApolloServer } from 'apollo-server'
-import { ALL_NOTES, ADD_NOTE } from './queries.js'
+import { ALL_NOTES, ADD_NOTE, REGISTER } from './queries.js'
 // import Note from './models/Note'
 import server from './server'
 import mongoose from 'mongoose'
 import Note from './models/Note.js'
+import User from './models/User.js'
 import { getNotesInDatabase } from './utils/test_helper.js'
 
 /**
@@ -14,6 +15,7 @@ import { getNotesInDatabase } from './utils/test_helper.js'
  * 2. Tests from back end
  * 3. Ingegration tests with front end
  */
+
 
 const notes = [
   {
@@ -40,12 +42,12 @@ const serverExecute = async (query, variables=null) => {
   })
 }
 
-
-
 describe('database is empty', () => {
 
   beforeAll(async () => {
     await Note.deleteMany({})
+    await User.deleteMany({})
+    await serverExecute(REGISTER, { username: 'TestUser', password: 'Password' })
   })
 
   test('adding note works', async () => {
@@ -56,6 +58,7 @@ describe('database is empty', () => {
     }
 
     const result = await serverExecute(ADD_NOTE, { note })
+    console.log(result)
 
     const addedNote = result.data.addNote
     const { title, zettelId, text, tags, wikilinks } = addedNote

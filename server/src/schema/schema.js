@@ -10,8 +10,6 @@ const baseTypeDefs = gql`
   type Query
 `
 
-console.log(_.merge({}, noteResolvers, authResolvers))
-
 const schema = makeExecutableSchema({
   typeDefs: [baseTypeDefs, noteTypeDefs, authTypeDefs],
   resolvers: _.merge({}, noteResolvers, authResolvers)

@@ -4,7 +4,7 @@ import jwt from 'jsonwebtoken'
 import User from '../models/User.js'
 import { AuthenticationError } from 'apollo-server'
 
-const generateToken = ({ username, id }) => {
+const generateToken = ({ username, _id: id }) => {
   const tokenUser = { username, id }
   return jwt.sign(tokenUser, config.JWT_TOKEN, { expiresIn: 60*60 })
 }
@@ -25,7 +25,7 @@ const resolvers = {
 
       return user.save()
         .then(result => {
-          const token = generateToken(user.toJSON())
+          const token = generateToken(user)
           return { token }
         })
     },
@@ -42,13 +42,8 @@ const resolvers = {
         throw new AuthenticationError('Invalid username or password')
       }
 
-
-      if (user) {
-        const token = generateToken(user)
-        return { token }
-      }
-
-      return user
+      const token = generateToken(user)
+      return { token }
     }
   }
 }
