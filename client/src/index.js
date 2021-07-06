@@ -1,14 +1,15 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
-import { ApolloClient, ApolloProvider, HttpLink, InMemoryCache, gql } from '@apollo/client'
+import { ApolloClient, ApolloProvider, HttpLink, InMemoryCache } from '@apollo/client'
 import { setContext } from '@apollo/client/link/context'
 
-const authLink = setContext((_req, ctx) => {
-  const { headers } = ctx
-  const token = localStorage.getItem('cratemd-user-token')
 
-  console.log({ token })
+const authLink = setContext((req, ctx) => {
+  const { headers } = ctx
+  const token = localStorage.getItem('token')
+
+  console.log('setContext:', req.operationName, { token })
 
   return {
     headers: {
@@ -18,16 +19,15 @@ const authLink = setContext((_req, ctx) => {
   }
 })
 
-const httpLink = new HttpLink({
-  uri: 'http://localhost:4000/graphql',
-  ops: { credentials: 'include' },
-  credentials: 'include'
-})
+const httpLink = new HttpLink({ uri: 'http://localhost:4000/graphql' })
 
 const client = new ApolloClient({
   cache: new InMemoryCache(),
   link: authLink.concat(httpLink),
-  credentials: 'include'
+  onError: ({ networkError, graphQLErrors }) => {
+    graphQLErrors && console.log(graphQLErrors)
+    networkError && console.log(graphQLErrors)
+  }
 })
 
 
