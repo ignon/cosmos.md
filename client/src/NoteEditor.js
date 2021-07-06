@@ -4,7 +4,6 @@ import { useState, useCallback } from 'react'
 
 const NoteEditor = ({ height }) => {
 
-
   return (
     <Editor
       initialValue='Hello **react**  editors!'
