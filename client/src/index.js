@@ -3,6 +3,8 @@ import ReactDOM from 'react-dom';
 import App from './App';
 import { ApolloClient, ApolloProvider, HttpLink, InMemoryCache } from '@apollo/client'
 import { setContext } from '@apollo/client/link/context'
+import { IconContext } from 'react-icons'
+
 
 
 const authLink = setContext((req, ctx) => {
@@ -35,7 +37,9 @@ const client = new ApolloClient({
 ReactDOM.render(
   <React.StrictMode>
     <ApolloProvider client={client}>
-      <App />
+      <IconContext.Provider value={{ className: 'react-icons'}}>
+        <App />
+      </IconContext.Provider>
     </ApolloProvider>
   </React.StrictMode>,
 
