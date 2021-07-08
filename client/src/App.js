@@ -1,19 +1,23 @@
 import { useLazyQuery, useMutation } from "@apollo/client";
 import { useEffect, useState, useCallback, createRef } from "react";
 import { ALL_NOTES, LOGIN } from "./query";
-import TopBar from './TopBar'
+// import TopBar from './TopBar'
+import FocusTrap from 'focus-trap-react'
 import NoteEditor from './NoteEditor'
 import './index.css'
 import { MdMenu, MdSearch, MdAccountBox, MdDelete } from 'react-icons/md'
 
 function App() {
 
-  const [login, stuff] = useMutation(LOGIN)
+  const [view, setView] = useState('editor')
+  const [login] = useMutation(LOGIN)
   const [markdown, setMarkdown] = useState('')
 
   const [ loadNotes, { data: noteData } ] = useLazyQuery(
     ALL_NOTES, { errorPolicy: 'all' }
   )
+
+  console.log({ view })
 
   useEffect(() => {
     login({
@@ -37,30 +41,101 @@ function App() {
 
   const notes = noteData?.allNotes
 
+
+  const getMainComponent = (view) => {
+    switch(view) {
+      case 'search': return (<Search notes={notes} />)
+      case 'editor': return ((<NoteEditor onChange={text => setMarkdown(text)} /> ))
+      default:       return (<div>Unknown view</div>)
+    }
+  }
+
+  return (
+    <EditorFrame
+      headerComponent={(<TopBar
+        searchOnClick={() => setView(view === 'search' ? 'editor' : 'search')}
+      />)}
+      mainComponent={getMainComponent(view)}
+      sidebarComponent={( <NoteList notes={notes} />)}
+    />
+  )
+}
+
+const EditorFrame = ({ mainComponent, sidebarComponent, headerComponent }) => {
   return (
     <div>
       <div id='header'>
-        {/* <TopBar refetchNotes={refetchNotes} /> */}
-        {/* <Button icon={MdSearch} /> */}
-        {/* <MdMenu /> */}
-        <Button Icon={MdSearch} onClick={() => console.log('search')}/>
-        <MdAccountBox />
-        <MdDelete />
+        {headerComponent}
       </div>
 
       <div id='root-container'>
         <div className='flexItem' id='note-editor' spellCheck="false">
           <div id='note-editor-padding'>
-            <NoteEditor onChange={text => setMarkdown(text)} />
+            {mainComponent}
           </div>
         </div>
         <div className='flexItem' id='note-sidebar'>
-          <NoteList notes={notes} />
+          {sidebarComponent}
         </div>
       </div>
     </div>
   )
 }
+
+// const Search = ({ notes }) => {
+//   if (!notes) return <div>Loading...</div>
+//   return (
+//     <div>
+//       <h2>Seach</h2>
+//       { notes.map(note => <div id={note.zettelId}>{note.title}</div>) }
+//     </div>
+//   )
+// }
+
+
+const TopBar = ({ searchOnClick, className }) => {
+  return (
+    <div className='search-dropdown'>
+      <Dropdown
+        button={<Button Icon={MdSearch} onClick={searchOnClick} />}
+        content={<SearchItems />}
+      />
+      {/* <div>
+        
+        <MdAccountBox />
+        <MdDelete />
+      </div> */}
+    </div>
+  )
+}
+
+// const SearchItems = () => {
+//   const notes = Array(10).fill({ title: 'Lorem Ipsum'})
+
+//   return (
+//     <FocusTrap active={false} focusTrapOptions={{ displayCheck: 'none' }}>
+//       <div className='trap'>
+//         <a href='/'>Moi:3</a>
+
+//         {/* {notes.map(note => <select className='search-item' href='/'>{note.title}</select>)} */}
+//       </div>
+//     </FocusTrap>
+//   )
+// }
+
+const Dropdown = ({ button, content, className }) => {
+  return (
+    <div className={className}>
+      <div className='dropdown'>
+        {button}
+        <div className='dropdown-content'>
+          {content}
+        </div>
+      </div>
+    </div>
+  )
+}
+
 
 const NoteList = ({ notes }) => {
   if (!notes) return null
@@ -73,7 +148,6 @@ const NoteList = ({ notes }) => {
           <div key={zettelId} className='backlink'>
             <a href='/'> {title} </a>
             <div> {tags.map(tag => '#'+tag).join('  ')} </div>
-            {/* <div> {zettelId} </div> */}
             <br />
           </div>
         )}
@@ -81,6 +155,7 @@ const NoteList = ({ notes }) => {
     </div>
   )
 }
+
 
 const Button = ({ Icon, onClick }) => {
   return (

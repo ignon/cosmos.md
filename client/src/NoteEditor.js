@@ -5,27 +5,38 @@ import { useEffect, useRef } from 'react'
 import axios from 'axios'
 import { until } from './utils'
 
-const NoteEditor = ({ height, text, onChange }) => {
+const NoteEditor = ({ onChange }) => {
 
   const editorRef = useRef()
-  const editor = editorRef.current?.editorInst
 
-  console.log({ editor })
+  const getEditor = () => editorRef.current?.editorInst
+  const editor = getEditor()
+
+  console.log({ editorRef })
 
   useEffect(() => {
     axios.get('https://raw.githubusercontent.com/rust-lang/rfcs/master/README.md')
       .then(async (result) => {
 
-        await until(() => (editor))
+        await until(() => (getEditor()))
+        const editor = getEditor()
+
         const text = result.data
-        editor.changeMode('markdown', false)
-        editor.setMarkdown(text)
-        editor.changeMode('wysiwyg', false)
+        // editor.changeMode('markdown')
+        editor.setMarkdown(text, false)
+        // editor.changeMode('wysiwyg')
+
+        // const codemirror = editor.getCodeMirror()
+        // console.log({ codemirror })
+        // const squire = editor.getSquire()
+        // console.log({ squire })
       })
-  }, [editor])
+  }, [])
 
 
   const onKeyup = () => {
+    if (!editor)  return;
+
     const text = editor.getMarkdown()
     if (onChange) { onChange(text) }
   }
@@ -39,7 +50,7 @@ const NoteEditor = ({ height, text, onChange }) => {
   return (
     <Editor
       initialValue='toimiiko tää ees'
-      initialEditType='wysiwyg'
+      initialEditType='markdown'
       previewStyle='tab'
       height={'100%'}
       ref={editorRef}
