@@ -17,9 +17,10 @@ const NoteEditor = ({ height, text, onChange }) => {
       .then(async (result) => {
 
         await until(() => (editor))
-        
         const text = result.data
+        editor.changeMode('markdown', false)
         editor.setMarkdown(text)
+        editor.changeMode('wysiwyg', false)
       })
   }, [editor])
 

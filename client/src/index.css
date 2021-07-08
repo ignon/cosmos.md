@@ -158,11 +158,9 @@ button {
 #note-editor .toastui-editor-main {
   max-width: 800px;
   /* border: 1px solid black; */
-  /* position: relative;
+  position: relative;
   left: 50%;
-  transform: translateX(-50%); */
-  margin: 0 auto;
-
+  transform: translateX(-50%);
 }
 
 
