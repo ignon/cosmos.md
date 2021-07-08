@@ -4,33 +4,11 @@ import { ALL_NOTES } from "./query";
 import TopBar from './TopBar'
 import NoteEditor from './NoteEditor'
 import './index.css'
-import { useWindowSize, useRefDimensions } from "./useDimensions";
 import { MdMenu, MdSearch, MdAccountBox, MdDelete } from 'react-icons/md'
 
 function App() {
 
   const [markdown, setMarkdown] = useState('')
-  const [height, setHeight] = useState(null)
-  // const div = useCallback(node => {
-  //   if (node !== null) {
-  //     const rect = node.getBoundingClientRect()
-  //     setHeight(rect.height)
-  //   }
-  // }, [])
-  // const [height, setHeight] = useState(null)
-  const div = useRef()
-  // const [height, setHeight] = useState(undefined)
-  const { height: windowHeight } = useWindowSize()
-  console.log({ windowHeight })
-
-  useEffect(() => {
-    const rect = div.current?.getBoundingClientRect()
-    const { width, height } = rect
-    console.log({ width, height })
-    setHeight(height)
-    console.log(height)
-  }, [])
-
 
   const {
     data: noteData,
@@ -54,9 +32,9 @@ function App() {
       </div>
 
       <div id='root-container'>
-        <div className='flexItem' id='note-editor' ref={div} spellCheck="false">
+        <div className='flexItem' id='note-editor' spellCheck="false">
           <div id='note-editor-padding'>
-            <NoteEditor height={height} onChange={text => setMarkdown(text)} />
+            <NoteEditor onChange={text => setMarkdown(text)} />
           </div>
         </div>
         <div className='flexItem' id='note-sidebar'>

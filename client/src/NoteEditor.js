@@ -28,7 +28,7 @@ const NoteEditor = ({ height, text, onChange }) => {
   return (
     <Editor
       initialValue='toimiiko tää ees'
-      initialEditType='markdown'
+      initialEditType='wysiwyg'
       previewStyle='tab'
       height={'100%'}
       ref={editorRef}

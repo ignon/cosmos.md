@@ -34,7 +34,8 @@ code {
 
 
 #header {
-  height: 40px;
+  padding-top: 3px;
+  padding-left: 5px;
 }
 
 #root-container {
@@ -57,21 +58,23 @@ code {
 }
 
 #note-editor-padding {
-  max-width: 800px;
+  /* max-width: 800px; */
   flex-grow: 1;
 }
 
-.toastui-editor-toolbar,
-.toastui-editor-mode-switch,
-.toastui-editor-md-tab-container,
-.toastui-editor-defaultUI-toolbar {
-  height: 0;
+/* .toastui-editor-toolbar, */
+/* .toastui-editor-mode-switch,
+.toastui-editor-md-tab-container,*/
+/* .toastui-editor-defaultUI-toolbar */
+.toastui-editor-tabs
+{
+  width: 0;
   visibility: hidden !important;
 }
 
 #note-editor .toastui-editor-defaultUI {
-  border: none;
-  /* border: 1px solid black; */
+  /* border: none; */
+  justify-content: center;
 }
 
 #note-sidebar {
@@ -119,33 +122,6 @@ div:has(div.toastui-editor-defaultUI) {
   padding-right: 10px;
 }
 
-
-
-
-.toastui-editor-md-heading1 {
-  font-size: 24px;
-}
-
-.toastui-editor-md-heading2 {
-  font-size: 22px;
-}
-
-.toastui-editor-md-heading3 {
-  font-size: 20px;
-}
-
-.toastui-editor-md-heading4 {
-  font-size: 18px;
-}
-
-.toastui-editor-md-heading5 {
-  font-size: 16px;
-}
-
-.toastui-editor-md-heading6 {
-  font-size: 14px;
-}
-
 .toastui-editor-contents {
   font-size: 15px;
 }
@@ -169,4 +145,24 @@ button {
 .defaultEditorContainer {
   flex: 1;
   flex-grow: 1;
+  overflow: hidden;
+
+  flex-direction: row;
+}
+
+#note-editor .toastui-editor-defaultUI {
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.toastui-editor-main {
+  max-width: 800px;
+  /* border: 1px solid black; */
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.toastui-editor-defaultUI-toolbar {
+  /* justify-content: center; */
 }
