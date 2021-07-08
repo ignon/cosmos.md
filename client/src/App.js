@@ -44,7 +44,7 @@ function App() {
 
   const getMainComponent = (view) => {
     switch(view) {
-      case 'search': return (<Search notes={notes} />)
+      // case 'search': return (<Search notes={notes} />)
       case 'editor': return ((<NoteEditor onChange={text => setMarkdown(text)} /> ))
       default:       return (<div>Unknown view</div>)
     }
@@ -53,7 +53,7 @@ function App() {
   return (
     <EditorFrame
       headerComponent={(<TopBar
-        searchOnClick={() => setView(view === 'search' ? 'editor' : 'search')}
+        searchOnClick={console.log('')}
       />)}
       mainComponent={getMainComponent(view)}
       sidebarComponent={( <NoteList notes={notes} />)}
@@ -82,46 +82,16 @@ const EditorFrame = ({ mainComponent, sidebarComponent, headerComponent }) => {
   )
 }
 
-// const Search = ({ notes }) => {
-//   if (!notes) return <div>Loading...</div>
-//   return (
-//     <div>
-//       <h2>Seach</h2>
-//       { notes.map(note => <div id={note.zettelId}>{note.title}</div>) }
-//     </div>
-//   )
-// }
-
 
 const TopBar = ({ searchOnClick, className }) => {
   return (
-    <div className='search-dropdown'>
-      <Dropdown
-        button={<Button Icon={MdSearch} onClick={searchOnClick} />}
-        content={<SearchItems />}
-      />
-      {/* <div>
-        
-        <MdAccountBox />
-        <MdDelete />
-      </div> */}
+    <div>
+      <Button Icon={MdSearch} onClick={searchOnClick} />
+      {/* <MdAccountBox /> */}
+      <MdDelete />
     </div>
   )
 }
-
-// const SearchItems = () => {
-//   const notes = Array(10).fill({ title: 'Lorem Ipsum'})
-
-//   return (
-//     <FocusTrap active={false} focusTrapOptions={{ displayCheck: 'none' }}>
-//       <div className='trap'>
-//         <a href='/'>Moi:3</a>
-
-//         {/* {notes.map(note => <select className='search-item' href='/'>{note.title}</select>)} */}
-//       </div>
-//     </FocusTrap>
-//   )
-// }
 
 const Dropdown = ({ button, content, className }) => {
   return (
