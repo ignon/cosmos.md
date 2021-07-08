@@ -155,12 +155,31 @@ button {
   justify-content: flex-start;
 }
 
-.toastui-editor-main {
+#note-editor .toastui-editor-main {
   max-width: 800px;
   /* border: 1px solid black; */
-  position: relative;
+  /* position: relative;
   left: 50%;
-  transform: translateX(-50%);
+  transform: translateX(-50%); */
+  margin: 0 auto;
+
+}
+
+
+/* The ideal would be to move the scrollbar to
+   righ border, but I'm not a front end person lol
+ */
+#note-editor .toastui-editor-main {
+  -ms-overflow-style: none;  /* Internet Explorer 10+ */
+  scrollbar-width: none;  /* Firefox */
+}
+
+#note-editor .toastui-editor-main::-webkit-scrollbar { 
+  display: none;  /* Safari and Chrome */
+}
+
+::-webkit-scrollbar {
+    display: none;
 }
 
 .toastui-editor-defaultUI-toolbar {

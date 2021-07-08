@@ -25,9 +25,7 @@ const NoteEditor = ({ height, text, onChange }) => {
 
 
   const onKeyup = () => {
-    // const text = document.querySelector('#editorContent')
     const text = editor.getMarkdown()
-    console.log({ text })
     if (onChange) { onChange(text) }
   }
 

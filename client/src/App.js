@@ -43,7 +43,7 @@ function App() {
         {/* <TopBar refetchNotes={refetchNotes} /> */}
         {/* <Button icon={MdSearch} /> */}
         {/* <MdMenu /> */}
-        <MdSearch />
+        <Button Icon={MdSearch} onClick={() => console.log('search')}/>
         <MdAccountBox />
         <MdDelete />
       </div>
@@ -82,10 +82,10 @@ const NoteList = ({ notes }) => {
   )
 }
 
-const Button = ({ icon, onClick }) => {
+const Button = ({ Icon, onClick }) => {
   return (
     <button onClick={onClick}>
-      <icon />
+      <Icon />
     </button>
   )
 }
