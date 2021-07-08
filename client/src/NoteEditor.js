@@ -2,21 +2,33 @@ import '@toast-ui/editor/dist/toastui-editor.css';
 import '@toast-ui/editor/dist/theme/toastui-editor-dark.css';
 import { Editor } from '@toast-ui/react-editor'
 import { useEffect, useRef } from 'react'
+import axios from 'axios'
+import { until } from './utils'
 
 const NoteEditor = ({ height, text, onChange }) => {
 
   const editorRef = useRef()
   const editor = editorRef.current?.editorInst
-  if (editor) {
-    // editor.setMarkdown(text)
-    // editor.ii8n.setCode('')
-  }
+
+  console.log({ editor })
+
+  useEffect(() => {
+    axios.get('https://raw.githubusercontent.com/rust-lang/rfcs/master/README.md')
+      .then(async (result) => {
+
+        await until(() => (editor))
+        
+        const text = result.data
+        editor.setMarkdown(text)
+      })
+  }, [editor])
 
 
   const onKeyup = () => {
-    const text = document.querySelector('#editorContent')
+    // const text = document.querySelector('#editorContent')
+    const text = editor.getMarkdown()
     console.log({ text })
-    // if (onChange) { onChange(text) }
+    if (onChange) { onChange(text) }
   }
 
   useEffect(() => {
@@ -34,7 +46,6 @@ const NoteEditor = ({ height, text, onChange }) => {
       ref={editorRef}
       frontMatter={true}
       theme='light'
-      onLoad={(...args) => console.log('onLoad', args)}
       onKeyup={onKeyup}
       language='none'
     />
