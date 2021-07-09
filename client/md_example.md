@@ -1,6 +1,7 @@
 # Wikilinks
 Wikilinks: https://github.com/nhn/tui.editor/issues/968
 CodeMirror: https://github.com/nhn/tui.editor/issues/704
+React-Select: https://react-select.com/home#animated-components
 
 ### mdBook
 mdBook is a command line tool and Rust crate to create books using Markdown (as by the CommonMark specification) files. It's very similar to Gitbook but written in Rust.

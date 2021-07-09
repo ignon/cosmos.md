@@ -5,19 +5,18 @@ import { ALL_NOTES, LOGIN } from "./query";
 import FocusTrap from 'focus-trap-react'
 import NoteEditor from './NoteEditor'
 import './index.css'
-import { MdMenu, MdSearch, MdAccountBox, MdDelete } from 'react-icons/md'
+import { MdSearch, MdAccountBox, MdDelete } from 'react-icons/md'
+import CommandPalette from 'react-command-palette'
 
 function App() {
 
-  const [view, setView] = useState('editor')
+  const [search, setSearch] = useState(false)
   const [login] = useMutation(LOGIN)
   const [markdown, setMarkdown] = useState('')
 
   const [ loadNotes, { data: noteData } ] = useLazyQuery(
     ALL_NOTES, { errorPolicy: 'all' }
   )
-
-  console.log({ view })
 
   useEffect(() => {
     login({
@@ -42,22 +41,26 @@ function App() {
   const notes = noteData?.allNotes
 
 
-  const getMainComponent = (view) => {
-    switch(view) {
-      // case 'search': return (<Search notes={notes} />)
+  const getMainComponent = () => {
+    switch('editor') {
       case 'editor': return ((<NoteEditor onChange={text => setMarkdown(text)} /> ))
       default:       return (<div>Unknown view</div>)
     }
   }
 
   return (
-    <EditorFrame
-      headerComponent={(<TopBar
-        searchOnClick={console.log('')}
-      />)}
-      mainComponent={getMainComponent(view)}
-      sidebarComponent={( <NoteList notes={notes} />)}
-    />
+    <div>
+      <SearchPalette
+        open={search}
+      />
+      <EditorFrame
+        headerComponent={(<TopBar
+          searchOnClick={() => setSearch(true)}
+        />)}
+        mainComponent={getMainComponent()}
+        sidebarComponent={( <NoteList notes={notes} />)}
+      />
+    </div>
   )
 }
 
@@ -136,3 +139,21 @@ const Button = ({ Icon, onClick }) => {
 }
 
 export default App;
+
+const SearchPalette = ({ open }) => {
+  const command = () => {}
+  const notes = [
+    { name: 'Note1', command},
+    { name: 'Note2', command},
+    { name: 'A Note', command},
+    { name: 'B Note', command},
+  ]
+
+  return (
+    <CommandPalette
+      commands={notes}
+      open={open}
+      // trigger={<div></div>}
+    />
+  )
+}

@@ -12,6 +12,7 @@
     "focus-trap-react": "^8.7.0",
     "graphql": "^15.5.1",
     "react": "^17.0.2",
+    "react-command-palette": "^0.16.2",
     "react-dom": "^17.0.2",
     "react-icons": "^4.2.0",
     "react-scripts": "4.0.3",
