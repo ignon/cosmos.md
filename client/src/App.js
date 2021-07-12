@@ -1,64 +1,59 @@
-import { useLazyQuery, useMutation } from "@apollo/client";
-import { useEffect, useState, useCallback, createRef } from "react";
-import { ALL_NOTES, LOGIN } from "./query";
-// import TopBar from './TopBar'
-import FocusTrap from 'focus-trap-react'
+import { useLazyQuery, useMutation, useReactiveVar } from "@apollo/client";
+import React, { useEffect, useState, useCallback, createRef } from "react";
+import { ALL_NOTES, FIND_NOTE } from "./query";
 import NoteEditor from './NoteEditor'
 import './index.css'
 import { MdSearch, MdAccountBox, MdDelete } from 'react-icons/md'
-import CommandPalette from 'react-command-palette'
+import SearchField from './SearchField'
+import { useCurrentNote } from "./useCurrentNote";
+import { editorVar, zettelIdVar } from "./cache";
+import useLogin from "./useLogin";
 
 function App() {
 
-  const [search, setSearch] = useState(false)
-  const [login] = useMutation(LOGIN)
+  const [login] = useLogin({
+    onCompleted: () => loadNotes()
+  })
+
   const [markdown, setMarkdown] = useState('')
 
-  const [ loadNotes, { data: noteData } ] = useLazyQuery(
+  const [loadNotes, { data: noteData }] = useLazyQuery(
     ALL_NOTES, { errorPolicy: 'all' }
   )
+
+  const note = useCurrentNote({
+    onCompleted: note => {
+      const editor = editorVar()
+      editor.setMarkdown(note.text)
+    }
+  })
+  console.log({ note })
 
   useEffect(() => {
     login({
       variables: {
         username: 'TestUser',
         password: 'Password'
-      }
+      },
     })
-      .then(async ({ data }) => {
-        const token = (data?.login.token) 
-        console.log({ token })
-
-        if (token) {
-          localStorage.setItem('token', token)
-        }
-        await new Promise(r => setTimeout(r, 2000))
-        loadNotes()
-      })
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const notes = noteData?.allNotes
 
-
   const getMainComponent = () => {
-    switch('editor') {
-      case 'editor': return ((<NoteEditor onChange={text => setMarkdown(text)} /> ))
-      default:       return (<div>Unknown view</div>)
+    switch ('editor') {
+      case 'editor': return ((<NoteEditor onChange={_ => null} />))
+      default: return (<div>Unknown view</div>)
     }
   }
 
   return (
     <div>
-      <SearchPalette
-        open={search}
-      />
       <EditorFrame
-        headerComponent={(<TopBar
-          searchOnClick={() => setSearch(true)}
-        />)}
+        headerComponent={<SearchBar />}
         mainComponent={getMainComponent()}
-        sidebarComponent={( <NoteList notes={notes} />)}
+        sidebarComponent={<NoteList notes={notes} />}
       />
     </div>
   )
@@ -86,25 +81,19 @@ const EditorFrame = ({ mainComponent, sidebarComponent, headerComponent }) => {
 }
 
 
-const TopBar = ({ searchOnClick, className }) => {
-  return (
-    <div>
-      <Button Icon={MdSearch} onClick={searchOnClick} />
-      {/* <MdAccountBox /> */}
-      <MdDelete />
-    </div>
-  )
-}
+const SearchBar = ({ searchOnClick, className }) => {
+  const [findNote] = useLazyQuery(FIND_NOTE)
 
-const Dropdown = ({ button, content, className }) => {
   return (
-    <div className={className}>
-      <div className='dropdown'>
-        {button}
-        <div className='dropdown-content'>
-          {content}
-        </div>
-      </div>
+    <div id='top-bar'>
+      <Button Icon={MdSearch} onClick={searchOnClick} />
+      <SearchField
+        onCreate={val => console.log(val) && findNote({ variables: { query: val}})}
+        onSelect={zettelId => {
+          console.log('onSelect', zettelId)
+          zettelIdVar(zettelId)
+        }}
+      />
     </div>
   )
 }
@@ -117,10 +106,10 @@ const NoteList = ({ notes }) => {
     <div id='notelistContainer'>
       <h2 id='backlinksTitle'>Backlinks</h2>
       <div id='notelist'>
-        {notes.map(({title, tags, zettelId}) =>
+        {notes.map(({ title, tags, zettelId }) =>
           <div key={zettelId} className='backlink'>
             <a href='/'> {title} </a>
-            <div> {tags.map(tag => '#'+tag).join('  ')} </div>
+            <div> {tags.map(tag => '#' + tag).join('  ')} </div>
             <br />
           </div>
         )}
@@ -140,20 +129,16 @@ const Button = ({ Icon, onClick }) => {
 
 export default App;
 
-const SearchPalette = ({ open }) => {
-  const command = () => {}
-  const notes = [
-    { name: 'Note1', command},
-    { name: 'Note2', command},
-    { name: 'A Note', command},
-    { name: 'B Note', command},
-  ]
 
+const Dropdown = ({ button, content, className }) => {
   return (
-    <CommandPalette
-      commands={notes}
-      open={open}
-      // trigger={<div></div>}
-    />
+    <div className={className}>
+      <div className='dropdown'>
+        {button}
+        <div className='dropdown-content'>
+          {content}
+        </div>
+      </div>
+    </div>
   )
 }

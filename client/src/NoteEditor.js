@@ -4,6 +4,7 @@ import { Editor } from '@toast-ui/react-editor'
 import { useEffect, useRef } from 'react'
 import axios from 'axios'
 import { until } from './utils'
+import { editorVar } from './cache';
 
 const NoteEditor = ({ onChange }) => {
 
@@ -20,6 +21,8 @@ const NoteEditor = ({ onChange }) => {
 
         await until(() => (getEditor()))
         const editor = getEditor()
+
+        editorVar(editor)
 
         const text = result.data
         // editor.changeMode('markdown')

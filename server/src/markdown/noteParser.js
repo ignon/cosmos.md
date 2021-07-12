@@ -41,12 +41,16 @@ export const parseNote = (args) => {
   }
 
   const yamlString = YAML.stringify(yaml)
-  const markdownYAML = `---\n${yamlString}---\n`
+  // const markdownYAML = `---\n${yamlString}---\n`
 
   // Note YAML metadata is updated (to overwrite zettelId and maintain indentation)
-  text = (textHasYaml)
-    ? text.replace(yamlRegex, markdownYAML)
-    : `${markdownYAML}\n${text}`
+  // text = (textHasYaml)
+  //   ? text.replace(yamlRegex, markdownYAML)
+  //   : `${markdownYAML}\n${text}`
+  
+  if (textHasYaml) {
+    text = text.replaceFirst(yamlRegex, '')
+  }
 
   return {
     title,
@@ -60,7 +64,8 @@ export const parseNote = (args) => {
       title,
       zettelId,
       tags
-    }
+    },
+    yaml: yamlString,
     // yamlData: yaml
   }
 }

@@ -23,6 +23,19 @@ export const ADD_NOTE = gql`
   }
 `
 
+export const FIND_NOTE = gql`
+  query findNote($query: String!) {
+    findNote(query: $query) {
+      title
+      zettelId
+      text
+      tags
+      wikilinks
+      backlinks
+    }
+  }
+`
+
 export const REGISTER = gql`
   mutation register($username: String!, $password: String!){
     register(username: $username, password: $password) {

@@ -5,3 +5,7 @@ const delay = (timer=100) => (
 export const until = async (conditionFunc)  => {
   while (!conditionFunc()) await delay(30)
 }
+
+export function escapeRegexSubstring(string) {
+  return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
+}
