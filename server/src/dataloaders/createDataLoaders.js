@@ -16,14 +16,14 @@ const createDataloaders = ({ userId }) => {
         { userId },
         { wikilinks: { $in: titles } }
       ]
-    }).select('title wikilinks -_id')
+    })//.select('title wikilinks -_id')
       
     // console.log('TITLES', titles)
     // console.log('BACKLINK NOTES', backlinkNotes)
     backlinkNotes.forEach(note => {
       note.wikilinks.forEach(wikilink => {
         if (backlinkMap[wikilink]) {
-          backlinkMap[wikilink].push(note.title)
+          backlinkMap[wikilink].push(note)
         }
       })
     })

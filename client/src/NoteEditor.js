@@ -25,14 +25,7 @@ const NoteEditor = ({ onChange }) => {
         editorVar(editor)
 
         const text = result.data
-        // editor.changeMode('markdown')
         editor.setMarkdown(text, false)
-        // editor.changeMode('wysiwyg')
-
-        // const codemirror = editor.getCodeMirror()
-        // console.log({ codemirror })
-        // const squire = editor.getSquire()
-        // console.log({ squire })
       })
   }, [])
 

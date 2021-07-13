@@ -23,15 +23,22 @@ export const ADD_NOTE = gql`
   }
 `
 
+
+
 export const FIND_NOTE = gql`
-  query findNote($query: String!) {
-    findNote(query: $query) {
+  query findNote($query: String, $title: String, $zettelId: String) {
+    findNote(query: $query, title: $title, zettelId: $zettelId) {
       title
       zettelId
       text
       tags
       wikilinks
-      backlinks
+      backlinks {
+        title
+        tags
+        wikilinks
+        zettelId
+      }
     }
   }
 `

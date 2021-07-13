@@ -30,15 +30,25 @@ const resolvers = {
 
       return Note.find(mongoQuery)
     },
-    findNote: async (_, { query }, ctx) => {
+    findNote: async (_, { query, title, zettelId }, ctx) => {
       requireAuth(ctx)
 
       const zettelIdRegex = /^\d+$/
       const isValidZettelId = zettelIdRegex.test(query)
 
-      const mongoQuery = (isValidZettelId)
-        ? { $or: [{ zettelId: query }, { title: query }] }
-        : { title: query }
+      let mongoQuery
+      if (zettelId) {
+        mongoQuery = { zettelId }
+      }
+      else if (title) {
+        mongoQuery = { title }
+      }
+      else if (query) {
+        mongoQuery = (isValidZettelId)
+          ? { $or: [{ zettelId: query }, { title: query }] }
+          : { title: query }
+      }
+
 
       return Note.findOne(mongoQuery)
     },

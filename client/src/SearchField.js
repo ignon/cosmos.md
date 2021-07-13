@@ -67,9 +67,9 @@ const SearchField = ({ open, onCreate, onSelect }) => {
 
 
 const parseOptionsFromNotes = (notes) => {
-  return notes.map(({ title, tags }) => ({
+  return notes.map(({ title, zettelId, tags }) => ({
     label: title,
-    value: title,
+    value: zettelId,
     tags
   }))
 }
@@ -81,6 +81,7 @@ const filterNotes = (input, notes) => {
   }
 
   const queryRE = new RegExp('^' + escapeRegexSubstring(input), 'i')
+  const tagRE = new RegExp('^' + escapeRegexSubstring(input.replace('#', '')), 'i')
   const startMatch = [], inlineMatch = [], tagMatch = []
 
   notes.forEach(note => {
@@ -94,7 +95,7 @@ const filterNotes = (input, notes) => {
     else if (queryLength >= 3 && titleParts.find(t => queryRE.test(t))) {
       inlineMatch.push(note)
     }
-    else if (tags.find(tag => queryRE.test(tag))) {
+    else if (tags.find(tag => tagRE.test(tag))) {
       tagMatch.push(note)
     }
   })

@@ -238,3 +238,11 @@ button {
 /* .search-option-container { */
   /* background-color: pink !important; */
 /* } */
+
+#notelist .wikilink {
+  color: #EEE;
+  font-size: 14px;
+  padding-top: 2px;
+  font-style: italic;
+  font-weight: 350;
+}

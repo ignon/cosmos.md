@@ -7,14 +7,9 @@ const typeDefs = gql`
     zettelId: String!
     tags: [String!]!
     wikilinks: [String]!
-    backlinks: [Backlink!]!
+    backlinks: [Note!]!
     text: String!
     userId: String
-  }
-
-  type Backlink {
-    title: String!
-    backlinks: [String!]!
   }
 
   type NoteRef {
@@ -31,7 +26,7 @@ const typeDefs = gql`
   extend type Query {
     noteCount: Int!
     allNotes: [Note!]!
-    findNote(query: String!): Note
+    findNote(query: String, zettelId: String, title: String): Note
     findNotes(title: String, zettelId: String, tag: String): [Note]!
   }
 
