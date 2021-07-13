@@ -33,13 +33,13 @@ const text = {
   required: true
 }
 
+
 const schema = new mongoose.Schema({
   title,
   zettelId,
   userId: {
-    type: String,
-    required: true,
-    index: true
+    type: mongoose.Schema.ObjectId,
+    required: true
   },
   tags: [String],
   text,

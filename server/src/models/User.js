@@ -11,7 +11,7 @@ const schema = mongoose.Schema({
   passwordHash: {
     type: String,
     minlength: 30,
-    // required: true
+    required: true
   }
 })
 

@@ -18,7 +18,7 @@ export const ADD_NOTE = gql`
       text
       tags
       wikilinks
-      backlinks
+      backlinks { title }
     }
   }
 `

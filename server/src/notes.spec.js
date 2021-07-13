@@ -115,7 +115,7 @@ describe('when notes exists', () => {
     })
 
     test('backlinks work', async () => {
-      const { backlinks } = addedNote
+      const backlinks = addedNote.backlinks.map(link => link.title)
 
       const notesInDatabase = await getNotesInDatabase()
       const notesThatHaveWikilinkToOurNote = notesInDatabase
