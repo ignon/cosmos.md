@@ -10,6 +10,16 @@ export const ALL_NOTES = gql`
   }
 `
 
+export const LATEST_NOTES = gql`
+  query LATEST_NOTES {
+    findLatestNotes {
+      title
+      zettelId
+      tags
+    }
+  }
+`
+
 export const ADD_NOTE = gql`
   mutation addNote($note: NoteArgs){
     addNote(note: $note) {

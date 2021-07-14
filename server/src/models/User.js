@@ -12,7 +12,11 @@ const schema = mongoose.Schema({
     type: String,
     minlength: 30,
     required: true
-  }
+  },
+  recentNotes: [{
+    type: mongoose.Schema.ObjectId,
+    ref: 'Note'
+  }]
 })
 
 schema.plugin(uniqueValidator)

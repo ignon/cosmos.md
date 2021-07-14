@@ -1,26 +1,36 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState } from "react";
-import { ALL_NOTES } from "./query";
+import { ALL_NOTES, LATEST_NOTES } from "./query";
 import { useLazyQuery } from "@apollo/client";
 import ReactSelect from 'react-select/creatable'
 import { escapeRegexSubstring } from './utils'
+import { useEffect } from "react/cjs/react.development";
+import { noteVar } from "./cache";
 // import { useDebounce } from 'use-debounce/lib'
 
 
 // TODO: ignoreAccents, trim
 // const [searchQueryDebounced] = useDebounce(searchQuery, 500);
-const SearchField = ({ open, onCreate, onSelect }) => {
+const SearchField = ({ fieldRef, onCreate, onSelect }) => {
 
   const [options, setOptions] = useState([])
   const [searchQuery, setSearchQuery] = useState('')
+
   const [getNotes, { data }] = useLazyQuery(ALL_NOTES, {
     fetchPolicy: 'cache-and-network'
   })
-  const notes = data?.allNotes || []
+  const [findLatesNotes, { data: latestData }] = useLazyQuery(LATEST_NOTES, {
+    fetchPolicy: 'cache-and-network'
+  })
 
-  if (!searchQuery && options.length !== notes.length) {
-    const options = filterOptions(searchQuery, notes)
+  const notes = data?.allNotes || []
+  const latestNotes = latestData?.findLatestNotes || []
+
+  useEffect(() => {
+    const options = filterOptions(searchQuery, notes, latestNotes)
     setOptions(options)
-  }
+  }, [`${[searchQuery, notes, latestNotes]}`])
+
 
 
   const handleSelect = ({ label, value, __isNew__: isNew }) => {
@@ -34,7 +44,8 @@ const SearchField = ({ open, onCreate, onSelect }) => {
   const handleInputChange = (input, { action }) => {
     if (action === 'input-change') {
       setSearchQuery(input)
-      const options = filterOptions(input, notes)
+
+      const options = filterOptions(input, notes, latestNotes)
       setOptions(options)
     }
   }
@@ -44,6 +55,7 @@ const SearchField = ({ open, onCreate, onSelect }) => {
 
   const handleOpen = () => {
     getNotes()
+    findLatesNotes()
   }
 
 
@@ -61,6 +73,7 @@ const SearchField = ({ open, onCreate, onSelect }) => {
       onInputChange={handleInputChange}
       filterOption={() => true}
       formatOptionLabel={args => <NoteOption {...args} />}
+      ref={fieldRef}
     />
   )
 }
@@ -75,7 +88,7 @@ const parseOptionsFromNotes = (notes) => {
 }
 
 
-const filterNotes = (input, notes) => {
+const filterNotes = (input, notes, latestNotes) => {
   if (!input) { 
     return notes
   }
@@ -104,10 +117,17 @@ const filterNotes = (input, notes) => {
   return filteredNotes
 }
 
-const filterOptions = (input, notes) => {
-  const filteredNotes = filterNotes(input, notes)
-  const options = parseOptionsFromNotes(filteredNotes)
-  return options
+const filterOptions = (input, notes, latestNotes) => {
+  if (!input) {
+    const options = parseOptionsFromNotes(latestNotes)
+    return options
+  }
+  else {
+    const filteredNotes = filterNotes(input, notes)
+    const options = parseOptionsFromNotes(filteredNotes)
+    return options
+  }
+
 }
 
 const NoteOption = ({ label, tags }) => {

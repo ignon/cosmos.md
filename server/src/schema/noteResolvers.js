@@ -5,7 +5,29 @@ import User from '../models/User.js'
 import { AuthenticationError, UserInputError } from 'apollo-server-errors'
 import logger from '../utils/logger.js'
 import { requireAuth } from '../middleware/middlewareCheck.js'
+import mongoose from 'mongoose'
+import { GraphQLError } from 'graphql'
 
+
+const updateRecentNotes = async (note) => {
+  const result = await User.findByIdAndUpdate(note.userId, {
+    $pull: { 
+      recentNotes: {
+        $in: [ note._id ]
+      },
+    },
+  })
+  const result2 = await User.findByIdAndUpdate(note.userId, {
+    $push: {
+      recentNotes: {
+        $each: [note._id],
+        $position: 0,
+        $slice: 10
+      }
+    }
+  })
+  console.log({ result, result2 })
+}
 
 const resolvers = {
   Query: {
@@ -31,6 +53,7 @@ const resolvers = {
       return Note.find(mongoQuery)
     },
     findNote: async (_, { query, title, zettelId }, ctx) => {
+      console.log(ctx)
       requireAuth(ctx)
 
       const zettelIdRegex = /^\d+$/
@@ -52,6 +75,24 @@ const resolvers = {
 
       return Note.findOne(mongoQuery)
     },
+    findLatestNotes: async (_, args, ctx) => {
+      console.log(ctx)
+      requireAuth(ctx)
+
+      try {
+        const userId = mongoose.Types.ObjectId(ctx.userId)
+        const user = await User
+          .findById(userId)
+          .populate('recentNotes')
+
+        const { recentNotes } = user
+
+        return recentNotes
+      }
+      catch(error) {
+        throw new UserInputError('Input error ' + error.message, { invalidArgs: true })
+      }
+    }
   },
   Note: {
     backlinks: async ({ title }, args, context) => {
@@ -60,6 +101,12 @@ const resolvers = {
     },
     wikilinks: ({ wikilinks }) => {
       return wikilinks ?? []
+    },
+    userId: ({ userId }) => {
+      if (typeof userId === 'string') {
+        return mongoose.Types.ObjectId(userId)
+      }
+      return userId
     }
   },
   Mutation: {
@@ -71,12 +118,19 @@ const resolvers = {
 
       console.log('adding note', note.title)
 
-      const newNote = new Note(note)
+      try {
+        const newNote = new Note(note)
+        const savedNote = await newNote.save()
 
-      return newNote.save()
-        .then(result => result.toJSON())
+        updateRecentNotes(savedNote)
+
+        return savedNote.toJSON()
+      }
+      catch(error) {
+        throw new UserInputError('Input error ' + error.message, { invalidArgs: true })
+      }
     },
-    addNotes: async (_, args) => {
+    addNotes: async (_, args, ctx) => {
       requireAuth(ctx)
 
       const notes = args
@@ -87,7 +141,7 @@ const resolvers = {
       // Should use some kind of data-loader
       const populatedNotes = notes.map(async (n) => await populateNote(n))
     },
-    editNote: async (_, args) => {
+    editNote: async (_, args, ctx) => {
       requireAuth(ctx)
 
       const note = parseNote(args.note)
@@ -110,54 +164,10 @@ const resolvers = {
         throw new UserInputError(`Note with zettelId: '${zettelId}' doesn't exist`)
       }
 
+      updateRecentNotes(updatedNote)
+
       return updatedNote.toJSON()
     },
-    register: async (_, args) => {
-      const { username, password } = args
-
-      const saltRounds = 10
-      const passwordHash = await bcrypt.hash(password, saltRounds)
-
-      const user = new User({
-        username,
-        passwordHash
-      })
-
-      return user.save()
-        .then(result => {
-          const token = generateToken(user.toJSON())
-          return { token }
-        })
-    },
-    login: async (_, args) => {
-      const { username, password } = args
-      const user = await User.findOne({ username })
-
-      const passwordCorrect = user === null
-        ? false
-        : await bcrypt.compare(password, user.passwordHash)
-
-
-      if (!user || !passwordCorrect) {
-        throw new AuthenticationError('Invalid username or password')
-      }
-
-
-      if (user) {
-        const token = generateToken(user)
-        return { token }
-      }
-      // if (!user || args.password !== 'secret') {
-      //   throw new UserInputError('wrong credentials')
-      // }
-
-      // const userForToken = {
-      //   username: newUsername,
-      //   id: user._id
-      // }
-
-      return user
-    }
   }
 }
 

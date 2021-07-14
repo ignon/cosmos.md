@@ -1,6 +1,6 @@
 POST http://localhost:4000/graphql
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFyZGUxMCIsImlkIjoiNjBlYzY3NjJiNWEwYWM2YzA2YzA3NTExIiwiaWF0IjoxNjI2MTA1Njk5LCJleHAiOjE2MjYxMDkyOTl9.cANAVyl1bwd_SHWmZPmuhT6nTOnqyZrIrwdrpj9-NfU
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFyZGUxMCIsImlkIjoiNjBlZTBlNGI2MWI3ZTk2ZjBkZGM4NWI5IiwiaWF0IjoxNjI2MjEzOTcxLCJleHAiOjE2MjYyMTc1NzF9.K1t6o-hXoHvEKiBgarGSi2eTShzzki5cu3zrYM9wgOs
 X-REQUEST-TYPE: GraphQL
 
 mutation addNote($note: NoteArgs){
@@ -11,15 +11,15 @@ mutation addNote($note: NoteArgs){
     tags
     wikilinks
     backlinks {
-      title, hashtags
+      title
     }
   }
 }
 
 {
   "note": {
-    "title": "moikke2lis",
-    "zettelId": "42928342890732",
+    "title": "newera22 note",
+    "zettelId": "41322292283428902732",
     "text": "[[moikkelis]] [[anarchy]] [[ApolloClient]] #life"
   }
 }
@@ -28,6 +28,7 @@ mutation addNote($note: NoteArgs){
 
 POST http://localhost:4000/graphql
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFyZGUxMCIsImlkIjoiNjBlZTBlNGI2MWI3ZTk2ZjBkZGM4NWI5IiwiaWF0IjoxNjI2MjEzOTcxLCJleHAiOjE2MjYyMTc1NzF9.K1t6o-hXoHvEKiBgarGSi2eTShzzki5cu3zrYM9wgOs
 X-REQUEST-TYPE: GraphQL
 
 mutation editNote($note: NoteArgs){
@@ -45,8 +46,8 @@ mutation editNote($note: NoteArgs){
 
 {
   "note": {
-    "title": "communism12124",
-    "zettelId": "48739120",
+    "title": "newer2 note",
+    "zettelId": "4132292283428902732",
     "text": "[[moikkelis]] [[anarchy]] [[ApolloClient]] #life"
   }
 }
@@ -65,7 +66,7 @@ query allNotes {
     text
     wikilinks
     backlinks {
-      title, hashtags
+      title
     }
   }
 }
@@ -74,6 +75,7 @@ query allNotes {
 
 POST http://localhost:4000/graphql
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFyZGU2IiwiaWQiOiJqYWsyNWwzMjEya2psMzRkc2FmIiwiaWF0IjoxNjI1MTY1MDk2fQ.xtKZdUDGbTELrvjWpa6-sbVnoqpNhAHxmTPYR1sawZY
 X-REQUEST-TYPE: GraphQL
 
 query findNote($query: String!) {
@@ -86,7 +88,7 @@ query findNote($query: String!) {
 }
 
 {
-  "query": "moikkelis"
+  "query": "Redis"
 }
 
 ###
@@ -140,7 +142,7 @@ mutation register($username: String!, $password: String!) {
 
 POST http://localhost:4000/graphql
 Content-Type: application/json
-Header: Bearer 
+Authorization: : Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFyZGUxMCIsImlkIjoiNjBlZTA0ZTQxMGVkOTc2MTZmZjZjNjVhIiwiaWF0IjoxNjI2MjExNTU2LCJleHAiOjE2MjYyMTUxNTZ9.RKL98Z5vtxV8qkKsmRnMZGkVBz_JY87FxPVIrOkvwmQ
 X-REQUEST-TYPE: GraphQL
 
 mutation login($username: String!, $password: String!) {
@@ -155,4 +157,17 @@ mutation login($username: String!, $password: String!) {
 {
   "username": "arde10",
   "password": "kissa3"
+}
+
+###
+
+POST http://localhost:4000/graphql
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFyZGUxMCIsImlkIjoiNjBlZTBlNGI2MWI3ZTk2ZjBkZGM4NWI5IiwiaWF0IjoxNjI2MjE3NjY2LCJleHAiOjE2MjYyMjEyNjZ9.jzFv_5LXCg37EeEKD3-kRyNrgJnGhvXPvettWrBqbYU
+X-REQUEST-TYPE: GraphQL
+
+query findLatestNotes {
+  findLatestNotes {
+    title
+  }
 }

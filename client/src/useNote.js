@@ -8,9 +8,8 @@ const useNote = ({ onChange, fetchPolicy='cache-only' } = {}) => {
   const result = useQuery(FIND_NOTE, {
     fetchPolicy,
     variables: { zettelId },
-    onCompleted: (data) => {
-      const note = data?.findNote
-      onChange?.(note)
+    onCompleted: ({ findNote: note } = {}) => {
+      if (note) onChange?.(note)
     }
   })
 
@@ -19,3 +18,14 @@ const useNote = ({ onChange, fetchPolicy='cache-only' } = {}) => {
 }
 
 export default useNote
+
+
+// const client = useApolloClient()
+// const zettelId = zettelIdVar()
+// const note2 = client.readFragment({
+//   id: `Note:${zettelId}`,
+//   fragment: gql`fragment MyNote on Note { zettelId, text }`
+// })
+// console.log({ note2 })
+
+// useEffect(() => { }, [note, editor])
