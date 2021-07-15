@@ -44,7 +44,7 @@ export const EDIT_NOTE_STRING = `
       wikilinks
     }
   }
-`.trim()
+`
 
 export const EDIT_NOTE = gql`${
   EDIT_NOTE_STRING

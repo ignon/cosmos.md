@@ -17,7 +17,6 @@ export const authorizeFromBody = (req, _res, next) => {
     return next()
   }
 
-
   const isLocalhost = req.get('host').includes('localhost')
   
   if (protocol === 'https' || (isDevMode && isLocalhost)) {

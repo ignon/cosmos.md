@@ -55,14 +55,13 @@ function App() {
   }, [isLoggedIn, text, timerCompleted])
 
   const handleTextChange = text => {
-    console.log('text change', text)
     setText(text)
   }
 
   return (
     <div>
       <EditorFrame
-        headerComponent={<SearchBar />}
+        headerComponent={<TopBar />}
         mainComponent={<NoteEditor onChange={handleTextChange} />}
         sidebarComponent={<Backlinks />}
       />
@@ -71,6 +70,13 @@ function App() {
 }
 
 
+const TopBar = () => {
+  return (
+    <div id='top-bar'>
+      <SearchBar />
+    </div>
+  )
+}
 
 
 const SearchBar = ({ className }) => {
@@ -84,7 +90,6 @@ const SearchBar = ({ className }) => {
   })
 
   const searchOnClick = () => {
-    // console.log(searchFieldRef)
     searchFieldRef.current?.focus()
   }
 
@@ -100,14 +105,14 @@ const SearchBar = ({ className }) => {
   }
 
   return (
-    <div id='top-bar'>
+    <div id='search-container'>
       <Button Icon={MdSearch} onClick={searchOnClick} />
       <SearchField
         onCreate={handleNoteCreate}
         onSelect={handleNoteSelect}
         fieldRef={searchFieldRef}
       />
-    </div>
+    </ div>
   )
 }
 

@@ -222,11 +222,15 @@ button {
 #top-bar {
   display: flex;
   flex-direction: row;
+  flex-grow: 1;
+}
+
+#search-container {
+  display: flex;
 }
 
 .search-bar {
   min-width: 300px;
-  /* margin-bottom: 1px; */
   margin-top: 6px;
 }
 
@@ -234,10 +238,6 @@ button {
   font-size: 12px;
   color: gray;
 }
-
-/* .search-option-container { */
-  /* background-color: pink !important; */
-/* } */
 
 #notelist .wikilink {
   color: #EEE;
