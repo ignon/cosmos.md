@@ -11,7 +11,7 @@ export const ALL_NOTES = gql`
 `
 
 export const LATEST_NOTES = gql`
-  query LATEST_NOTES {
+  query latestNotes {
     findLatestNotes {
       title
       zettelId
@@ -33,7 +33,22 @@ export const ADD_NOTE = gql`
   }
 `
 
+export const EDIT_NOTE_STRING = `
+  mutation editNote($note: NoteArgs){
+    editNote(note: $note) {
+      title
+      zettelId
+      tags
+      text
+      userId
+      wikilinks
+    }
+  }
+`.trim()
 
+export const EDIT_NOTE = gql`${
+  EDIT_NOTE_STRING
+}`
 
 export const FIND_NOTE = gql`
   query findNote($query: String, $title: String, $zettelId: String) {

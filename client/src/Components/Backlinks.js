@@ -4,7 +4,7 @@ const Backlinks = () => {
   const note = useNote()
   if (!note) return null
 
-  const { backlinks } = note
+  const { backlinks, wikilinks } = note
 
 
   return (
@@ -24,6 +24,15 @@ const Backlinks = () => {
           )}
         </div>
         {backlinks.length === 0 && <div>No backlinks</div>}
+        <h2 id='backlinksTitle'>Wikilinks</h2>
+        <div>
+          {wikilinks.map(title =>
+            <div key={title} className='backlink'>
+              <a href='/'> {title} </a>
+              <br />
+            </div>
+          )}
+        </div>
       </div>
     </div>
   )

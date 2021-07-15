@@ -5,12 +5,8 @@ import { useLazyQuery } from "@apollo/client";
 import ReactSelect from 'react-select/creatable'
 import { escapeRegexSubstring } from './utils'
 import { useEffect } from "react/cjs/react.development";
-import { noteVar } from "./cache";
-// import { useDebounce } from 'use-debounce/lib'
 
 
-// TODO: ignoreAccents, trim
-// const [searchQueryDebounced] = useDebounce(searchQuery, 500);
 const SearchField = ({ fieldRef, onCreate, onSelect }) => {
 
   const [options, setOptions] = useState([])
@@ -33,15 +29,14 @@ const SearchField = ({ fieldRef, onCreate, onSelect }) => {
 
 
 
-  const handleSelect = ({ label, value, __isNew__: isNew }) => {
-    // console.log(value, onCreate, onSelect)
+  const handleSearchSelect = ({ value, __isNew__: isNew }) => {
     setSearchQuery('')
 
     if (isNew) onCreate?.(value)
     else       onSelect?.(value)
   }
 
-  const handleInputChange = (input, { action }) => {
+  const handleSearchInputChange = (input, { action }) => {
     if (action === 'input-change') {
       setSearchQuery(input)
 
@@ -51,9 +46,7 @@ const SearchField = ({ fieldRef, onCreate, onSelect }) => {
   }
 
 
-
-
-  const handleOpen = () => {
+  const handleSearchOpen = () => {
     getNotes()
     findLatesNotes()
   }
@@ -63,14 +56,14 @@ const SearchField = ({ fieldRef, onCreate, onSelect }) => {
     <ReactSelect
       value={null}
       options={options}
-      onMenuOpen={handleOpen}
+      onMenuOpen={handleSearchOpen}
       className='search-bar'
       inputValue={searchQuery}
       placeholder='Search or create note'
-      onChange={handleSelect}
+      onChange={handleSearchSelect}
       createOptionPosition='first'
       allowCreateWhileLoading={false}
-      onInputChange={handleInputChange}
+      onInputChange={handleSearchInputChange}
       filterOption={() => true}
       formatOptionLabel={args => <NoteOption {...args} />}
       ref={fieldRef}

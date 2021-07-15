@@ -10,14 +10,14 @@ import { GraphQLError } from 'graphql'
 
 
 const updateRecentNotes = async (note) => {
-  const result = await User.findByIdAndUpdate(note.userId, {
+  await User.findByIdAndUpdate(note.userId, {
     $pull: { 
       recentNotes: {
         $in: [ note._id ]
       },
     },
   })
-  const result2 = await User.findByIdAndUpdate(note.userId, {
+  await User.findByIdAndUpdate(note.userId, {
     $push: {
       recentNotes: {
         $each: [note._id],
@@ -26,7 +26,6 @@ const updateRecentNotes = async (note) => {
       }
     }
   })
-  console.log({ result, result2 })
 }
 
 const resolvers = {
@@ -143,6 +142,8 @@ const resolvers = {
     },
     editNote: async (_, args, ctx) => {
       requireAuth(ctx)
+
+      console.log('EDIT')
 
       const note = parseNote(args.note)
       note.userId = ctx.userId

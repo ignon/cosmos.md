@@ -1,4 +1,6 @@
-import { useApolloClient, useLazyQuery, useReactiveVar } from "@apollo/client";
+/* eslint-disable react-hooks/exhaustive-deps */
+
+import { useMutation, useLazyQuery, useReactiveVar } from "@apollo/client";
 import React, { useEffect, useRef } from "react";
 import { FIND_NOTE } from "./query";
 import NoteEditor from './NoteEditor'
@@ -11,29 +13,57 @@ import useLogin from "./useLogin";
 import Button from './Button'
 import EditorFrame from './Components/EditorFrame'
 import Backlinks from './Components/Backlinks'
+import { useState } from "react/cjs/react.development";
+import { useTimer } from './utils'
+import useEditNote from './hooks/editNote'
 
 function App() {
 
-  const [login] = useLogin({ onCompleted: _ => true })
+  const [myVar, setMyVar] = useState('myVar')
+  const [text, setText] = useState('')
+  const [login, isLoggedIn] = useLogin({ onCompleted: _ => true })
+  const { timerCompleted, setTimer } = useTimer(0.1)
+
+  console.log({ text })
 
   useEffect(() => {
     login({ username: 'TestUser', password: 'Password' })
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
 
   const editor = useReactiveVar(editorVar)
 
-  useNote({
+  const note = useNote({
     onChange: note => {
-      editor?.setMarkdown(`# ${note.title}\n${note.text}`)
+      console.log({ note })
+      editor?.setMarkdown(note.text)
+      setText(note.text)
     }
   })
+
+  document.note = { ...note, text }
+
+  const { editNote } = useEditNote()
+
+
+
+  useEffect(() => {
+    if (isLoggedIn && note && note.text !== text && timerCompleted) {
+      editNote({ ...note, text })
+      setTimer(1)
+    }
+  }, [isLoggedIn, text, timerCompleted])
+
+  const handleTextChange = text => {
+    console.log('text change', text)
+    setText(text)
+  }
 
   return (
     <div>
       <EditorFrame
         headerComponent={<SearchBar />}
-        mainComponent={<NoteEditor onChange={_ => null} />}
+        mainComponent={<NoteEditor onChange={handleTextChange} />}
         sidebarComponent={<Backlinks />}
       />
     </div>
@@ -54,22 +84,27 @@ const SearchBar = ({ className }) => {
   })
 
   const searchOnClick = () => {
-    console.log(searchFieldRef)
+    // console.log(searchFieldRef)
     searchFieldRef.current?.focus()
   }
 
-  const client = useApolloClient()
-  console.log({ cache: client.cache })
+  // const client = useApolloClient()
+  // console.log({ cache: client.cache })
+
+  const handleNoteSelect = zettelId => {
+    findNote({ variables: { zettelId }})
+  }
+
+  const handleNoteCreate = zettelId => {
+    console.log('ON_CREATE', zettelId)
+  }
 
   return (
     <div id='top-bar'>
       <Button Icon={MdSearch} onClick={searchOnClick} />
       <SearchField
-        onCreate={val => console.log(val) && findNote({ variables: { query: val}})}
-        onSelect={zettelId => {
-          console.log('ON_SELECT', zettelId)
-          findNote({ variables: { zettelId } })
-        }}
+        onCreate={handleNoteCreate}
+        onSelect={handleNoteSelect}
         fieldRef={searchFieldRef}
       />
     </div>

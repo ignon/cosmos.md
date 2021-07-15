@@ -24,7 +24,8 @@ const useLogin = ({ onCompleted }) => {
     })
   }
 
-  return [wrapperLogin]
+  const isLoggedIn = (localStorage.getItem('token'))
+  return [wrapperLogin, isLoggedIn]
 }
 
 export default useLogin
