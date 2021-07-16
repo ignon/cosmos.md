@@ -1,7 +1,7 @@
 import { LOGIN } from './query'
 import { useMutation } from "@apollo/client";
 
-const useLogin = ({ onCompleted }) => {
+const useLogin = ({ onCompleted }={}) => {
   const [login] = useMutation(LOGIN, {
     onCompleted: async ({ login }) => {
       const token = (login?.token)
@@ -24,8 +24,8 @@ const useLogin = ({ onCompleted }) => {
     })
   }
 
-  const isLoggedIn = (localStorage.getItem('token'))
-  return [wrapperLogin, isLoggedIn]
+  const isLoggedIn = Boolean(localStorage.getItem('token'))
+  return { login: wrapperLogin, isLoggedIn }
 }
 
 export default useLogin

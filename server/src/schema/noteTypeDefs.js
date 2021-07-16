@@ -29,6 +29,7 @@ const typeDefs = gql`
     findNote(query: String, zettelId: String, title: String): Note
     findNotes(title: String, zettelId: String, tag: String): [Note]!
     findLatestNotes: [Note]!
+    allTags: [String!]!
   }
 
   extend type Mutation {

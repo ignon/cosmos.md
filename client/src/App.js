@@ -16,22 +16,29 @@ import Backlinks from './Components/Backlinks'
 import { useState } from "react/cjs/react.development";
 import { useTimer } from './utils'
 import useEditNote from './hooks/editNote'
+import TagField from './Components/TagField'
+import { useRouteMatch } from 'react-router-dom'
 
 function App() {
 
-  const [myVar, setMyVar] = useState('myVar')
+  console.log('APP')
   const [text, setText] = useState('')
-  const [login, isLoggedIn] = useLogin({ onCompleted: _ => true })
+  const { login, isLoggedIn } = useLogin({ onCompleted: _ => true })
   const { timerCompleted, setTimer } = useTimer(0.1)
 
-  console.log({ text })
 
   useEffect(() => {
     login({ username: 'TestUser', password: 'Password' })
   }, [])
 
 
+  // const noteQueryMatch = useRouteMatch('/:query')
+  // const query = noteQueryMatch?.params.query
+  // console.log({ query })
+
   const editor = useReactiveVar(editorVar)
+
+  const { editNote } = useEditNote()
 
   const note = useNote({
     onChange: note => {
@@ -43,7 +50,6 @@ function App() {
 
   document.note = { ...note, text }
 
-  const { editNote } = useEditNote()
 
 
 
@@ -74,12 +80,13 @@ const TopBar = () => {
   return (
     <div id='top-bar'>
       <SearchBar />
+      <TagField />
     </div>
   )
 }
 
 
-const SearchBar = ({ className }) => {
+const SearchBar = () => {
 
   const searchFieldRef = useRef()
 
@@ -93,15 +100,12 @@ const SearchBar = ({ className }) => {
     searchFieldRef.current?.focus()
   }
 
-  // const client = useApolloClient()
-  // console.log({ cache: client.cache })
-
   const handleNoteSelect = zettelId => {
     findNote({ variables: { zettelId }})
   }
 
-  const handleNoteCreate = zettelId => {
-    console.log('ON_CREATE', zettelId)
+  const handleNoteCreate = title => {
+    console.log('ON_CREATE', title)
   }
 
   return (
@@ -117,3 +121,7 @@ const SearchBar = ({ className }) => {
 }
 
 export default App;
+
+
+// const client = useApolloClient()
+// console.log({ cache: client.cache })

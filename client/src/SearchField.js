@@ -51,6 +51,12 @@ const SearchField = ({ fieldRef, onCreate, onSelect }) => {
     findLatesNotes()
   }
 
+  const style = {
+    control: base => ({
+      ...base,
+      border: 'none'
+    }),
+  }
 
   return (
     <ReactSelect
@@ -66,7 +72,9 @@ const SearchField = ({ fieldRef, onCreate, onSelect }) => {
       onInputChange={handleSearchInputChange}
       filterOption={() => true}
       formatOptionLabel={args => <NoteOption {...args} />}
+      components={{ IndicatorSeparator: () => null, DropdownIndicator: () => null }}
       ref={fieldRef}
+      styles={style}
     />
   )
 }

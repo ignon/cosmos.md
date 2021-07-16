@@ -96,17 +96,26 @@ div:has(div.toastui-editor-defaultUI) {
   margin-left: 10px;
 }
 
-#notelist {
+.backlinks {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  border-left: 1px solid gray;
+  padding-left: 10px;
+  margin-bottom: 30px;
+}
+
+#wikilinks {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
 }
 
-#backlinksTitle {
+#notelistContainer h2 {
   font-size: 25px;
   padding: 0;
-  margin-bottom: 10px;
-  color: #EEE
+  margin-bottom: 8px;
+  color: #EEE;
 }
 
 #note-sidebar a {
@@ -120,6 +129,12 @@ div:has(div.toastui-editor-defaultUI) {
   flex-shrink: 1;
   min-width: 140px;
   padding-right: 10px;
+  padding-bottom: 10px;
+  /* border-left: 1px solid gray; */
+}
+
+.backlink:last-child {
+  padding-bottom: 3px;
 }
 
 .toastui-editor-contents {
@@ -223,14 +238,24 @@ button {
   display: flex;
   flex-direction: row;
   flex-grow: 1;
+  align-items: center;
+  justify-content: space-between;
 }
 
 #search-container {
   display: flex;
 }
 
+.tag-field {
+  padding-left: 10px;
+  padding-right: 10px;
+  min-width: 120px;
+  margin-bottom: 6px;
+}
+
 .search-bar {
-  min-width: 300px;
+  min-width: 200px;
+  max-width: 80%;
   margin-top: 6px;
 }
 
@@ -239,10 +264,60 @@ button {
   color: gray;
 }
 
-#notelist .wikilink {
+#top-bar {
+  display: flex;
+  flex-direction: row;
+}
+
+#notelistContainer .wikilink {
   color: #EEE;
   font-size: 14px;
   padding-top: 2px;
   font-style: italic;
   font-weight: 350;
+}
+
+#notelistContainer .tags {
+  font-size: 15px;
+}
+
+#notelistContainer .title {
+  font-size: 16px;
+}
+
+#notelistContainer .note-title {
+  font-size: 18px;
+}
+
+#notelistContainer h2 {
+  font-size: 18px;
+}
+
+#note-sidebar .tag-container a {
+  font-weight: 400;
+  /* font-style: italic; */
+}
+
+#note-sidebar .tag a {
+  font-weight: 350;
+  font-style: italic;
+  font-size: 15px;
+  display: block;
+  min-width: 140px;
+}
+
+
+#note-sidebar a:hover {
+  text-decoration: underline;
+}
+
+
+#top-bar .note-title {
+  flex-grow: 1;
+  color: #4d4d4d;
+  font-family: 'Open Sans';
+  font-weight: 600;
+  font-size: 20px;
+  padding-bottom: 7px;
+  padding-left: 21px;
 }

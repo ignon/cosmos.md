@@ -1,6 +1,6 @@
 POST http://localhost:4000/graphql
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFyZGUxMCIsImlkIjoiNjBlZTBlNGI2MWI3ZTk2ZjBkZGM4NWI5IiwiaWF0IjoxNjI2MjEzOTcxLCJleHAiOjE2MjYyMTc1NzF9.K1t6o-hXoHvEKiBgarGSi2eTShzzki5cu3zrYM9wgOs
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFyZGUxMCIsImlkIjoiNjBmMDY1Mzg2NDNhNzY2NjI3NDg0ZTc2IiwiaWF0IjoxNjI2MzY3Mjg4LCJleHAiOjE2MjYzNzA4ODh9.Q1jNMkV30rab3yiZaYXeqy4qSYuGUCACb-pDOHJV_7k
 X-REQUEST-TYPE: GraphQL
 
 mutation addNote($note: NoteArgs){
@@ -18,9 +18,9 @@ mutation addNote($note: NoteArgs){
 
 {
   "note": {
-    "title": "newera22 note",
-    "zettelId": "41322292283428902732",
-    "text": "[[moikkelis]] [[anarchy]] [[ApolloClient]] #life"
+    "title": "newera22 2note",
+    "zettelId": "413222292283428902732",
+    "text": "[[moikkelis]] [[anarchy]] [[ApolloClient]] #apollo"
   }
 }
 
@@ -170,4 +170,16 @@ query findLatestNotes {
   findLatestNotes {
     title
   }
+}
+
+
+###
+
+POST http://localhost:4000/graphql
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFyZGUxMCIsImlkIjoiNjBmMDY1Mzg2NDNhNzY2NjI3NDg0ZTc2IiwiaWF0IjoxNjI2MzY3Mjg4LCJleHAiOjE2MjYzNzA4ODh9.Q1jNMkV30rab3yiZaYXeqy4qSYuGUCACb-pDOHJV_7k
+X-REQUEST-TYPE: GraphQL
+
+query allTags {
+  allTags
 }

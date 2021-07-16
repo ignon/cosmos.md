@@ -4,6 +4,7 @@ import { FIND_NOTE } from './query'
 
 const useNote = ({ onChange, fetchPolicy='cache-only' } = {}) => {
   const zettelId = useReactiveVar(zettelIdVar)
+  console.log({ zettelId: zettelIdVar() })
 
   const result = useQuery(FIND_NOTE, {
     fetchPolicy,

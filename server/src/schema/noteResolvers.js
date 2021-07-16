@@ -91,6 +91,13 @@ const resolvers = {
       catch(error) {
         throw new UserInputError('Input error ' + error.message, { invalidArgs: true })
       }
+    },
+    allTags: async (_, args, ctx) => {
+      requireAuth(ctx)
+      const { userId } = ctx
+
+      const tags = await Note.find({ userId }).distinct('tags')
+      return tags
     }
   },
   Note: {

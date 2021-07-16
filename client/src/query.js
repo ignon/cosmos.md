@@ -89,3 +89,9 @@ export const CLEAR_NOTES = gql`
     response
   }
 `
+
+export const ALL_TAGS = gql`
+  query allTags {
+    allTags
+  }
+`

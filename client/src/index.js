@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { StrictMode } from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
-import { ApolloClient, ApolloProvider, HttpLink } from '@apollo/client'
+import { ApolloClient, ApolloProvider as Apollo, HttpLink } from '@apollo/client'
 import { setContext } from '@apollo/client/link/context'
-import { IconContext } from 'react-icons'
+import { IconContext as Icon } from 'react-icons'
+import { BrowserRouter as Router } from 'react-router-dom'
 import cache from './cache'
 
 
@@ -32,16 +33,21 @@ const client = new ApolloClient({
   }
 })
 
+const iconOptions = {
+  className: 'react-icons'
+}
 
 
 ReactDOM.render(
-  <React.StrictMode>
-    <ApolloProvider client={client}>
-      <IconContext.Provider value={{ className: 'react-icons'}}>
-        <App />
-      </IconContext.Provider>
-    </ApolloProvider>
-  </React.StrictMode>,
+  <StrictMode>
+    <Router>
+      <Apollo client={client}>
+        <Icon.Provider value={iconOptions}>
+          <App />
+        </Icon.Provider>
+      </Apollo>
+    </Router>
+  </StrictMode>,
 
   document.getElementById('root')
 );
