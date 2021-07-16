@@ -1,5 +1,6 @@
 import useNote from "../useNote";
 import { useMediaQuery } from '@react-hook/media-query'
+import NoteLink from './NoteLink'
 
 const Backlinks = () => {
   const note = useNote()
@@ -7,8 +8,6 @@ const Backlinks = () => {
 
   if (!note) return null
 
-
-  console.log(({ potrait }))
 
   const { backlinks, wikilinks, tags } = note
 
@@ -24,20 +23,19 @@ const Backlinks = () => {
 
   return (
     <div id='notelistContainer'>
-      {<h1 className='note-title'>{note?.title || 'Unnamed'}</h1>}
-      <h2 id='backlinksTitle'>{backlinkTitle}</h2>
-      <div className='backlinks'>
-        {backlinks.map(({ title, tags, zettelId, wikilinks}) =>
-          <div key={zettelId} className='backlink'>
-            <a className='title' href='/'> {title} </a>
-            <div className='tags'>{tags.map(tag => '#' + tag).join(' ')} </div>
-            <div className='wikilink'>- {wikilinks
-              .filter(title => title !== note.title)
-              .join(', ')} -</div>
-          </div>
-        )}
-        {backlinks.length === 0 && <div>No backlinks</div>}
-      </div>
+      <NoteTitle title={note.title} />
+      <NoteList
+        title={backlinkTitle}
+        currentNote={note}
+        notes={backlinks}
+        emptyMessage={'No backlinks'}
+      />
+      <NoteList
+        title='Refecenred notes'
+        currentNote={note}
+        notes={wikilinks}
+        emptyMessage='No referenced notes'
+      />
       {!potrait && (
         <div>
           <h2 id='backlinksTitle'>References notes</h2>
@@ -45,7 +43,7 @@ const Backlinks = () => {
             <div>
               {wikilinks.map(title =>
                 <div key={title} className='backlink'>
-                  <a href='/'> {title} </a>
+                  <NoteLink title={title} />
                 </div>
               )}
             </div>
@@ -63,6 +61,54 @@ const Backlinks = () => {
       )}
     </div>
   )
+}
+
+const NoteTitle = ({ title }) => {
+  return (
+    <h1 className='note-title'>{title || 'Unnamed'}</h1>
+  )
+}
+
+const NoteList = ({ currentNote, title, notes, emptyMessage, renderIf }) => {
+
+  if ((renderIf)  && !renderIf()) {
+    return null
+  }
+
+  const renderTags = (tags=[]) => {
+    return (
+      <div className='tags'>{tags.map(tag => '#' + tag).join(' ')} </div>
+    )
+  }
+
+  const renderWikilinks = (wikilinks=[]) => {
+    return (
+      <div className='wikilink'>- {wikilinks
+        .filter(title => title !== currentNote.title)
+        .map((title, i) => (
+          <NoteLink title={title} />
+        ))} -
+      </div>
+    )
+  }
+
+
+  return (
+    <div>
+      <h2 id='backlinksTitle'>{title}</h2>
+      <div className='backlinks'>
+        {notes.map(({ title, tags, wikilinks}) =>
+          <div key={title} className='backlink'>
+            <NoteLink title={title} />
+            {renderTags(tags)}
+            {renderWikilinks(wikilinks)}
+          </div>
+        )}
+        {notes.length === 0 && <div>{emptyMessage}</div>}
+      </div>
+    </div>
+  )
+
 }
 
 export default Backlinks

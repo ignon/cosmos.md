@@ -13,20 +13,15 @@ const NoteEditor = ({ onChange }) => {
   const getEditor = () => editorRef.current?.editorInst
   const editor = getEditor()
 
-  console.log({ editorRef })
 
   useEffect(() => {
-    axios.get('https://raw.githubusercontent.com/rust-lang/rfcs/master/README.md')
-      .then(async (result) => {
+    const editorMount = async () => {
+      await until(() => (getEditor()))
+      const editor = getEditor()
+      editorVar(editor)
+    }
 
-        await until(() => (getEditor()))
-        const editor = getEditor()
-
-        editorVar(editor)
-
-        const text = result.data
-        editor.setMarkdown(text, false)
-      })
+    editorMount()
   }, [])
 
 

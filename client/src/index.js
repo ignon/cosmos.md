@@ -6,7 +6,9 @@ import { setContext } from '@apollo/client/link/context'
 import { IconContext as Icon } from 'react-icons'
 import { BrowserRouter as Router } from 'react-router-dom'
 import cache from './cache'
+import config from './config'
 
+const { SERVER_URL } = config
 
 
 const authLink = setContext((req, ctx) => {
@@ -23,7 +25,7 @@ const authLink = setContext((req, ctx) => {
   }
 })
 
-const httpLink = new HttpLink({ uri: 'http://localhost:4000/graphql' })
+const httpLink = new HttpLink({ uri: SERVER_URL })
 const client = new ApolloClient({
   cache,
   link: authLink.concat(httpLink),

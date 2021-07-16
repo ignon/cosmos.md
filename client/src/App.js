@@ -1,14 +1,13 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 
-import { useMutation, useLazyQuery, useReactiveVar } from "@apollo/client";
+import { useReactiveVar } from "@apollo/client";
 import React, { useEffect, useRef } from "react";
-import { FIND_NOTE } from "./query";
 import NoteEditor from './NoteEditor'
 import './index.css'
 import { MdSearch, MdAccountBox, MdDelete } from 'react-icons/md'
 import SearchField from './SearchField'
 import useNote from "./useNote";
-import { editorVar, zettelIdVar } from "./cache";
+import { editorVar } from "./cache";
 import useLogin from "./useLogin";
 import Button from './Button'
 import EditorFrame from './Components/EditorFrame'
@@ -17,7 +16,8 @@ import { useState } from "react/cjs/react.development";
 import { useTimer } from './utils'
 import useEditNote from './hooks/editNote'
 import TagField from './Components/TagField'
-import { useRouteMatch } from 'react-router-dom'
+import { until } from './utils'
+import { useHistory } from "react-router";
 
 function App() {
 
@@ -32,18 +32,14 @@ function App() {
   }, [])
 
 
-  // const noteQueryMatch = useRouteMatch('/:query')
-  // const query = noteQueryMatch?.params.query
-  // console.log({ query })
-
   const editor = useReactiveVar(editorVar)
 
   const { editNote } = useEditNote()
 
   const note = useNote({
-    onChange: note => {
-      console.log({ note })
-      editor?.setMarkdown(note.text)
+    onChange: async note => {
+      await until(() => (editor))
+      editor.setMarkdown(note.text)
       setText(note.text)
     }
   })
@@ -51,12 +47,13 @@ function App() {
   document.note = { ...note, text }
 
 
-
-
   useEffect(() => {
     if (isLoggedIn && note && note.text !== text && timerCompleted) {
-      editNote({ ...note, text })
-      setTimer(1)
+      const text = editor.getMarkdown()
+      if (text) {
+        editNote({ ...note, text })
+        setTimer(0.1)
+      }
     }
   }, [isLoggedIn, text, timerCompleted])
 
@@ -88,24 +85,20 @@ const TopBar = () => {
 
 const SearchBar = () => {
 
+  const history = useHistory()
   const searchFieldRef = useRef()
 
-  const [findNote] = useLazyQuery(FIND_NOTE, {
-    onCompleted({ findNote: note }) {
-      zettelIdVar(note.zettelId)
-    }
-  })
 
   const searchOnClick = () => {
     searchFieldRef.current?.focus()
   }
 
-  const handleNoteSelect = zettelId => {
-    findNote({ variables: { zettelId }})
+  const handleNoteSelect = title => {
+    history.push(title) 
   }
 
   const handleNoteCreate = title => {
-    console.log('ON_CREATE', title)
+    history.push(title) 
   }
 
   return (
@@ -121,7 +114,3 @@ const SearchBar = () => {
 }
 
 export default App;
-
-
-// const client = useApolloClient()
-// console.log({ cache: client.cache })

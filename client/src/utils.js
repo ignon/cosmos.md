@@ -1,4 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
+import dateFormat from 'dateformat'
 import { useEffect, useState } from "react/cjs/react.development";
 
 export const delay = (timer=100) => ( 
@@ -29,4 +30,15 @@ export const useTimer = (initialPause) => {
   useEffect(() => setTimer(), [])
 
   return { timerCompleted, setTimer }
+}
+
+export const getZettelId = (dateString=null) => {
+  const date = (dateString)
+    ? new Date(dateString)
+    : new Date()
+
+  const format = 'yyyy-mm-dd-HH-MM-ss'
+  const zettelId = dateFormat(date, format).replace(/-/g, '')
+
+  return zettelId
 }

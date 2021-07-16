@@ -269,7 +269,9 @@ button {
   flex-direction: row;
 }
 
-#notelistContainer .wikilink {
+#notelistContainer .wikilink,
+#notelistContainer .wikilink a
+ {
   color: #EEE;
   font-size: 14px;
   padding-top: 2px;
@@ -277,6 +279,9 @@ button {
   font-weight: 350;
 }
 
+#notelistContainer .wikilink a {
+  margin-right: 3px;
+}
 #notelistContainer .tags {
   font-size: 15px;
 }

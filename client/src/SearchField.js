@@ -38,10 +38,10 @@ const SearchField = ({ fieldRef, onCreate, onSelect }) => {
 
   const handleSearchInputChange = (input, { action }) => {
     if (action === 'input-change') {
-      setSearchQuery(input)
 
       const options = filterOptions(input, notes, latestNotes)
       setOptions(options)
+      setSearchQuery(input)
     }
   }
 
@@ -81,9 +81,9 @@ const SearchField = ({ fieldRef, onCreate, onSelect }) => {
 
 
 const parseOptionsFromNotes = (notes) => {
-  return notes.map(({ title, zettelId, tags }) => ({
+  return notes.map(({ title, tags }) => ({
     label: title,
-    value: zettelId,
+    value: title,
     tags
   }))
 }
