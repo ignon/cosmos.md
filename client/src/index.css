@@ -34,8 +34,6 @@ code {
 
 
 #header {
-  /* padding-top: 3px;
-  padding-left: 5px; */
   height: 50px;
 }
 
@@ -97,19 +95,11 @@ div:has(div.toastui-editor-defaultUI) {
 }
 
 .backlinks {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
   border-left: 1px solid gray;
   padding-left: 10px;
   margin-bottom: 30px;
 }
 
-#wikilinks {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-}
 
 #notelistContainer h2 {
   font-size: 25px;
@@ -125,12 +115,8 @@ div:has(div.toastui-editor-defaultUI) {
 }
 
 .backlink {
-  flex-grow: 0;
-  flex-shrink: 1;
-  min-width: 140px;
   padding-right: 10px;
   padding-bottom: 10px;
-  /* border-left: 1px solid gray; */
 }
 
 .backlink:last-child {
@@ -172,7 +158,6 @@ button {
 
 #note-editor .toastui-editor-main {
   max-width: 800px;
-  /* border: 1px solid black; */
   position: relative;
   left: 50%;
   transform: translateX(-50%);

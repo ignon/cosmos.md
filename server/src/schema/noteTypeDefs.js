@@ -6,8 +6,10 @@ const typeDefs = gql`
     title: String!
     zettelId: String!
     tags: [String!]!
-    wikilinks: [String]!
+    wikilinks: [Note!]!
     backlinks: [Note!]!
+    wikilinkTitles: [String!]!
+    backlinkTitles: [String!]!
     text: String!
     userId: String
   }

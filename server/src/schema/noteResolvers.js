@@ -34,7 +34,6 @@ const resolvers = {
       requireAuth(ctx)
 
       const { userId } = ctx
-      console.log('all notes ', userId )
       return Note.find({ userId })
     },
     findNotes: (_, { tag, title, zettelId }, ctx) => {
@@ -52,7 +51,6 @@ const resolvers = {
       return Note.find(mongoQuery)
     },
     findNote: async (_, { query, title, zettelId }, ctx) => {
-      console.log(ctx)
       requireAuth(ctx)
 
       const zettelIdRegex = /^\d+$/
@@ -69,6 +67,9 @@ const resolvers = {
         mongoQuery = (isValidZettelId)
           ? { $or: [{ zettelId: query }, { title: query }] }
           : { title: query }
+      }
+      else {
+        return null
       }
 
 
@@ -150,23 +151,19 @@ const resolvers = {
     editNote: async (_, args, ctx) => {
       requireAuth(ctx)
 
-      console.log('EDIT')
-
       const note = parseNote(args.note)
       note.userId = ctx.userId
 
-      const { zettelId, title } = note
+      console.log('EDIT', { note })
 
-      const oldNote = await Note.findOne({ zettelId })
-      if (!oldNote) {
-        throw new Error(`Note with zettelId ${zettelId} doesn't exist`)
-      }
+      const { title } = note
 
-      if (oldNote.title !== title) {
-        logger.info('Updating notes which have wikilink to this note')
-      }
+      const updatedNote = await Note.findOneAndUpdate({ title }, note, {
+        // setDefaultsOnInsert: true,
+        // new: true,
+        upsert: true,
+      })
 
-      const updatedNote = await Note.findOneAndUpdate({ zettelId }, note, { new: true })
 
       if (!updatedNote) {
         throw new UserInputError(`Note with zettelId: '${zettelId}' doesn't exist`)
