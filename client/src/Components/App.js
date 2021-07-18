@@ -1,27 +1,25 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 
+import '../styles/index.css'
 import { useReactiveVar } from "@apollo/client";
 import React, { useEffect, useRef } from "react";
 import NoteEditor from './NoteEditor'
-import './index.css'
-import { MdSearch, MdAccountBox, MdDelete } from 'react-icons/md'
+import { MdSearch } from 'react-icons/md'
 import SearchField from './SearchField'
-import useNote from "./useNote";
-import { editorVar } from "./cache";
-import useLogin from "./useLogin";
+import useNote from "../useNote";
+import { editorVar } from "../cache";
+import useLogin from "../useLogin";
 import Button from './Button'
-import EditorFrame from './Components/EditorFrame'
-import Backlinks from './Components/Backlinks'
+import EditorFrame from './EditorFrame'
+import Backlinks from './Backlinks'
 import { useState } from "react/cjs/react.development";
-import { useTimer } from './utils'
-import useEditNote from './hooks/editNote'
-import TagField from './Components/TagField'
-import { until } from './utils'
+import { useTimer, until } from '../utils/utils'
+import useEditNote from '../operations/mutations/editNote'
+import TagField from './TagField'
 import { useHistory } from "react-router";
 
 function App() {
 
-  console.log('APP')
   const [text, setText] = useState('')
   const { login, isLoggedIn } = useLogin({ onCompleted: _ => true })
   const { timerCompleted, setTimer } = useTimer(0.1)
@@ -52,7 +50,7 @@ function App() {
       const text = editor.getMarkdown()
       if (text) {
         editNote({ ...note, text })
-        setTimer(0.1)
+        setTimer(1)
       }
     }
   }, [isLoggedIn, text, timerCompleted])

@@ -12,6 +12,9 @@ const useLogin = ({ onCompleted }={}) => {
       }
 
       onCompleted?.()
+    },
+    onError: (err) => {
+      alert('User not logged in', err.message)
     }
   })
 

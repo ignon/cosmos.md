@@ -10,15 +10,14 @@ export const ALL_NOTES = gql`
   }
 `
 
-export const LATEST_NOTES = gql`
-  query latestNotes {
-    findLatestNotes {
+export const SEARCH_NOTES = gql`
+  query SearchNotes($input: String!) {
+    searchNotes(input: $input) {
       title
-      zettelId
-      tags
     }
   }
 `
+
 
 export const ADD_NOTE = gql`
   mutation addNote($note: NoteArgs){
@@ -50,23 +49,6 @@ export const EDIT_NOTE = gql`${
   EDIT_NOTE_STRING
 }`
 
-export const FIND_NOTE = gql`
-  query findNote($query: String, $title: String, $zettelId: String) {
-    findNote(query: $query, title: $title, zettelId: $zettelId) {
-      title
-      zettelId
-      text
-      tags
-      wikilinks
-      backlinks {
-        title
-        tags
-        wikilinks
-        zettelId
-      }
-    }
-  }
-`
 
 export const REGISTER = gql`
   mutation register($username: String!, $password: String!){

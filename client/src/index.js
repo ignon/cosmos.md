@@ -1,12 +1,14 @@
 import React, { StrictMode } from 'react';
 import ReactDOM from 'react-dom';
-import App from './App';
+import App from './Components/App';
 import { ApolloClient, ApolloProvider as Apollo, HttpLink } from '@apollo/client'
 import { setContext } from '@apollo/client/link/context'
 import { IconContext as Icon } from 'react-icons'
 import { BrowserRouter as Router } from 'react-router-dom'
 import cache from './cache'
-import config from './config'
+import config from './utils/config'
+// import history from './utils/history'
+
 
 const { SERVER_URL } = config
 

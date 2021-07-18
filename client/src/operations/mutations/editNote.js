@@ -1,8 +1,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { EDIT_NOTE, EDIT_NOTE_STRING } from '../query'
+import { EDIT_NOTE, EDIT_NOTE_STRING } from '../../query'
 import { useMutation } from '@apollo/client'
 import { useEffect } from 'react'
-import config from '../config'
+import config from '../../utils/config'
 const { SERVER_URL } = config
 
 

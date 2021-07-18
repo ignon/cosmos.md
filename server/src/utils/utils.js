@@ -1,13 +1,13 @@
 import dateFormat from 'dateformat'
 
 
-export const getZettelId = (dateString=null) => {
-  const date = (dateString)
-    ? new Date(dateString)
-    : new Date()
-
+export const getZettelId = (date=new Date, sparce=true) => {
   const format = 'yyyy-mm-dd-HH-MM-ss'
-  const zettelId = dateFormat(date, format).replace(/-/g, '')
+  let zettelId = dateFormat(date, format)
+
+  if (sparce) {
+    return zettelId.replace(/-/g, '')
+  }
 
   return zettelId
 }
@@ -26,4 +26,8 @@ export const queryBacklinks = (notes, noteTitle) => {
       title,
       zettelId: null
     }))
+}
+
+export function escapeRegexSubstring(string) {
+  return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
 }

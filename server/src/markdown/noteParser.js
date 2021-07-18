@@ -66,6 +66,7 @@ export const parseNote = (args) => {
       tags
     },
     yaml: yamlString,
+    modified: new Date()
     // yamlData: yaml
   }
 }

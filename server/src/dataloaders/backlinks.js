@@ -16,6 +16,8 @@ const backlinks = new DataLoader(async (titles) => {
     ]
   }).select('title wikilinks hashtags -_id')
     
+  // console.log('TITLES', titles)
+  // console.log('BACKLINK NOTES', backlinkNotes)
 
   backlinkNotes.forEach(note => {
     note.wikilinks.forEach(wikilink => {

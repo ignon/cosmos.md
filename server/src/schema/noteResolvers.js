@@ -2,31 +2,43 @@ import __ from 'lodash'
 import { parseNote } from '../markdown/noteParser.js'
 import Note from '../models/Note.js'
 import User from '../models/User.js'
-import { AuthenticationError, UserInputError } from 'apollo-server-errors'
+import { UserInputError } from 'apollo-server-errors'
 import logger from '../utils/logger.js'
 import { requireAuth } from '../middleware/middlewareCheck.js'
 import mongoose from 'mongoose'
-import { GraphQLError } from 'graphql'
+import { escapeRegexSubstring, getZettelId } from '../utils/utils.js'
+import { GraphQLScalarType } from 'graphql'
 
 
 const updateRecentNotes = async (note) => {
-  await User.findByIdAndUpdate(note.userId, {
-    $pull: { 
-      recentNotes: {
-        $in: [ note._id ]
-      },
-    },
+  const userId = note.userId
+  const noteId = note._id
+  if (!noteId) return
+
+  const recentNotes = await User.findByIdAndUpdate(userId, {
+    $addToSet: { recentNotes: noteId }
   })
-  await User.findByIdAndUpdate(note.userId, {
-    $push: {
-      recentNotes: {
-        $each: [note._id],
-        $position: 0,
-        $slice: 10
-      }
-    }
-  })
+
+  const maxLength = 10
+
+  if (recentNotes.length > maxLength) {
+    User.findByIdAndUpdate(userId, {
+      recentNotes: __.sortBy(recentNotes, 'modified').slice(0, maxLength)
+    })
+  }
 }
+
+const dateScalar = new GraphQLScalarType({
+  name: 'Date',
+  description: 'Date custom scalar type',
+  serialize: (date) => getZettelId(date),
+  parseValue: (value) => new Date(value),
+  parseLiteral: (ast) => ( 
+    ast.kind === Kind.INT
+      ? new Date(parseInt(ast.value, 10))
+      : null
+   ),
+});
 
 const resolvers = {
   Query: {
@@ -34,23 +46,11 @@ const resolvers = {
       requireAuth(ctx)
 
       const { userId } = ctx
+      console.log('all notes ', userId )
       return Note.find({ userId })
     },
-    findNotes: (_, { tag, title, zettelId }, ctx) => {
-      requireAuth(ctx)
-
-      const mongoQuery = { $or: [] }
-      if (zettelId) mongoQuery.$or.push({ zettelId })
-      if (title) mongoQuery.$or.push({ title })
-      if (tag) mongoQuery.$or.push({ tags: { $in: tag } })
-
-      if (mongoQuery.$or.length === 0) {
-        return []
-      }
-
-      return Note.find(mongoQuery)
-    },
     findNote: async (_, { query, title, zettelId }, ctx) => {
+      console.log(ctx)
       requireAuth(ctx)
 
       const zettelIdRegex = /^\d+$/
@@ -68,12 +68,38 @@ const resolvers = {
           ? { $or: [{ zettelId: query }, { title: query }] }
           : { title: query }
       }
-      else {
-        return null
-      }
-
 
       return Note.findOne(mongoQuery)
+    },
+    searchNotes: async (_, args, ctx) => {
+      requireAuth(ctx)
+
+      const { userId } = ctx
+      const input = escapeRegexSubstring(args.input)
+
+      if (!input) {
+        const user = await User
+          .findById(userId)
+          .populate('recentNotes')
+        
+        const { recentNotes } = user
+        return __.sortBy(recentNotes, 'modified')
+          // .reverse()
+      }
+
+      const $regex = new RegExp(`^${input}`, 'i')
+
+      const notes = await Note.find({
+        $or: [
+          { userId, title: { $regex } },
+          { userId, $text: { $search: input } },
+        ]
+      })
+        .limit(20)
+
+      console.log({ notes })
+
+      return notes
     },
     findLatestNotes: async (_, args, ctx) => {
       console.log(ctx)
@@ -87,7 +113,6 @@ const resolvers = {
 
         const { recentNotes } = user
 
-        return recentNotes
       }
       catch(error) {
         throw new UserInputError('Input error ' + error.message, { invalidArgs: true })
@@ -101,6 +126,7 @@ const resolvers = {
       return tags
     }
   },
+  Date: dateScalar,
   Note: {
     backlinks: async ({ title }, args, context) => {
       const { backlinks } = context.loaders
@@ -114,7 +140,7 @@ const resolvers = {
         return mongoose.Types.ObjectId(userId)
       }
       return userId
-    }
+    },
   },
   Mutation: {
     addNote: async (_, args, ctx) => {
@@ -159,15 +185,9 @@ const resolvers = {
       const { title } = note
 
       const updatedNote = await Note.findOneAndUpdate({ title }, note, {
-        // setDefaultsOnInsert: true,
-        // new: true,
         upsert: true,
+        new: true
       })
-
-
-      if (!updatedNote) {
-        throw new UserInputError(`Note with zettelId: '${zettelId}' doesn't exist`)
-      }
 
       updateRecentNotes(updatedNote)
 
@@ -177,3 +197,4 @@ const resolvers = {
 }
 
 export default resolvers
+

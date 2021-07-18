@@ -1,15 +1,16 @@
 import { gql } from 'apollo-server'
 
 const typeDefs = gql`
+  scalar Date
+
   type Note {
     id: ID!
     title: String!
     zettelId: String!
     tags: [String!]!
-    wikilinks: [Note!]!
+    wikilinks: [String]!
     backlinks: [Note!]!
-    wikilinkTitles: [String!]!
-    backlinkTitles: [String!]!
+    modified: Date
     text: String!
     userId: String
   }
@@ -30,6 +31,7 @@ const typeDefs = gql`
     allNotes: [Note!]!
     findNote(query: String, zettelId: String, title: String): Note
     findNotes(title: String, zettelId: String, tag: String): [Note]!
+    searchNotes(input: String!): [Note!]!
     findLatestNotes: [Note]!
     allTags: [String!]!
   }

@@ -254,17 +254,18 @@ button {
   flex-direction: row;
 }
 
-#notelistContainer .wikilink,
-#notelistContainer .wikilink a
+#notelistContainer .wikilinks,
+#notelistContainer .wikilinks a
  {
   color: #EEE;
   font-size: 14px;
   padding-top: 2px;
   font-style: italic;
   font-weight: 350;
+  display: inline-block;
 }
 
-#notelistContainer .wikilink a {
+#notelistContainer .wikilinks a {
   margin-right: 3px;
 }
 #notelistContainer .tags {
@@ -310,4 +311,13 @@ button {
   font-size: 20px;
   padding-bottom: 7px;
   padding-left: 21px;
+}
+
+#note-editor a {
+  color: #747474cf;
+  text-decoration: none;
+}
+
+#note-editor a:hover {
+  text-decoration: underline;
 }

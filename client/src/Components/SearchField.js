@@ -1,9 +1,9 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState } from "react";
-import { ALL_NOTES, LATEST_NOTES } from "./query";
-import { useLazyQuery } from "@apollo/client";
+import { SEARCH_NOTES } from "../query";
+import { useLazyQuery, useQuery } from "@apollo/client";
 import ReactSelect from 'react-select/creatable'
-import { escapeRegexSubstring } from './utils'
+import { escapeRegexSubstring } from '../utils/utils'
 import { useEffect } from "react/cjs/react.development";
 
 
@@ -12,20 +12,19 @@ const SearchField = ({ fieldRef, onCreate, onSelect }) => {
   const [options, setOptions] = useState([])
   const [searchQuery, setSearchQuery] = useState('')
 
-  const [getNotes, { data }] = useLazyQuery(ALL_NOTES, {
-    fetchPolicy: 'cache-and-network'
-  })
-  const [findLatesNotes, { data: latestData }] = useLazyQuery(LATEST_NOTES, {
-    fetchPolicy: 'cache-and-network'
+  const [searchNotes, { data }] = useLazyQuery(SEARCH_NOTES, {
+    fetchPolicy: 'cache-and-network',
+    variables: {
+      input: searchQuery
+    }
   })
 
-  const notes = data?.allNotes || []
-  const latestNotes = latestData?.findLatestNotes || []
+  const notes = data?.searchNotes || []
 
   useEffect(() => {
-    const options = filterOptions(searchQuery, notes, latestNotes)
+    const options = parseOptionsFromNotes(notes)
     setOptions(options)
-  }, [`${[searchQuery, notes, latestNotes]}`])
+  }, [`${[searchQuery, notes]}`])
 
 
 
@@ -38,17 +37,17 @@ const SearchField = ({ fieldRef, onCreate, onSelect }) => {
 
   const handleSearchInputChange = (input, { action }) => {
     if (action === 'input-change') {
-
-      const options = filterOptions(input, notes, latestNotes)
+      const options = parseOptionsFromNotes(notes)
       setOptions(options)
+      // const options = filterOptions(input, notes)
+      // setOptions(options)
       setSearchQuery(input)
     }
   }
 
 
   const handleSearchOpen = () => {
-    getNotes()
-    findLatesNotes()
+    searchNotes('')
   }
 
   const style = {
