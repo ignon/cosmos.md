@@ -37,7 +37,7 @@ export const parseNote = (args) => {
   // In web editor
   if (zettelId !== yaml.zettelId) {
     yaml.zettelId = zettelId
-    text = text.replace()
+    // text = text.replace()
   }
 
   const yamlString = YAML.stringify(yaml)
@@ -49,6 +49,7 @@ export const parseNote = (args) => {
   //   : `${markdownYAML}\n${text}`
   
   if (textHasYaml) {
+    // console.log({ text })
     text = text.replaceFirst(yamlRegex, '')
   }
 

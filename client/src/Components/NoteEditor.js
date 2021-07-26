@@ -23,7 +23,6 @@ const NoteEditor = ({ onChange }) => {
       const editor = getEditor()
       editorVar(editor)
 
-      // Force editor to resize
       window.dispatchEvent(new Event('resize'));
     }
 
@@ -50,7 +49,7 @@ const NoteEditor = ({ onChange }) => {
   return (
     <Editor
       initialValue=''
-      initialEditType='markdown'
+      initialEditType='wysiwyg'
       previewStyle='tab'
       height='100%'
       ref={editorRef}
@@ -76,17 +75,17 @@ const NoteEditor = ({ onChange }) => {
             return span
           }
         },
-        {
-          rule: hashtagRE,
-          toDOM: (text) => {
-            const rule = hashtagRE
-            const matched = text.match(rule)
-            const span = document.createElement('span')
-            const title = matched[0]
-            span.innerHTML = `<a class="widget-anchor" href="/${title}">${title}</a>`
-            return span
-          }
-        },
+        // {
+        //   rule: hashtagRE,
+        //   toDOM: (text) => {
+        //     const rule = hashtagRE
+        //     const matched = text.match(rule)
+        //     const span = document.createElement('span')
+        //     const title = matched[0]
+        //     span.innerHTML = `<a class="widget-anchor" href="/${title}">${title}</a>`
+        //     return span
+        //   }
+        // },
       ]}
       toolbarItems={[
           ['heading', 'bold', 'italic', 'strike'],

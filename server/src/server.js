@@ -6,12 +6,12 @@ import config from './utils/config.js'
 import logger from './utils/logger.js'
 import createDataloaders from './dataloaders/createDataLoaders.js'
 import User from './models/User.js'
+import setupNotes from './setupNotes/setupNotes.js'
 
-let testUser
+let testUser, defaultUser
+
 const { NODE_ENV, NODE_ENVS } = config
 const TEST_MODE = (NODE_ENV === NODE_ENVS.TEST);
-
-console.log(NODE_ENV, TEST_MODE)
 
 const url = config.MONGODB_URI
 
@@ -24,13 +24,14 @@ mongoose.connect(url, {
 })
   .then(result => {
     logger.info('connected to MongoDB', url)
+    setupNotes()
   })
   .catch(error => {
     logger.info('error connecting to MongoDB:', error.message)
   });
 
 
-const getUserId = async ({ userId, body }) => {
+const getUserId = async ({ userId }) => {
   if (userId) return userId
   if (TEST_MODE) {
     if (!testUser) {
@@ -44,16 +45,33 @@ const getUserId = async ({ userId, body }) => {
   return null
 }
 
+const getDefaultUserId = async () => {
+  if (!defaultUser) {
+    defaultUser = await User.findOne({ username: 'defaultUser' })
+  }
+  if (!defaultUser) {
+    throw new Error('defaultUser not set')
+  }
+
+  return defaultUser._id
+}
+
 const server = new ApolloServer({
   schema,
   playground: false,
   introspection: true,
   context: async ({ req={}, res }) => {
     const userId = await getUserId(req)
+    const defaultUserId = await getDefaultUserId()
+    const userOrDefaultId = userId || defaultUserId
+
+    console.log('context', { defaultUserId })
 
     return {
       userId,
-      loaders: createDataloaders({ userId })
+      defaultUserId,
+      userOrDefaultId,
+      loaders: createDataloaders({ userId: userOrDefaultId })
     }
   }
 })

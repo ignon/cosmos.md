@@ -151,7 +151,7 @@ const NoteList = ({ currentNote, title, notes, emptyMessage, skipIf }) => {
   )
 }
 
-const WikilinkList = ({ notes, title, skipIf }) => {
+const WikilinkList = ({ notes, title, skipIf, emptyMessage }) => {
   if (skipIf === true) {
     return null
   }
@@ -165,6 +165,7 @@ const WikilinkList = ({ notes, title, skipIf }) => {
           </div>
         )
       })}
+      {notes.length === 0 && <div>{emptyMessage}</div>}
     </SidebarContainer>
   )
 }

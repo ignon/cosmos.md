@@ -3,15 +3,24 @@ import { parseNote } from '../markdown/noteParser.js'
 import Note from '../models/Note.js'
 import User from '../models/User.js'
 import { UserInputError } from 'apollo-server-errors'
-import logger from '../utils/logger.js'
 import { requireAuth } from '../middleware/middlewareCheck.js'
 import mongoose from 'mongoose'
-import { escapeRegexSubstring, getZettelId } from '../utils/utils.js'
-import { GraphQLScalarType } from 'graphql'
+import { escapeRegexSubstring } from '../utils/utils.js'
+import { dateScalar } from './customScalars.js'
+import { textToJson } from '../middleware/sendBeacon.js'
 
 
-const updateRecentNotes = async (note) => {
-  const userId = note.userId
+const sortLatestNotes = (notes) => {
+  const maxLength = 10
+
+  const sortedNotes = __.sortBy(recentNotes, n => ( 
+    n.modified || Number.MIN_VALUE
+  ))
+  
+  return sortedNotes.reverse().slice(0, maxLength)
+}
+
+const updateRecentNotes = async (note, userId) => {
   const noteId = note._id
   if (!noteId) return
 
@@ -19,63 +28,50 @@ const updateRecentNotes = async (note) => {
     $addToSet: { recentNotes: noteId }
   })
 
-  const maxLength = 10
-
+  const maxLength = 20
   if (recentNotes.length > maxLength) {
     User.findByIdAndUpdate(userId, {
-      recentNotes: __.sortBy(recentNotes, 'modified').slice(0, maxLength)
+      recentNotes: sortLatestNotes(recentNotes)
     })
   }
 }
 
-const dateScalar = new GraphQLScalarType({
-  name: 'Date',
-  description: 'Date custom scalar type',
-  serialize: (date) => getZettelId(date),
-  parseValue: (value) => new Date(value),
-  parseLiteral: (ast) => ( 
-    ast.kind === Kind.INT
-      ? new Date(parseInt(ast.value, 10))
-      : null
-   ),
-});
 
 const resolvers = {
   Query: {
     allNotes: (_, args, ctx) => {
-      requireAuth(ctx)
+      const userId = ctx.userOrDefaultId
 
-      const { userId } = ctx
-      console.log('all notes ', userId )
       return Note.find({ userId })
     },
     findNote: async (_, { query, title, zettelId }, ctx) => {
-      console.log(ctx)
-      requireAuth(ctx)
+      const userId = ctx.userOrDefaultId
 
       const zettelIdRegex = /^\d+$/
       const isValidZettelId = zettelIdRegex.test(query)
 
       let mongoQuery
       if (zettelId) {
-        mongoQuery = { zettelId }
+        mongoQuery = { userId, zettelId }
       }
       else if (title) {
-        mongoQuery = { title }
+        mongoQuery = { userId, title }
       }
       else if (query) {
         mongoQuery = (isValidZettelId)
-          ? { $or: [{ zettelId: query }, { title: query }] }
-          : { title: query }
+          ? { $or: [{ userId, zettelId: query }, { userId, title: query }] }
+          : { userId, title: query }
       }
 
       return Note.findOne(mongoQuery)
     },
     searchNotes: async (_, args, ctx) => {
-      requireAuth(ctx)
-
-      const { userId } = ctx
+      const userId = ctx.userOrDefaultId
       const input = escapeRegexSubstring(args.input)
+
+      if (!input && !ctx.userId) {
+        return Note.find({ userId })
+      }
 
       if (!input) {
         const user = await User
@@ -83,8 +79,12 @@ const resolvers = {
           .populate('recentNotes')
         
         const { recentNotes } = user
-        return __.sortBy(recentNotes, 'modified')
-          // .reverse()
+        const sortedNotes = __.sortBy(recentNotes, n => ( 
+          n.modified || Number.MIN_VALUE
+        ))
+          .reverse()
+
+        return sortedNotes
       }
 
       const $regex = new RegExp(`^${input}`, 'i')
@@ -176,6 +176,7 @@ const resolvers = {
     },
     editNote: async (_, args, ctx) => {
       requireAuth(ctx)
+      const { userId } = ctx
 
       const note = parseNote(args.note)
       note.userId = ctx.userId
@@ -189,7 +190,7 @@ const resolvers = {
         new: true
       })
 
-      updateRecentNotes(updatedNote)
+      updateRecentNotes(updatedNote, userId)
 
       return updatedNote.toJSON()
     },

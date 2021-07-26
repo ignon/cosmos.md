@@ -37,7 +37,7 @@ const parseTags = (text) => {
   let tags = matchGroupsGlobal(text, tagRegex, 1)
   tags = sortAndRemoveDuplicates(tags)
 
-  return tags;
+  return tags
 }
 
 const parseWikilinks = (text) => {

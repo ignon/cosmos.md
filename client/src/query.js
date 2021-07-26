@@ -14,10 +14,11 @@ export const SEARCH_NOTES = gql`
   query SearchNotes($input: String!) {
     searchNotes(input: $input) {
       title
+      zettelId
+      modified
     }
   }
 `
-
 
 export const ADD_NOTE = gql`
   mutation addNote($note: NoteArgs){

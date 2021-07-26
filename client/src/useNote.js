@@ -30,7 +30,7 @@ export const FIND_NOTE = gql`
 
 const useNote = ({ onChange, fetchPolicy='network-only' } = {}) => {
   const noteQueryMatch = useRouteMatch('/:query')
-  const queryRaw = noteQueryMatch?.params.query || 'ApolloServer'
+  const queryRaw = noteQueryMatch?.params.query || 'cosmos'
   const query = queryRaw.replaceAll('+', ' ')
 
 
@@ -59,7 +59,6 @@ const useNote = ({ onChange, fetchPolicy='network-only' } = {}) => {
     const note = createNewNote(query)
     return note
   }
-
 
   return note
 }

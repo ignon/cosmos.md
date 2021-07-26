@@ -46,3 +46,4 @@ export const getZettelId = (dateString=null) => {
 export const clamp = (num, min, max) => {
   return Math.min(Math.max(num, min), max)
 }
+

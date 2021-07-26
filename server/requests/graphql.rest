@@ -58,7 +58,7 @@ mutation editNote($note: NoteArgs){
 ###
 POST http://localhost:4000/graphql
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFyZGUxMCIsImlkIjoiNjBmMDY1Mzg2NDNhNzY2NjI3NDg0ZTc2IiwiaWF0IjoxNjI2NTYwMzkzLCJleHAiOjE2MjY1NjM5OTN9.PgfjdvqBmYRYsp9XAU6MkgzFy9GMaw_D-x-iSXgwqdE
+# Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFyZGUxMCIsImlkIjoiNjBmMDY1Mzg2NDNhNzY2NjI3NDg0ZTc2IiwiaWF0IjoxNjI2NTYwMzkzLCJleHAiOjE2MjY1NjM5OTN9.PgfjdvqBmYRYsp9XAU6MkgzFy9GMaw_D-x-iSXgwqdE
 X-REQUEST-TYPE: GraphQL
 
 query allNotes {
@@ -127,7 +127,7 @@ POST http://localhost:4000/graphql
 Content-Type: application/json
 X-REQUEST-TYPE: GraphQL
 
-mutation register($username: String!, $password: String!) {
+mutation register($username: string!, $password: string!) {
   register(
     username: $username
     password: $password

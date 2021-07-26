@@ -19,6 +19,7 @@ const schema = mongoose.Schema({
   }]
 })
 
+schema.index({ username: 1 }, { unique: 1 })
 schema.plugin(uniqueValidator)
 
 const transform = {

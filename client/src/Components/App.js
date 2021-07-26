@@ -1,5 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 
+import 'semantic-ui-css/semantic.min.css'
 import '../styles/index.css'
 import { useReactiveVar } from "@apollo/client";
 import React, { useEffect, useRef } from "react";
@@ -17,18 +18,18 @@ import { useTimer, until } from '../utils/utils'
 import useEditNote from '../operations/mutations/editNote'
 import TagField from './TagField'
 import { useHistory } from "react-router";
+import LoginForm from './LoginForm.js'
+import { Link } from 'react-router-dom'
+import RegisterForm from './RegisterForm';
+// import { Button as SButton } from 'semantic-ui-react'
 
 function App() {
 
   const [text, setText] = useState('')
-  const { login, isLoggedIn } = useLogin({ onCompleted: _ => true })
+  const { isLoggedIn } = useLogin({ onCompleted: () => {
+    alert('refresh')
+  } })
   const { timerCompleted, setTimer } = useTimer(0.1)
-
-
-  useEffect(() => {
-    login({ username: 'TestUser', password: 'Password' })
-  }, [])
-
 
   const editor = useReactiveVar(editorVar)
 
@@ -62,7 +63,7 @@ function App() {
   return (
     <div>
       <EditorFrame
-        headerComponent={<TopBar />}
+        headerComponent={<TopBar onLogin={() => {}}/>}
         mainComponent={<NoteEditor onChange={handleTextChange} />}
         sidebarComponent={<Backlinks />}
       />
@@ -72,10 +73,34 @@ function App() {
 
 
 const TopBar = () => {
+  const history = useHistory()
+  const { isLoggedIn, logout } = useLogin()
+  const [loginOpen, setLoginOpen] = useState(false)
+  const [registerOpen, setRegisterOpen] = useState(false)
+
+
+  const onLogout = () => {
+    logout()
+    history.push('cosmos')
+  }
+
   return (
     <div id='top-bar'>
+      <LoginForm open={loginOpen} setOpen={setLoginOpen}/>
+      <RegisterForm open={registerOpen} setOpen={setRegisterOpen} />
       <SearchBar />
-      <TagField />
+      <div style={{display: 'flex', flexDirection: 'row', margin: 0, padding: 0, alignItems: 'center'}}>
+        {!isLoggedIn 
+          ? <>
+              <Link onClick={() => setLoginOpen(true)}>Login</Link>
+              <Link onClick={() => setRegisterOpen(true)}>Register</Link>
+            </>
+          : <>
+            <TagField />
+            <Link onClick={onLogout}>Logout</Link>
+          </>
+        }
+      </div>
     </div>
   )
 }
@@ -85,7 +110,6 @@ const SearchBar = () => {
 
   const history = useHistory()
   const searchFieldRef = useRef()
-
 
   const searchOnClick = () => {
     searchFieldRef.current?.focus()

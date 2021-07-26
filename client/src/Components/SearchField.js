@@ -1,10 +1,10 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useState } from "react";
-import { SEARCH_NOTES } from "../query";
-import { useLazyQuery, useQuery } from "@apollo/client";
+import React, { useState } from 'react';
+import { SEARCH_NOTES } from '../query';
+import { useApolloClient, useLazyQuery } from '@apollo/client';
 import ReactSelect from 'react-select/creatable'
 import { escapeRegexSubstring } from '../utils/utils'
-import { useEffect } from "react/cjs/react.development";
+import { useEffect } from 'react/cjs/react.development';
 
 
 const SearchField = ({ fieldRef, onCreate, onSelect }) => {
@@ -13,13 +13,17 @@ const SearchField = ({ fieldRef, onCreate, onSelect }) => {
   const [searchQuery, setSearchQuery] = useState('')
 
   const [searchNotes, { data }] = useLazyQuery(SEARCH_NOTES, {
-    fetchPolicy: 'cache-and-network',
+    fetchPolicy: 'network-only',
     variables: {
       input: searchQuery
     }
   })
 
+  const apollo = useApolloClient()
   const notes = data?.searchNotes || []
+
+  console.log({ searchQuery, data, cache: apollo.cache })
+  console.log({ notes })
 
   useEffect(() => {
     const options = parseOptionsFromNotes(notes)
@@ -53,8 +57,9 @@ const SearchField = ({ fieldRef, onCreate, onSelect }) => {
   const style = {
     control: base => ({
       ...base,
-      border: 'none'
-    }),
+      border: 'none',
+      fontSize: '16.5px',
+    })
   }
 
   return (
@@ -115,19 +120,6 @@ const filterNotes = (input, notes, latestNotes) => {
 
   const filteredNotes = [...startMatch, ...inlineMatch, ...tagMatch]
   return filteredNotes
-}
-
-const filterOptions = (input, notes, latestNotes) => {
-  if (!input) {
-    const options = parseOptionsFromNotes(latestNotes)
-    return options
-  }
-  else {
-    const filteredNotes = filterNotes(input, notes)
-    const options = parseOptionsFromNotes(filteredNotes)
-    return options
-  }
-
 }
 
 const NoteOption = ({ label, tags }) => {

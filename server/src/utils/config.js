@@ -5,6 +5,7 @@ const PORT = process.env.PORT ?? 4000
 const NODE_ENV = process.env.NODE_ENV
 const MONGODB_URI = process.env.MONGODB_URI
 const JWT_TOKEN = process.env.JWT_TOKEN
+const DEFAULT_USER_PASSWORD = process.env.DEFAULT_USER_PASSWORD
 
 
 const NODE_ENVS = {
@@ -19,5 +20,6 @@ export default {
   NODE_ENV,
   NODE_ENVS,
   MONGODB_URI,
-  JWT_TOKEN
+  JWT_TOKEN,
+  DEFAULT_USER_PASSWORD
 }
