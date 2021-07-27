@@ -42,7 +42,10 @@ const useEditNote = () => {
     if (isLoggedIn) {
       const note = noteVar()
       console.log('editNote', { note })
-      editNote({ variables: { note }})
+      const { title, zettelId, text } = note
+      editNote({ variables: {
+        note: { title, zettelId, text }
+      }})
     }
   }
 
