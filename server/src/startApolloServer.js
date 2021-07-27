@@ -1,6 +1,5 @@
 import server from './server.js'
 import logger from './utils/logger.js'
-import config from './utils/config.js'
 import app from './app.js'
 
 
@@ -10,7 +9,7 @@ export const startApolloServer = async (port) => {
   const cors = { credentials: 1, origin: '*' }
   server.applyMiddleware({ app, cors })
 
-  let httpServer;
+  let httpServer
   await new Promise(resolve =>
     httpServer = app.listen({ port }, resolve)
   )

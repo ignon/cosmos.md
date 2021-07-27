@@ -11,7 +11,6 @@ const options = {
 }
 
 const jwtCallback = (jwtPayload, done) => {
-  console.log(jwtPayload)
 
   if (jwtPayload) {
     return done(null, jwtPayload)
@@ -19,16 +18,6 @@ const jwtCallback = (jwtPayload, done) => {
   else {
     return done('error', false)
   }
-
-  // return User.findOne({ _id: jwt_payload.sub })
-  //   .then(user =>
-  //     (user)
-  //     ? done(null, user)
-  //     : done(null, false)
-  //   )
-  //   .catch(error =>
-  //     done(error, false)
-  //   )
 }
 
 const myJWTStragety = new JWTStrategy(options, jwtCallback)

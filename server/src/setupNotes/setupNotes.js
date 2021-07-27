@@ -1,15 +1,14 @@
 import fs from 'file-system'
 import path from 'path'
-import Note from '../models/Note.js';
-import User from '../models/User.js';
+import Note from '../models/Note.js'
+import User from '../models/User.js'
 import config from '../utils/config.js'
 import { parseNote } from '../markdown/noteParser.js'
-import { getZettelId } from '../utils/utils.js';
 
 const { DEFAULT_USER_PASSWORD } = config
 
 function readFilesSync(dir) {
-  const files = [];
+  const files = []
 
   fs.readdirSync(dir).forEach(filename => {
     const { name, ext } = path.parse(filename)
@@ -61,10 +60,9 @@ const setupNotes = async () => {
     })
 
     note.userId = defaultUserId
-
     console.log({ name, text })
 
-    const savedNote = await (new Note(note)).save()
+    await (new Note(note)).save()
   })
 }
 

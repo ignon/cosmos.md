@@ -1,4 +1,4 @@
-import { GraphQLScalarType } from 'graphql'
+import { GraphQLScalarType, Kind } from 'graphql'
 import dateFormat from 'dateformat'
 
 export const dateScalar = new GraphQLScalarType({
@@ -12,5 +12,5 @@ export const dateScalar = new GraphQLScalarType({
     ast.kind === Kind.INT
       ? new Date(parseInt(ast.value, 10))
       : null
-   ),
-});
+  )
+})

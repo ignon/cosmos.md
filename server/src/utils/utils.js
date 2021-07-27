@@ -13,7 +13,7 @@ export const getZettelId = (date=new Date, sparce=true) => {
 }
 
 export const queryBacklinks = (notes, noteTitle) => {
-  const linksToNote = (note, title) => {
+  const linksToNote = (note) => {
     const noteMentions = note.wikilinks
       .filter(noteRef => noteRef.title === noteTitle).length
     
@@ -29,5 +29,5 @@ export const queryBacklinks = (notes, noteTitle) => {
 }
 
 export function escapeRegexSubstring(string) {
-  return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
+  return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') // $& means the whole matched string
 }

@@ -21,10 +21,9 @@ const myJWTStrategy = new JWTStrategy(options, async (payload, done) => {
 
 
 passport.use('jwt', myJWTStrategy)
-passport.initialize()
 
 export const jwtAuthMiddleware = (req, res, next) => {
-  passport.authenticate('jwt', { session: false }, (err, user, info) => {
+  passport.authenticate('jwt', { session: false }, (err, user) => {
     if (user) {
       req.userId = user.id
     }

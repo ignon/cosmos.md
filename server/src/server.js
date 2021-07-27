@@ -1,4 +1,3 @@
-import _ from 'lodash'
 import { ApolloServer } from 'apollo-server-express'
 import schema from './schema/schema.js'
 import mongoose from 'mongoose'
@@ -11,7 +10,7 @@ import setupNotes from './setupNotes/setupNotes.js'
 let testUser, defaultUser
 
 const { NODE_ENV, NODE_ENVS } = config
-const TEST_MODE = (NODE_ENV === NODE_ENVS.TEST);
+const TEST_MODE = (NODE_ENV === NODE_ENVS.TEST)
 
 const url = config.MONGODB_URI
 
@@ -22,13 +21,13 @@ mongoose.connect(url, {
   useCreateIndex: true,
   autoIndex: NODE_ENV !== NODE_ENVS.PRODUCTION
 })
-  .then(result => {
+  .then(() => {
     logger.info('connected to MongoDB', url)
     setupNotes()
   })
   .catch(error => {
     logger.info('error connecting to MongoDB:', error.message)
-  });
+  })
 
 
 const getUserId = async ({ userId }) => {
@@ -60,12 +59,13 @@ const server = new ApolloServer({
   schema,
   playground: false,
   introspection: true,
-  context: async ({ req={}, res }) => {
+  context: async ({ req={}}) => {
     const userId = await getUserId(req)
     const defaultUserId = await getDefaultUserId()
-    const userOrDefaultId = userId || defaultUserId
+    const userOrDefaultId = userId || defaultUserId
 
-    console.log('context', { defaultUserId })
+    console.log({ userId })
+
 
     return {
       userId,

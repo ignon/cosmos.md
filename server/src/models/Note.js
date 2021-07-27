@@ -1,19 +1,5 @@
 import mongoose from 'mongoose'
 import uniqueValidator from 'mongoose-unique-validator'
-import explain from 'mongoose-explain'
-
-
-// var wikilinkSchema = mongoose.Schema({
-//   title: {
-//     type: String,
-//     required: true,
-//     unique: false
-//   },
-//   zettelId: {
-//     type: String,
-//     required: false
-//   }
-// }, { _id : false });
 
 
 const title = {

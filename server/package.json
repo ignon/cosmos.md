@@ -13,7 +13,8 @@
     "mongoserver:start": "sudo systemctl start mongod",
     "mongoserver:stop": "sudo systemctl stop mongod",
     "mongoserver:status": "sudo systemctl status mongod",
-    "mongoserver:restart": "sudo systemctl restart mongod"
+    "mongoserver:restart": "sudo systemctl restart mongod",
+    "lint": "eslint ."
   },
   "jest": {
     "verbose": false,
@@ -55,5 +56,9 @@
   },
   "engines": {
     "node": ">= 15.19.0"
+  },
+  "devDependencies": {
+    "eslint": "^7.31.0",
+    "eslint-plugin-jest": "^24.4.0"
   }
 }

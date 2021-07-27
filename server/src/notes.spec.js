@@ -1,6 +1,3 @@
-import _ from 'lodash'
-import schema from './schema/schema.js'
-import { ApolloServer } from 'apollo-server'
 import { ALL_NOTES, ADD_NOTE, REGISTER } from './queries.js'
 // import Note from './models/Note'
 import server from './server'
@@ -89,7 +86,7 @@ describe('when notes exists', () => {
   })
 
   describe('note creation, wikilinks and backlinks get created', () => {
-    let addedNote; 
+    let addedNote
     const note = {
       title: 'ApolloClient',
       zettelId: '202106222712',

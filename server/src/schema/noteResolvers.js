@@ -7,14 +7,13 @@ import { requireAuth } from '../middleware/middlewareCheck.js'
 import mongoose from 'mongoose'
 import { escapeRegexSubstring } from '../utils/utils.js'
 import { dateScalar } from './customScalars.js'
-import { textToJson } from '../middleware/sendBeacon.js'
 
 
 const sortLatestNotes = (notes) => {
   const maxLength = 10
 
-  const sortedNotes = __.sortBy(recentNotes, n => ( 
-    n.modified || Number.MIN_VALUE
+  const sortedNotes = __.sortBy(notes, n => ( 
+    n.modified || Number.MIN_VALUE
   ))
   
   return sortedNotes.reverse().slice(0, maxLength)
@@ -80,7 +79,7 @@ const resolvers = {
         
         const { recentNotes } = user
         const sortedNotes = __.sortBy(recentNotes, n => ( 
-          n.modified || Number.MIN_VALUE
+          n.modified || Number.MIN_VALUE
         ))
           .reverse()
 
@@ -159,17 +158,6 @@ const resolvers = {
       catch(error) {
         throw new UserInputError('Input error ' + error.message, { invalidArgs: true })
       }
-    },
-    addNotes: async (_, args, ctx) => {
-      requireAuth(ctx)
-
-      const notes = args
-
-      // This creates problems IF backlinks are SAVED to MongoDB
-      // This creates problems WHEN notes not yet updated are saved
-      // as wikilinks (zettelID=null when not yet saved)
-      // Should use some kind of data-loader
-      const populatedNotes = notes.map(async (n) => await populateNote(n))
     },
     editNote: async (_, args, ctx) => {
       requireAuth(ctx)

@@ -95,7 +95,7 @@ export const parseTags = (text) => {
   let tags = matchGroupsGlobal(text, tagRegex, 1)
   tags = sortAndRemoveDuplicates(tags)
 
-  return tags;
+  return tags
 }
 
 export const parseWikilinks = (text) => {
@@ -105,7 +105,7 @@ export const parseWikilinks = (text) => {
   wikilinkTitles = sortAndRemoveDuplicates(wikilinkTitles)
 
   // const wikilinks = wikilinkTitles.map(title => ({ title, zettelId: null }))
-  return wikilinkTitles;
+  return wikilinkTitles
 }
 
 export const parseYAML = (text) => {

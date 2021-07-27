@@ -116,13 +116,14 @@ const SearchBar = () => {
   const history = useHistory()
   const searchFieldRef = useRef()
   const { isLoggedIn } = useLogin()
+  const { editNote } = useEditNote()
 
   const searchOnClick = () => {
     searchFieldRef.current?.focus()
   }
 
   const handleNoteSelect = title => {
-    console.log('select')
+    editNote()
     history.push(title) 
   }
 
@@ -130,6 +131,7 @@ const SearchBar = () => {
     if (!isLoggedIn) {
       alert('You are not logged in, created notes won\'t be saved')
     }
+    editNote()
     history.push(title) 
   }
 

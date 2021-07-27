@@ -4,7 +4,8 @@ import { REGISTER, LOGIN } from './queries.js'
 import startApolloServer from './startApolloServer'
 import supertest from 'supertest'
 
-let httpServer, server, api;
+let httpServer, server, api
+
 
 const executeQuery = async (query, variables) => {
   return await server.executeOperation({ query, variables })
