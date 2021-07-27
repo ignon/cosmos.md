@@ -1,26 +1,24 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-
 import 'semantic-ui-css/semantic.min.css'
 import '../styles/index.css'
-import { useReactiveVar } from "@apollo/client";
-import React, { useEffect, useRef } from "react";
+import { useReactiveVar } from '@apollo/client'
+import React, { useEffect, useRef } from 'react'
 import NoteEditor from './NoteEditor'
 import { MdSearch } from 'react-icons/md'
 import SearchField from './SearchField'
-import useNote from "../useNote";
-import { editorVar, noteVar } from "../cache";
-import useLogin from "../useLogin";
+import useNote from '../useNote'
+import { editorVar, noteVar } from '../cache'
+import useLogin from '../useLogin'
 import Button from './Button'
 import EditorFrame from './EditorFrame'
 import Backlinks from './Backlinks'
-import { useState } from "react/cjs/react.development";
+import { useState } from 'react/cjs/react.development'
 import { useTimer, until } from '../utils/utils'
 import useEditNote from '../operations/mutations/editNote'
 import TagField from './TagField'
-import { useHistory } from "react-router";
+import { useHistory } from 'react-router'
 import LoginForm from './LoginForm.js'
 import { Link } from 'react-router-dom'
-import RegisterForm from './RegisterForm';
+import RegisterForm from './RegisterForm'
 import { DEFAULT_NOTE } from '../utils/config.js'
 
 
@@ -98,9 +96,9 @@ const TopBar = () => {
       <div style={{display: 'flex', flexDirection: 'row', margin: 0, padding: 0, alignItems: 'center'}}>
         {!isLoggedIn 
           ? <>
-              <Link onClick={() => setLoginOpen(true)}>Login</Link>
-              <Link onClick={() => setRegisterOpen(true)}>Register</Link>
-            </>
+            <Link onClick={() => setLoginOpen(true)}>Login</Link>
+            <Link onClick={() => setRegisterOpen(true)}>Register</Link>
+          </>
           : <>
             <TagField />
             <Link onClick={onLogout}>Logout</Link>
@@ -147,4 +145,4 @@ const SearchBar = () => {
   )
 }
 
-export default App;
+export default App

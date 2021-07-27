@@ -1,6 +1,6 @@
 import { LOGIN, REGISTER } from './query'
-import { useApolloClient, useMutation } from "@apollo/client";
-import { useHistory } from 'react-router';
+import { useApolloClient, useMutation } from '@apollo/client'
+import { useHistory } from 'react-router'
 
 const useLogin = ({ onCompleted }={}) => {
 

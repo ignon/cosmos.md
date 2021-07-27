@@ -25,7 +25,7 @@ export const FIND_NOTE = gql`
 
 const useNote = ({ onChange, fetchPolicy='network-only' } = {}) => {
   const noteQueryMatch = useRouteMatch('/:query')
-  const queryRaw = noteQueryMatch?.params.query || DEFAULT_NOTE
+  const queryRaw = noteQueryMatch?.params.query || DEFAULT_NOTE
   const query = queryRaw.replaceAll('+', ' ')
 
 

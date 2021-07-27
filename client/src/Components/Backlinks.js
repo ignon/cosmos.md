@@ -1,8 +1,8 @@
-import useNote from "../useNote";
+import useNote from '../useNote'
 import { useMediaQuery } from '@react-hook/media-query'
 import NoteLink from './NoteLink'
-import { editorVar } from "../cache";
-import parseNote from "../markdown/noteParser";
+import { editorVar } from '../cache'
+import parseNote from '../markdown/noteParser'
 
 const styles = {
   noteContainer: {
@@ -89,9 +89,9 @@ const Backlinks = () => {
 }
 
 
-const NoteTitle = ({ title, skipIf }) => ( 
+const NoteTitle = ({ title }) => ( 
   <h1 className='note-title'>{title || 'Unnamed'}</h1>
- )
+)
 
 const TagList = ({ tags, title, emptyMessage, skipIf }) => {
   if (skipIf === true) {
@@ -109,6 +109,7 @@ const TagList = ({ tags, title, emptyMessage, skipIf }) => {
     </SidebarContainer>
   )
 }
+
 
 const NoteList = ({ currentNote, title, notes, emptyMessage, skipIf }) => {
 
@@ -139,13 +140,13 @@ const NoteList = ({ currentNote, title, notes, emptyMessage, skipIf }) => {
 
   return (
     <SidebarContainer title={title}>
-      {notes.map(({ title, tags, wikilinks }) => ( 
+      {notes.map(({ title, /*tags,*/ wikilinks }) => ( 
         <div key={title} className='backlink' style={styles.wikilinks}>
           <NoteLink title={title} style={{flexGrow: 1}}/>
           {renderWikilinks(wikilinks)}
           {/* {renderTags(tags)} */}
         </div>
-       ))}
+      ))}
       {notes.length === 0 && <div>{emptyMessage}</div>}
     </SidebarContainer>
   )

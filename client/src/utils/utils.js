@@ -1,17 +1,16 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import dateFormat from 'dateformat'
-import { useEffect, useState } from "react/cjs/react.development";
+import { useEffect, useState } from 'react'
 
 export const delay = (timer=100) => ( 
-  new Promise(r => setTimeout(_ => r()), timer)
- )
+  new Promise(resolve => setTimeout(() => resolve()), timer)
+)
 
 export const until = async (conditionFunc)  => {
   while (!conditionFunc()) await delay(30)
 }
 
 export function escapeRegexSubstring(string) {
-  return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
+  return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') // $& means the whole matched string
 }
 
 export const useTimer = (initialPause) => {

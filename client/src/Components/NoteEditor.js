@@ -1,13 +1,13 @@
-import '@toast-ui/editor/dist/toastui-editor.css';
-import '@toast-ui/editor/dist/theme/toastui-editor-dark.css';
+import '@toast-ui/editor/dist/toastui-editor.css'
+import '@toast-ui/editor/dist/theme/toastui-editor-dark.css'
 import { Editor } from '@toast-ui/react-editor'
 import React, { useEffect, useRef } from 'react'
-import ReactDOM from 'react-dom';
+import ReactDOM from 'react-dom'
 import { until } from '../utils/utils'
-import { editorVar } from '../cache';
+import { editorVar } from '../cache'
 import { InlineNoteLink } from './NoteLink'
-import { useHistory } from 'react-router';
-import useEditNote from '../operations/mutations/editNote';
+import { useHistory } from 'react-router'
+import useEditNote from '../operations/mutations/editNote'
 
 const NoteEditor = ({ onChange }) => {
 
@@ -26,7 +26,7 @@ const NoteEditor = ({ onChange }) => {
       const editor = getEditor()
       editorVar(editor)
 
-      window.dispatchEvent(new Event('resize'));
+      window.dispatchEvent(new Event('resize'))
     }
 
     editorMount()
@@ -34,7 +34,7 @@ const NoteEditor = ({ onChange }) => {
 
 
   const onKeyup = () => {
-    if (!editor)  return;
+    if (!editor)  return
 
     const text = editor.getMarkdown()
     if (onChange) { onChange(text) }
@@ -99,13 +99,13 @@ const NoteEditor = ({ onChange }) => {
         // },
       ]}
       toolbarItems={[
-          ['heading', 'bold', 'italic', 'strike'],
-          ['quote', 'link'],
-          ['code', 'codeblock'],
-          ['table'],
-          // ['task', 'table'],
-          // ['table', /*'image',*/ 'link'],
-          // ['code', 'codeblock'],
+        ['heading', 'bold', 'italic', 'strike'],
+        ['quote', 'link'],
+        ['code', 'codeblock'],
+        ['table'],
+        // ['task', 'table'],
+        // ['table', /*'image',*/ 'link'],
+        // ['code', 'codeblock'],
       ]}
     />
   )

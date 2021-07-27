@@ -1,13 +1,12 @@
-import React, { StrictMode } from 'react';
-import ReactDOM from 'react-dom';
-import App from './Components/App';
+import React, { StrictMode } from 'react'
+import ReactDOM from 'react-dom'
+import App from './Components/App'
 import { ApolloClient, ApolloProvider as Apollo, HttpLink } from '@apollo/client'
 import { setContext } from '@apollo/client/link/context'
 import { IconContext as Icon } from 'react-icons'
 import { BrowserRouter as Router } from 'react-router-dom'
 import cache from './cache'
 import config from './utils/config'
-// import history from './utils/history'
 
 
 const { SERVER_URL } = config
@@ -54,5 +53,5 @@ ReactDOM.render(
   </StrictMode>,
 
   document.getElementById('root')
-);
+)
 

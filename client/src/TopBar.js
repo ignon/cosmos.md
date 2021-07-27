@@ -1,5 +1,6 @@
-import { useMutation, useApolloClient } from "@apollo/client";
-import { LOGIN } from "./query";
+
+import { useMutation, useApolloClient } from '@apollo/client'
+import { LOGIN } from './query'
 
 const TopBar = ({ refetchNotes }) => {
   const client = useApolloClient()
@@ -13,12 +14,12 @@ const TopBar = ({ refetchNotes }) => {
         password: 'Password'
       }
     })
-    .then(async result => {
-      const { token } = result.data.login
-      localStorage.setItem('token', token)
-      await new Promise(r => setTimeout(r, 100)); //idk storage.setItem is slow???
-      refetchNotes()
-    })
+      .then(async result => {
+        const { token } = result.data.login
+        localStorage.setItem('token', token)
+        await new Promise(r => setTimeout(r, 100)) // idk storage.setItem is slow???
+        refetchNotes()
+      })
   }
 
   const userLogout = async () => {

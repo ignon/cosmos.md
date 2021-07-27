@@ -46,7 +46,7 @@ const parseWikilinks = (text) => {
   let wikilinkTitles = matchGroupsGlobal(text, wikilinkRegex, 1)
   wikilinkTitles = sortAndRemoveDuplicates(wikilinkTitles)
 
-  return wikilinkTitles;
+  return wikilinkTitles
 }
 
 export default parseNote

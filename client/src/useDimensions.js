@@ -1,5 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-
 import { useEffect, useState } from 'react'
 
 export const useRefDimensions = (ref) => {
@@ -25,7 +23,7 @@ export const useWindowSize = () => {
   const [windowSize, setWindowSize] = useState({
     width: undefined,
     height: undefined,
-  });
+  })
 
   useEffect(() => {
     function handleResize() {
@@ -35,13 +33,13 @@ export const useWindowSize = () => {
       })
     }
 
-    window.addEventListener("resize", handleResize)
+    window.addEventListener('resize', handleResize)
 
     handleResize()
 
-    const cleanup = () => window.removeEventListener("resize", handleResize);
+    const cleanup = () => window.removeEventListener('resize', handleResize)
     return cleanup
-  }, []);
+  }, [])
 
-  return windowSize;
+  return windowSize
 }

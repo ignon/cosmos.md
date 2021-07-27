@@ -1,0 +1,96 @@
+name: Deployment pipeline
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+    types: [opened, synchronize]
+jobs:
+  setup:
+    runs-on: ubuntu-18.04
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+         node-version: '12.x'
+
+  test_client:
+    needs: setup
+    runs-on: ubuntu-18.04
+    timeout-minutes: 6 
+    defaults:
+      run:
+        working-directory: ./client
+    steps:
+      - uses: actions/checkout@v2
+      - name: npm install
+        run: npm install
+      - name: lint
+        run: npm run lint
+      # - name: build
+      #   run: npm run build
+      # - name: test
+      #   run: npm run test
+
+  # test_server:
+  #   needs: setup
+  #   runs-on: ubuntu-18.04
+  #   timeout-minutes: 6 
+  #   defaults:
+  #     run:
+  #       working-directory: ./server
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #     # - uses: actions/setup-node@v1
+  #       # with:
+  #       #  node-version: '12.x'
+  #     - name: where am i?
+  #       run: pwd
+  #     - name: npm install
+  #       run: npm install
+  #     - name: lint
+  #       run: npm run lint
+  #     # - name: build
+  #     #   run: npm run build
+  # integration_test:
+  #     needs: [test_client, test_server]
+  #     runs-on: ubuntu-18.04
+  #     steps:
+  #     - uses: actions/checkout@v2
+  #     - name: integration tests
+  #       run: echo work in progress
+  # deploy:
+  #     needs: [integration_test]
+  #     runs-on: ubuntu-18.04
+  #     env:
+  #       SHOULD_DEPLOY: ${{ github.event_name == 'push' && !contains(join(github.event.commits.*.message), '#skip') }}
+  #     steps:
+  #     - name: print info
+  #       run: echo $SHOULD_DEPLOY
+  #     - name: Bump version and push tag
+  #       if: ${{ github.event_name == 'push' && !contains(join(github.event.commits.*.message), '#skip') }}
+  #       uses: anothrNick/github-tag-action@eca2b69f9e2c24be7decccd0f15fdb1ea5906598
+  #       env:
+  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  #         DEFAULT_BUMP: patch
+  #     - uses: actions/checkout@v2
+  #     - name: deploy server to heroku
+  #       if: ${{ github.event_name == 'push' && !contains(join(github.event.commits.*.message), '#skip') }}
+  #       uses: akhileshns/heroku-deploy@v3.12.12
+  #       with:
+  #         heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+  #         heroku_app_name: "arde-phonebook"
+  #         heroku_email: "ignomagames@gmail.com"
+  #         healthcheck: "https://arde-phonebook.herokuapp.com/health"         
+  #         checkstring: "ok"
+  #         appdir: "server"
+  #     - name: deploy client to netlify
+  #       if: ${{ github.event_name == 'push' && !contains(join(github.event.commits.*.message), '#skip') }}
+  #       uses: netlify/actions/build@master
+  #       env:
+  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  #         NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+  #         NETLIFY_BASE: client   # Optional Directory to change to before starting build
+  #         NETLIFY_CMD: npm build
+  #         NETLIFY_DIR: client/build

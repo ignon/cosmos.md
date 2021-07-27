@@ -1,10 +1,7 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-import React, { useState } from 'react';
-import { SEARCH_NOTES } from '../query';
-import { useApolloClient, useLazyQuery } from '@apollo/client';
+import React, { useState, useEffect } from 'react'
+import { SEARCH_NOTES } from '../query'
+import { useApolloClient, useLazyQuery } from '@apollo/client'
 import ReactSelect from 'react-select/creatable'
-import { escapeRegexSubstring } from '../utils/utils'
-import { useEffect } from 'react/cjs/react.development';
 
 
 const SearchField = ({ fieldRef, onCreate, onSelect }) => {
@@ -20,7 +17,7 @@ const SearchField = ({ fieldRef, onCreate, onSelect }) => {
   })
 
   const apollo = useApolloClient()
-  const notes = data?.searchNotes || []
+  const notes = data?.searchNotes || []
 
   console.log({ searchQuery, data, cache: apollo.cache })
   console.log({ notes })
@@ -43,8 +40,6 @@ const SearchField = ({ fieldRef, onCreate, onSelect }) => {
     if (action === 'input-change') {
       const options = parseOptionsFromNotes(notes)
       setOptions(options)
-      // const options = filterOptions(input, notes)
-      // setOptions(options)
       setSearchQuery(input)
     }
   }
@@ -93,38 +88,38 @@ const parseOptionsFromNotes = (notes) => {
 }
 
 
-const filterNotes = (input, notes, latestNotes) => {
-  if (!input) { 
-    return notes
-  }
+// const filterNotes = (input, notes) => {
+//   if (!input) { 
+//     return notes
+//   }
 
-  const queryRE = new RegExp('^' + escapeRegexSubstring(input), 'i')
-  const tagRE = new RegExp('^' + escapeRegexSubstring(input.replace('#', '')), 'i')
-  const startMatch = [], inlineMatch = [], tagMatch = []
+//   const queryRE = new RegExp('^' + escapeRegexSubstring(input), 'i')
+//   const tagRE = new RegExp('^' + escapeRegexSubstring(input.replace('#', '')), 'i')
+//   const startMatch = [], inlineMatch = [], tagMatch = []
 
-  notes.forEach(note => {
-    const { title, tags=[] } = note
-    const queryLength = input.length
-    const titleParts = title.split(' ')
+//   notes.forEach(note => {
+//     const { title, tags=[] } = note
+//     const queryLength = input.length
+//     const titleParts = title.split(' ')
 
-    if (queryRE.test(title)) {
-      startMatch.push(note)
-    }
-    else if (queryLength >= 3 && titleParts.find(t => queryRE.test(t))) {
-      inlineMatch.push(note)
-    }
-    else if (tags.find(tag => tagRE.test(tag))) {
-      tagMatch.push(note)
-    }
-  })
+//     if (queryRE.test(title)) {
+//       startMatch.push(note)
+//     }
+//     else if (queryLength >= 3 && titleParts.find(t => queryRE.test(t))) {
+//       inlineMatch.push(note)
+//     }
+//     else if (tags.find(tag => tagRE.test(tag))) {
+//       tagMatch.push(note)
+//     }
+//   })
 
-  const filteredNotes = [...startMatch, ...inlineMatch, ...tagMatch]
-  return filteredNotes
-}
+//   const filteredNotes = [...startMatch, ...inlineMatch, ...tagMatch]
+//   return filteredNotes
+// }
 
 const NoteOption = ({ label, tags }) => {
 
-  const tagsString = (tags || []).map(tag => `#${tag}`).join(' ')
+  const tagsString = (tags || []).map(tag => `#${tag}`).join(' ')
 
   return (
     <div className='search-option-container' style={{

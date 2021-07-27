@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import { EDIT_NOTE, EDIT_NOTE_STRING } from '../../query'
 import { useMutation } from '@apollo/client'
 import { useEffect } from 'react'

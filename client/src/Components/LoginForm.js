@@ -1,11 +1,10 @@
-// import useField from '../utils/useField.js'
-import * as Yup from 'yup';
-import { Modal, Button } from 'semantic-ui-react';
+import * as Yup from 'yup'
+import { Modal, Button } from 'semantic-ui-react'
 import { Formik, Form, Field } from 'formik'
 import { TextField } from './FormField'
 import useLogin from '../useLogin'
-import { useHistory } from 'react-router';
-import { useApolloClient } from '@apollo/client';
+import { useHistory } from 'react-router'
+import { useApolloClient } from '@apollo/client'
 
 
 

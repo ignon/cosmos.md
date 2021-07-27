@@ -17,6 +17,7 @@
     "graphql": "^15.5.1",
     "history": "^5.0.0",
     "lodash": "^4.17.21",
+    "proptypes": "^1.1.0",
     "react": "^17.0.2",
     "react-bootstrap": "^2.0.0-beta.4",
     "react-command-palette": "^0.16.2",
@@ -36,7 +37,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "lint": "eslint ."
   },
   "eslintConfig": {
     "extends": [
@@ -55,5 +57,9 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "eslint": "^7.31.0",
+    "eslint-plugin-react": "^7.24.0"
   }
 }

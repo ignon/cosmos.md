@@ -6,18 +6,11 @@ import useNote from '../useNote'
 import { useMediaQuery } from '@react-hook/media-query'
 
 
-// const tagOptions = tags.map(tag => ({
-//   value: tag,
-//   label: tag
-// }))
-
 const TagField = () => {
 
   const { isLoggedIn } = useLogin()
   console.log({ isLoggedIn })
-  const { data } = useQuery(ALL_TAGS, {
-    // skip: () => (!isLoggedIn)
-  })
+  const { data } = useQuery(ALL_TAGS)
   const note = useNote()
   const noteTags = note?.tags || []
 
@@ -30,7 +23,6 @@ const TagField = () => {
   if (minimized) {
     return null
   }
-
 
 
   const styles = {
@@ -95,6 +87,6 @@ const parseOptions = (tags=[]) => {
     value: tag.toLocaleLowerCase(),
     label: tag
   }))
- }
+}
 
 export default TagField

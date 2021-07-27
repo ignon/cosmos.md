@@ -1,13 +1,13 @@
-import * as Yup from 'yup';
-import { Modal, Button } from 'semantic-ui-react';
+import * as Yup from 'yup'
+import { Modal, Button } from 'semantic-ui-react'
 import { Formik, Form, Field } from 'formik'
 import { TextField } from './FormField'
-import useLogin from '../useLogin';
-import { useHistory } from 'react-router';
-import { useApolloClient } from '@apollo/client';
+import useLogin from '../useLogin'
+import { useHistory } from 'react-router'
+import { useApolloClient } from '@apollo/client'
 
 
- const registerSchema = Yup.object().shape({
+const registerSchema = Yup.object().shape({
   username: Yup.string()
     .label('Username')
     .min(4)
@@ -18,12 +18,12 @@ import { useApolloClient } from '@apollo/client';
     .min(4)
     .max(15)
     .required(),
-   password: Yup.string()
+  password: Yup.string()
     .label('Password')
     .min(6)
     .max(50)
     .required(),
- });
+})
 
 const RegisterForm = ({ setOpen, open }) => {
   const client = useApolloClient()
