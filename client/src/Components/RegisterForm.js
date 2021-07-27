@@ -3,6 +3,8 @@ import { Modal, Button } from 'semantic-ui-react';
 import { Formik, Form, Field } from 'formik'
 import { TextField } from './FormField'
 import useLogin from '../useLogin';
+import { useHistory } from 'react-router';
+import { useApolloClient } from '@apollo/client';
 
 
  const registerSchema = Yup.object().shape({
@@ -24,11 +26,16 @@ import useLogin from '../useLogin';
  });
 
 const RegisterForm = ({ setOpen, open }) => {
+  const client = useApolloClient()
+  const history = useHistory()
 
   const { register } = useLogin({
     onCompleted: () => {
-      alert('registered')
       setOpen(false)
+      client.clearStore()
+      client.resetStore()
+      document.note = null
+      history.go(0)
     }
   })
 

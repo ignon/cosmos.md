@@ -63,6 +63,8 @@ const useLogin = ({ onCompleted }={}) => {
   const logout = () => {
     localStorage.removeItem('token')
     client.clearStore()
+    client.resetStore()
+    history.go(0)
   }
 
   const isLoggedIn = Boolean(localStorage.getItem('token'))

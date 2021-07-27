@@ -5,6 +5,7 @@ import { Formik, Form, Field } from 'formik'
 import { TextField } from './FormField'
 import useLogin from '../useLogin'
 import { useHistory } from 'react-router';
+import { useApolloClient } from '@apollo/client';
 
 
 
@@ -15,12 +16,16 @@ const loginSchema = Yup.object().shape({
 
 const LoginForm = ({ open, setOpen }) => {
 
+  const client = useApolloClient()
   const history = useHistory()
 
   const { login } = useLogin({
     onCompleted: () => {
       setOpen(false)
-      history.go(0) // re-render page
+      client.clearStore()
+      client.resetStore()
+      document.note = null // Blocks sendBeacon from saving current note
+      history.go(0)
     }
   })
 

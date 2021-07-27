@@ -7,6 +7,7 @@ import { until } from '../utils/utils'
 import { editorVar } from '../cache';
 import { InlineNoteLink } from './NoteLink'
 import { useHistory } from 'react-router';
+import useEditNote from '../operations/mutations/editNote';
 
 const NoteEditor = ({ onChange }) => {
 
@@ -15,6 +16,8 @@ const NoteEditor = ({ onChange }) => {
   const getEditor = () => editorRef.current?.editorInst
   const editor = getEditor()
   const history = useHistory()
+
+  const { editNote } = useEditNote()
 
 
   useEffect(() => {
@@ -44,7 +47,11 @@ const NoteEditor = ({ onChange }) => {
   }, [])
 
   const wikilinkRE = /\[\[(.*?)\]\]/
-  const hashtagRE = /#\S+[ $\n]/
+  // const hashtagRE = /#\S+[ $\n]/
+
+  const beforeLinkClick = () => {
+    editNote()
+  }
 
   return (
     <Editor
@@ -68,7 +75,11 @@ const NoteEditor = ({ onChange }) => {
             const title = matched[1]
             ReactDOM.render(
               <span>
-                <InlineNoteLink history={history} title={title} />
+                <InlineNoteLink
+                  beforeLinkClick={beforeLinkClick}
+                  history={history}
+                  title={title}
+                />
               </span>,
               span
             )
@@ -89,9 +100,10 @@ const NoteEditor = ({ onChange }) => {
       ]}
       toolbarItems={[
           ['heading', 'bold', 'italic', 'strike'],
-          ['quote', 'image', 'link'],
-          ['code', 'codeblock']
-          // ['ul', 'ol', 'task'],
+          ['quote', 'link'],
+          ['code', 'codeblock'],
+          ['table'],
+          // ['task', 'table'],
           // ['table', /*'image',*/ 'link'],
           // ['code', 'codeblock'],
       ]}

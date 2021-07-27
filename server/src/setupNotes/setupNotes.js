@@ -49,6 +49,7 @@ const setupNotes = async () => {
   const __dirname = path.resolve()
   const files = readFilesSync(path.join(__dirname, 'src/setupNotes/notes'))
 
+  let noteId = 100000
 
   files.forEach(async (file) => {
     const { name, text } = file
@@ -56,7 +57,7 @@ const setupNotes = async () => {
     const note = parseNote({
       title: name,
       text,
-      zettelId: getZettelId()
+      zettelId: `${noteId++}` //getZettelId()
     })
 
     note.userId = defaultUserId

@@ -1,6 +1,7 @@
 import { useRouteMatch } from 'react-router-dom'
 import { useQuery, gql } from '@apollo/client'
 import { getZettelId } from './utils/utils'
+import { DEFAULT_NOTE } from './utils/config'
 
 
 export const FIND_NOTE = gql`
@@ -21,20 +22,10 @@ export const FIND_NOTE = gql`
   }
 `
 
-// export const useFindNote = () => {
-//  const result = useQuery(FIND_NOTE, {
-//    skip,
-//    query,
-//  })
-// }
-
 const useNote = ({ onChange, fetchPolicy='network-only' } = {}) => {
   const noteQueryMatch = useRouteMatch('/:query')
-  const queryRaw = noteQueryMatch?.params.query || 'cosmos'
+  const queryRaw = noteQueryMatch?.params.query || DEFAULT_NOTE
   const query = queryRaw.replaceAll('+', ' ')
-
-
-  console.log({ query })
 
 
   const result = useQuery(FIND_NOTE, {
@@ -65,13 +56,11 @@ const useNote = ({ onChange, fetchPolicy='network-only' } = {}) => {
 
 export default useNote
 
-const createNewNote = (title) => {
-    return {
-      title,
-      text: `# ${title}\n\n`,
-      zettelId: getZettelId(),
-      backlinks: [],
-      wikilinks: [],
-      tags: []
-    }
-}
+const createNewNote = (title) => ({
+  title,
+  text: `# ${title}\n\n`,
+  zettelId: getZettelId(),
+  backlinks: [],
+  wikilinks: [],
+  tags: []
+})

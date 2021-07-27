@@ -101,26 +101,24 @@ const resolvers = {
 
       return notes
     },
-    findLatestNotes: async (_, args, ctx) => {
-      console.log(ctx)
-      requireAuth(ctx)
+    // findLatestNotes: async (_, args, ctx) => {
+    //   requireAuth(ctx)
 
-      try {
-        const userId = mongoose.Types.ObjectId(ctx.userId)
-        const user = await User
-          .findById(userId)
-          .populate('recentNotes')
+    //   try {
+    //     const userId = mongoose.Types.ObjectId(ctx.userId)
+    //     const user = await User
+    //       .findById(userId)
+    //       .populate('recentNotes')
 
-        const { recentNotes } = user
+    //     const { recentNotes } = user
 
-      }
-      catch(error) {
-        throw new UserInputError('Input error ' + error.message, { invalidArgs: true })
-      }
-    },
+    //   }
+    //   catch(error) {
+    //     throw new UserInputError('Input error ' + error.message, { invalidArgs: true })
+    //   }
+    // },
     allTags: async (_, args, ctx) => {
-      requireAuth(ctx)
-      const { userId } = ctx
+      const userId = ctx.userOrDefaultId
 
       const tags = await Note.find({ userId }).distinct('tags')
       return tags
@@ -135,12 +133,12 @@ const resolvers = {
     wikilinks: ({ wikilinks }) => {
       return wikilinks ?? []
     },
-    userId: ({ userId }) => {
-      if (typeof userId === 'string') {
-        return mongoose.Types.ObjectId(userId)
-      }
-      return userId
-    },
+    // userId: ({ userId }) => {
+    //   if (typeof userId === 'string') {
+    //     return mongoose.Types.ObjectId(userId)
+    //   }
+    //   return userId
+    // },
   },
   Mutation: {
     addNote: async (_, args, ctx) => {
@@ -156,7 +154,6 @@ const resolvers = {
         const savedNote = await newNote.save()
 
         updateRecentNotes(savedNote)
-
         return savedNote.toJSON()
       }
       catch(error) {

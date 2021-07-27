@@ -3,6 +3,7 @@ import config from '../utils/config.js'
 import jwt from 'jsonwebtoken'
 import User from '../models/User.js'
 import { AuthenticationError } from 'apollo-server'
+import Note from '../models/Note.js'
 
 const generateToken = ({ username, _id: id }) => {
   const tokenUser = { username, id }
@@ -12,7 +13,7 @@ const generateToken = ({ username, _id: id }) => {
 
 const resolvers = {
   Mutation: {
-    register: async (_, args) => {
+    register: async (_, args, ctx) => {
       const { username, password } = args
 
       const saltRounds = 10
@@ -23,11 +24,16 @@ const resolvers = {
         passwordHash
       })
 
-      return user.save()
-        .then(result => {
-          const token = generateToken(user)
-          return { token }
-        })
+      const defaultNotes = await Note.find({ userId: ctx.defaultUserId })
+      await user.save()
+
+      for(const note of defaultNotes) {
+        const newNote = new Note({ ...note.toJSON(), userId: user._id })
+        await newNote.save()
+      }
+
+      const token = generateToken(user)
+      return { token }
     },
     login: async (_, args) => {
       const { username, password } = args

@@ -3,6 +3,8 @@ import { EDIT_NOTE, EDIT_NOTE_STRING } from '../../query'
 import { useMutation } from '@apollo/client'
 import { useEffect } from 'react'
 import config from '../../utils/config'
+import { editorVar } from '../../cache'
+import useNote from '../../useNote'
 const { SERVER_URL } = config
 
 
@@ -29,16 +31,20 @@ const onPageExit = () => {
 
 
 const useEditNote = () => {
+  const note = useNote()
   const [editNote] = useMutation(EDIT_NOTE)
 
   useEffect(() => {
     document.addEventListener('visibilitychange', onPageExit)
   })
 
-  const wrappedEditNote = (note) => {
-    const { title, zettelId, text } = note
+  const wrappedEditNote = () => {
+    const editor = editorVar()
+    const text = editor.getMarkdown()
+
+    console.log({ note })
+    const { title, zettelId } = note
     const myNote = { title, zettelId, text }
-    console.log('edit note:', myNote)
     editNote({ variables: { note: myNote }})
   }
 

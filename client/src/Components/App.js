@@ -21,16 +21,14 @@ import { useHistory } from "react-router";
 import LoginForm from './LoginForm.js'
 import { Link } from 'react-router-dom'
 import RegisterForm from './RegisterForm';
-// import { Button as SButton } from 'semantic-ui-react'
+import { DEFAULT_NOTE } from '../utils/config.js'
+
 
 function App() {
 
-  const [text, setText] = useState('')
-  const { isLoggedIn } = useLogin({ onCompleted: () => {
-    alert('refresh')
-  } })
+  const { isLoggedIn } = useLogin()
+  const [ text, setText] = useState('')
   const { timerCompleted, setTimer } = useTimer(0.1)
-
   const editor = useReactiveVar(editorVar)
 
   const { editNote } = useEditNote()
@@ -43,16 +41,17 @@ function App() {
     }
   })
 
+  // Beacon API and sendBeacon doesn't seem to be be able to access
+  // variables from React context so...
+  // I try to come up with a more orthodox solution but for now..
   document.note = { ...note, text }
 
 
   useEffect(() => {
-    if (isLoggedIn && note && note.text !== text && timerCompleted) {
-      const text = editor.getMarkdown()
-      if (text) {
-        editNote({ ...note, text })
-        setTimer(1)
-      }
+    const textHasChanged = (note && note.text !== text)
+    if (isLoggedIn && textHasChanged && timerCompleted) {
+      editNote()
+      setTimer(1)
     }
   }, [isLoggedIn, text, timerCompleted])
 
@@ -63,7 +62,7 @@ function App() {
   return (
     <div>
       <EditorFrame
-        headerComponent={<TopBar onLogin={() => {}}/>}
+        headerComponent={<TopBar />}
         mainComponent={<NoteEditor onChange={handleTextChange} />}
         sidebarComponent={<Backlinks />}
       />
@@ -81,7 +80,7 @@ const TopBar = () => {
 
   const onLogout = () => {
     logout()
-    history.push('cosmos')
+    history.push(DEFAULT_NOTE)
   }
 
   return (
@@ -107,19 +106,23 @@ const TopBar = () => {
 
 
 const SearchBar = () => {
-
   const history = useHistory()
   const searchFieldRef = useRef()
+  const { isLoggedIn } = useLogin()
 
   const searchOnClick = () => {
     searchFieldRef.current?.focus()
   }
 
   const handleNoteSelect = title => {
+    console.log('select')
     history.push(title) 
   }
 
   const handleNoteCreate = title => {
+    if (!isLoggedIn) {
+      alert('You are not logged in, created notes won\'t be saved')
+    }
     history.push(title) 
   }
 
