@@ -102,7 +102,7 @@ const TagList = ({ tags, title, emptyMessage, skipIf }) => {
     <SidebarContainer title={title}>
       {tags.map(tag => (
         <div key={tag} className='tag'>
-          <a href='/'> {'#' + tag}</a>
+          <a onClick={e => e.preventDefault()}href='/'> {'#' + tag}</a>
         </div>
       ))}
       {tags.length === 0 && <div>{emptyMessage}</div>}
