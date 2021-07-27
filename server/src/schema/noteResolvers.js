@@ -133,12 +133,12 @@ const resolvers = {
     wikilinks: ({ wikilinks }) => {
       return wikilinks ?? []
     },
-    // userId: ({ userId }) => {
-    //   if (typeof userId === 'string') {
-    //     return mongoose.Types.ObjectId(userId)
-    //   }
-    //   return userId
-    // },
+    userId: ({ userId }) => {
+      if (typeof userId === 'string') {
+        return mongoose.Types.ObjectId(userId)
+      }
+      return userId
+    },
   },
   Mutation: {
     addNote: async (_, args, ctx) => {
@@ -182,14 +182,15 @@ const resolvers = {
 
       const { title } = note
 
-      const updatedNote = await Note.findOneAndUpdate({ title }, note, {
+      const updatedNote = await Note.findOneAndUpdate({ userId, title }, note, {
         upsert: true,
         new: true
       })
 
+      console.log({ updatedNote })
       updateRecentNotes(updatedNote, userId)
 
-      return updatedNote.toJSON()
+      return updatedNote
     },
   }
 }

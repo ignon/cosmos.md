@@ -125,7 +125,7 @@ const NoteList = ({ currentNote, title, notes, emptyMessage, skipIf }) => {
   const renderWikilinks = (wikilinks=[]) => {
 
     const noteLinks = wikilinks
-      .filter(title => wikilinks.length <= 1 || title !== currentNote.title)
+      .filter(title => wikilinks.length === 1 || title !== currentNote.title)
       .map(title =>
         <NoteLink title={title} key={title} />
       )

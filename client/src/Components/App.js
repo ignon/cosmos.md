@@ -8,7 +8,7 @@ import NoteEditor from './NoteEditor'
 import { MdSearch } from 'react-icons/md'
 import SearchField from './SearchField'
 import useNote from "../useNote";
-import { editorVar } from "../cache";
+import { editorVar, noteVar } from "../cache";
 import useLogin from "../useLogin";
 import Button from './Button'
 import EditorFrame from './EditorFrame'
@@ -37,9 +37,14 @@ function App() {
     onChange: async note => {
       await until(() => (editor))
       editor.setMarkdown(note.text)
+
+      const { title, zettelId, text } = note
+      noteVar({ title, zettelId, text })
       setText(note.text)
     }
   })
+
+  console.log({ note: noteVar() })
 
   // Beacon API and sendBeacon doesn't seem to be be able to access
   // variables from React context so...
@@ -57,6 +62,8 @@ function App() {
 
   const handleTextChange = text => {
     setText(text)
+    const { title, zettelId } = note
+    noteVar({ title, zettelId, text })
   }
 
   return (

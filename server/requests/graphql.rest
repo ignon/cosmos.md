@@ -49,28 +49,29 @@ mutation editNote($note: NoteArgs){
 
 {
   "note": {
-    "title": "newer2 note",
-    "zettelId": "4132292283428902732",
+    "title": "wikilink",
+    "zettelId": "100003",
     "text": "[[moikkelis]] [[anarchy]] [[ApolloClient]] #life"
   }
 }
 
 ###
-POST http://localhost:4000/graphql
+
+POST {{baseUrl}}
 Content-Type: application/json
-# Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFyZGUxMCIsImlkIjoiNjBmMDY1Mzg2NDNhNzY2NjI3NDg0ZTc2IiwiaWF0IjoxNjI2NTYwMzkzLCJleHAiOjE2MjY1NjM5OTN9.PgfjdvqBmYRYsp9XAU6MkgzFy9GMaw_D-x-iSXgwqdE
+Authorization: {{authentication}}
 X-REQUEST-TYPE: GraphQL
 
 query allNotes {
   allNotes {
     title
     zettelId
-    tags
-    text
-    wikilinks
-    backlinks {
-      title
-    }
+    # tags
+    # text
+    # wikilinks
+    # backlinks {
+    #   title
+    # }
   }
 }
 
@@ -91,7 +92,7 @@ query findNote($query: String!) {
 }
 
 {
-  "query": "Redis"
+  "query": "cosmos"
 }
 
 ###
@@ -160,8 +161,8 @@ mutation login($username: String!, $password: String!) {
 }
 
 {
-  "username": "arde10",
-  "password": "kissa3"
+  "username": "igno",
+  "password": "moikkelis"
 }
 
 ###

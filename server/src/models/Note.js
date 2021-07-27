@@ -49,8 +49,8 @@ const schema = new mongoose.Schema({
 
 schema.plugin(uniqueValidator)
 
-// schema.index({ userId: 1, title: 'text' }, { unique: 1 })
-schema.index({ userId: 1, zettelId: 1 }, { unique: 0 })
+// from mongo shell: db.notes.createIndex({ userId: 1, title: 'text' }, { unique: 1 })
+schema.index({ userId: 1, zettelId: 1 }, { unique: 1 })
 schema.index({ userId: 1, noteRef: 1 })
 schema.index({ userId: 1, tags: 1})
 schema.index({ userId: 1, wikilinks: 1})

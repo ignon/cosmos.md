@@ -1,11 +1,17 @@
-import { withRouter, Link } from 'react-router-dom'
+import { withRouter, Link, useHistory } from 'react-router-dom'
 // import useEditNote from '../operations/mutations/editNote'
 // import useNote from '../useNote'
 
 export const NoteLink = ({ title, style }) => {
+  const history = useHistory()
+
+  const onClick = (e) => {
+    e.preventDefault()
+    history.push(title)
+  }
   return (
     <div style={style}>
-      <Link to={`/${title}`}>{title}</Link>
+      <Link onClick={onClick} to={`/${title}`}>{title}</Link>
     </div>
   )
 }
@@ -19,7 +25,6 @@ export const InlineNoteLink = ({ beforeLinkClick, history, title }) => {
   const handleClick = (e) => {
     e.preventDefault()
     beforeLinkClick?.()
-
     history.push(title)
   }
 

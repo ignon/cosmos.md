@@ -2,6 +2,7 @@ import { useRouteMatch } from 'react-router-dom'
 import { useQuery, gql } from '@apollo/client'
 import { getZettelId } from './utils/utils'
 import { DEFAULT_NOTE } from './utils/config'
+import { noteVar } from './cache'
 
 
 export const FIND_NOTE = gql`
@@ -39,6 +40,7 @@ const useNote = ({ onChange, fetchPolicy='network-only' } = {}) => {
         ? findNote
         : createNewNote(query)
       
+      noteVar(note)
       onChange?.(note)
     }
   })

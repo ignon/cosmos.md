@@ -56,7 +56,7 @@ const NoteEditor = ({ onChange }) => {
   return (
     <Editor
       initialValue=''
-      initialEditType='wysiwyg'
+      initialEditType='markdown'
       previewStyle='tab'
       height='100%'
       ref={editorRef}
