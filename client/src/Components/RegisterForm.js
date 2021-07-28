@@ -49,9 +49,9 @@ const RegisterForm = ({ setOpen, open }) => {
       <Modal.Content>
         <Formik
           initialValues={{
-            username: 'igno',
-            displayName: 'ignotus',
-            password: 'moikkeliss',
+            username: '',
+            displayName: '',
+            password: '',
           }}
           onSubmit={values => {
             register(values)
