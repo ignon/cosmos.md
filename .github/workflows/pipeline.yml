@@ -11,45 +11,45 @@ jobs:
     runs-on: ubuntu-18.04
     steps:
       - uses: actions/checkout@v2
-  test_client:
-    needs: setup
-    runs-on: ubuntu-18.04
-    timeout-minutes: 6 
-    defaults:
-      run:
-        working-directory: ./client
-    steps:
-      - uses: actions/checkout@v2
-      - name: npm install
-        run: npm install
-      - name: lint
-        run: npm run lint
-  test_server:
-    needs: setup
-    runs-on: ubuntu-18.04
-    timeout-minutes: 6 
-    defaults:
-      run:
-        working-directory: ./server
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
-        with:
-         node-version: '14.17.1'
-      - name: where am i?
-        run: pwd
-      - name: setup .env
-        run: echo "${{secrets.SERVER_ENV_STAGE }}" > .env
-      - name: npm install
-        run: npm install
-      - name: ls
-        run: ls -al
-      - name: lint
-        run: npm run lint
-      - name: test
-        run: npm run test
+  # test_client:
+  #   needs: setup
+  #   runs-on: ubuntu-18.04
+  #   timeout-minutes: 6 
+  #   defaults:
+  #     run:
+  #       working-directory: ./client
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #     - name: npm install
+  #       run: npm install
+  #     - name: lint
+  #       run: npm run lint
+  # test_server:
+  #   needs: setup
+  #   runs-on: ubuntu-18.04
+  #   timeout-minutes: 6 
+  #   defaults:
+  #     run:
+  #       working-directory: ./server
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #     - uses: actions/setup-node@v1
+  #       with:
+  #        node-version: '14.17.1'
+  #     - name: where am i?
+  #       run: pwd
+  #     - name: setup .env
+  #       run: echo "${{secrets.SERVER_ENV_STAGE }}" > .env
+  #     - name: npm install
+  #       run: npm install
+  #     - name: ls
+  #       run: ls -al
+  #     - name: lint
+  #       run: npm run lint
+  #     - name: test
+  #       run: npm run test
   deploy:
-      needs: [test_client, test_server]
+      needs: [setup] #[test_client, test_server]
       runs-on: ubuntu-18.04
       env:
         SHOULD_DEPLOY: ${{ github.event_name == 'push' && !contains(join(github.event.commits.*.message), '#skip') }}
@@ -62,17 +62,17 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           DEFAULT_BUMP: patch
-  #     - uses: actions/checkout@v2
-  #     - name: deploy server to heroku
-  #       if: ${{ github.event_name == 'push' && !contains(join(github.event.commits.*.message), '#skip') }}
-  #       uses: akhileshns/heroku-deploy@v3.12.12
-  #       with:
-  #         heroku_api_key: ${{secrets.HEROKU_API_KEY}}
-  #         heroku_app_name: "arde-phonebook"
-  #         heroku_email: "ignomagames@gmail.com"
-  #         healthcheck: "https://arde-phonebook.herokuapp.com/health"         
-  #         checkstring: "ok"
-  #         appdir: "server"
+      - uses: actions/checkout@v2
+      - name: deploy server to heroku
+        if: ${{ github.event_name == 'push' && !contains(join(github.event.commits.*.message), '#skip') }}
+        uses: akhileshns/heroku-deploy@v3.12.12
+        with:
+          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+          heroku_app_name: "cosmos-md"
+          heroku_email: "ignomagames@gmail.com"
+          healthcheck: "https://cosmos-md.herokuapp.com/health"         
+          checkstring: "ok"
+          appdir: "server"
   #     - name: deploy client to netlify
   #       if: ${{ github.event_name == 'push' && !contains(join(github.event.commits.*.message), '#skip') }}
   #       uses: netlify/actions/build@master
