@@ -18,7 +18,6 @@ import { useHistory } from 'react-router'
 import LoginForm from './LoginForm.js'
 import { Link } from 'react-router-dom'
 import RegisterForm from './RegisterForm'
-import { DEFAULT_NOTE } from '../utils/config.js'
 
 
 function App() {
