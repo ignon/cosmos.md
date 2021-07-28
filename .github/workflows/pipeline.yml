@@ -15,19 +15,19 @@ jobs:
         with:
          node-version: '12.x'
 
-  test_client:
-    needs: setup
-    runs-on: ubuntu-18.04
-    timeout-minutes: 6 
-    defaults:
-      run:
-        working-directory: ./client
-    steps:
-      - uses: actions/checkout@v2
-      - name: npm install
-        run: npm install
-      - name: lint
-        run: npm run lint
+  # test_client:
+  #   needs: setup
+  #   runs-on: ubuntu-18.04
+  #   timeout-minutes: 6 
+  #   defaults:
+  #     run:
+  #       working-directory: ./client
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #     - name: npm install
+  #       run: npm install
+  #     - name: lint
+  #       run: npm run lint
 
   test_server:
     needs: setup
@@ -44,7 +44,7 @@ jobs:
       - name: where am i?
         run: pwd
       - name: setup .env
-        run: echo "${{secrets.WEBSITE_ENV_STAGE }}" > .env
+        run: echo "${{secrets.SERVER_ENV_STAGE }}" > .env
       - name: npm install
         run: npm install
       - name: ls
