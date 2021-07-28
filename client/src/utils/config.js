@@ -1,4 +1,7 @@
-export const SERVER_URL = 'http://localhost:4000/graphql'
+import dotenv from 'dotenv'
+dotenv.config()
+
+export const SERVER_URL = process.env.REACT_APP_SERVER_URL
 export const DEFAULT_NOTE = 'cosmos'
 
 const config = {
