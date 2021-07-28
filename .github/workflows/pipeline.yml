@@ -73,15 +73,15 @@ jobs:
           healthcheck: "https://cosmos-md.herokuapp.com/health"         
           checkstring: "ok"
           appdir: "server"
-      # - name: deploy client to netlify
-      #   if: ${{ github.event_name == 'push' && !contains(join(github.event.commits.*.message), '#skip') }}
-      #   uses: netlify/actions/build@master
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #     NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
-      #     NETLIFY_BASE: client   # Optional Directory to change to before starting build
-      #     NETLIFY_CMD: npm build
-      #     NETLIFY_DIR: client/build
+      - name: deploy client to netlify
+        if: ${{ github.event_name == 'push' && !contains(join(github.event.commits.*.message), '#skip') }}
+        uses: netlify/actions/build@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+          NETLIFY_BASE: client   # Optional Directory to change to before starting build
+          NETLIFY_CMD: npm build
+          NETLIFY_DIR: client/build
 
 
   # integration_test:
