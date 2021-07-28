@@ -2,17 +2,20 @@ import React, { useState, useEffect } from 'react'
 import { SEARCH_NOTES } from '../query'
 import { useApolloClient, useLazyQuery } from '@apollo/client'
 import ReactSelect from 'react-select/creatable'
+import { useDebounce } from 'use-debounce'
+import { escapeRegexSubstring } from '../utils/utils.js'
 
 
 const SearchField = ({ fieldRef, onCreate, onSelect }) => {
 
   const [options, setOptions] = useState([])
   const [searchQuery, setSearchQuery] = useState('')
+  const [searchQueryDebounced] = useDebounce(searchQuery, 500)
 
   const [searchNotes, { data }] = useLazyQuery(SEARCH_NOTES, {
     fetchPolicy: 'network-only',
     variables: {
-      input: searchQuery
+      input: searchQueryDebounced
     }
   })
 
@@ -23,7 +26,8 @@ const SearchField = ({ fieldRef, onCreate, onSelect }) => {
   console.log({ notes })
 
   useEffect(() => {
-    const options = parseOptionsFromNotes(notes)
+    const filteredNotes = filterNotes(searchQuery, notes)
+    const options = parseOptionsFromNotes(filteredNotes)
     setOptions(options)
   }, [`${[searchQuery, notes]}`])
 
@@ -38,8 +42,6 @@ const SearchField = ({ fieldRef, onCreate, onSelect }) => {
 
   const handleSearchInputChange = (input, { action }) => {
     if (action === 'input-change') {
-      const options = parseOptionsFromNotes(notes)
-      setOptions(options)
       setSearchQuery(input)
     }
   }
@@ -88,34 +90,34 @@ const parseOptionsFromNotes = (notes) => {
 }
 
 
-// const filterNotes = (input, notes) => {
-//   if (!input) { 
-//     return notes
-//   }
+const filterNotes = (input, notes) => {
+  if (!input) { 
+    return notes
+  }
 
-//   const queryRE = new RegExp('^' + escapeRegexSubstring(input), 'i')
-//   const tagRE = new RegExp('^' + escapeRegexSubstring(input.replace('#', '')), 'i')
-//   const startMatch = [], inlineMatch = [], tagMatch = []
+  const queryRE = new RegExp('^' + escapeRegexSubstring(input), 'i')
+  const tagRE = new RegExp('^' + escapeRegexSubstring(input.replace('#', '')), 'i')
+  const startMatch = [], inlineMatch = [], tagMatch = []
 
-//   notes.forEach(note => {
-//     const { title, tags=[] } = note
-//     const queryLength = input.length
-//     const titleParts = title.split(' ')
+  notes.forEach(note => {
+    const { title, tags=[] } = note
+    const queryLength = input.length
+    const titleParts = title.split(' ')
 
-//     if (queryRE.test(title)) {
-//       startMatch.push(note)
-//     }
-//     else if (queryLength >= 3 && titleParts.find(t => queryRE.test(t))) {
-//       inlineMatch.push(note)
-//     }
-//     else if (tags.find(tag => tagRE.test(tag))) {
-//       tagMatch.push(note)
-//     }
-//   })
+    if (queryRE.test(title)) {
+      startMatch.push(note)
+    }
+    else if (queryLength >= 3 && titleParts.find(t => queryRE.test(t))) {
+      inlineMatch.push(note)
+    }
+    else if (tags.find(tag => tagRE.test(tag))) {
+      tagMatch.push(note)
+    }
+  })
 
-//   const filteredNotes = [...startMatch, ...inlineMatch, ...tagMatch]
-//   return filteredNotes
-// }
+  const filteredNotes = [...startMatch, ...inlineMatch, ...tagMatch]
+  return filteredNotes
+}
 
 const NoteOption = ({ label, tags }) => {
 
