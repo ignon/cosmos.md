@@ -14,7 +14,6 @@ jobs:
   #     - uses: actions/setup-node@v1
   #       with:
   #        node-version: '12.x'
-
   # test_client:
   #   needs: setup
   #   runs-on: ubuntu-18.04
@@ -28,7 +27,6 @@ jobs:
   #       run: npm install
   #     - name: lint
   #       run: npm run lint
-
   test_server:
     needs: setup
     runs-on: ubuntu-18.04
