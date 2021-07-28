@@ -1,4 +1,4 @@
 # Major bugs in current version:
-- wikilinks and note names do not work if they have spaces in them
+- wikilinks / note names do not work if they have spaces in them
 - wikilinks and URL:s are case-sensitive
-- note reloading fails sometimes and manual refresh is needed
+- navigating to notes with URL works locally, but Netlify redirecting needs to be fixed to make it work in deployed version
