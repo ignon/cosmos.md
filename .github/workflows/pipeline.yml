@@ -83,6 +83,7 @@ jobs:
           NETLIFY_CMD: npm build
           NETLIFY_DIR: client/build
 
+
   # integration_test:
   #     needs: [test_client, test_server]
   #     runs-on: ubuntu-18.04
