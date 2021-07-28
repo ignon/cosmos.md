@@ -51,6 +51,7 @@ jobs:
         run: npm run lint
       - name: test
         run: npm run test
+
   # integration_test:
   #     needs: [test_client, test_server]
   #     runs-on: ubuntu-18.04
