@@ -14,7 +14,7 @@ import setupNotes from './setupNotes/setupNotes.js'
  * 3. Ingegration tests with front end
  */
 
-jest.setTimeout(10000)
+jest.setTimeout(30000)
 
 const notes = [
   {

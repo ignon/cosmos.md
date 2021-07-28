@@ -7,7 +7,7 @@ import supertest from 'supertest'
 
 let httpServer, server, api
 
-jest.setTimeout(10000)
+jest.setTimeout(30000)
 
 const executeQuery = async (query, variables) => {
   return await server.executeOperation({ query, variables })
