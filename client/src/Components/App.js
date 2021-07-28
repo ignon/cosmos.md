@@ -14,7 +14,6 @@ import Backlinks from './Backlinks'
 import { useState } from 'react'
 import { useTimer, until } from '../utils/utils'
 import useEditNote from '../operations/mutations/editNote'
-import TagField from './TagField'
 import { useHistory } from 'react-router'
 import LoginForm from './LoginForm.js'
 import { Link } from 'react-router-dom'
@@ -100,7 +99,7 @@ const TopBar = () => {
             <Link onClick={() => setRegisterOpen(true)}>Register</Link>
           </>
           : <>
-            <TagField />
+            {/* <TagField /> */}
             <Link onClick={onLogout}>Logout</Link>
           </>
         }
