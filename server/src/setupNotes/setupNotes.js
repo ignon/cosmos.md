@@ -59,6 +59,8 @@ const setupNotes = async () => {
       zettelId: `${noteId++}` //getZettelId()
     })
 
+    console.log({ note })
+
     note.userId = defaultUserId
 
     await (new Note(note)).save()

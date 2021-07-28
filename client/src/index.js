@@ -1,4 +1,4 @@
-import React, { StrictMode } from 'react'
+import React from 'react'
 import ReactDOM from 'react-dom'
 import App from './Components/App'
 import { ApolloClient, ApolloProvider as Apollo, HttpLink } from '@apollo/client'
@@ -42,15 +42,13 @@ const iconOptions = {
 
 
 ReactDOM.render(
-  <StrictMode>
-    <Router>
-      <Apollo client={client}>
-        <Icon.Provider value={iconOptions}>
-          <App />
-        </Icon.Provider>
-      </Apollo>
-    </Router>
-  </StrictMode>,
+  <Router>
+    <Apollo client={client}>
+      <Icon.Provider value={iconOptions}>
+        <App />
+      </Icon.Provider>
+    </Apollo>
+  </Router>,
 
   document.getElementById('root')
 )
