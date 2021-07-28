@@ -49,7 +49,7 @@ jobs:
       - name: test
         run: npm run test
   deploy:
-      needs: [setup] #[test_client, test_server]
+      needs: [test_client, test_server]
       runs-on: ubuntu-18.04
       env:
         SHOULD_DEPLOY: ${{ github.event_name == 'push' && !contains(join(github.event.commits.*.message), '#skip') }}
