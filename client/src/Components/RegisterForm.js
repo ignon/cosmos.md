@@ -94,6 +94,7 @@ const RegisterForm = ({ setOpen, open }) => {
 
 export default RegisterForm
 
+
 // import React from 'react';
 // import { Modal, Segment } from 'semantic-ui-react';
 // import AddPatientForm, { PatientFormValues } from './AddPatientForm';
