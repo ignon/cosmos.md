@@ -11,45 +11,45 @@ jobs:
     runs-on: ubuntu-18.04
     steps:
       - uses: actions/checkout@v2
-  test_client:
-    needs: setup
-    runs-on: ubuntu-18.04
-    timeout-minutes: 6 
-    defaults:
-      run:
-        working-directory: ./client
-    steps:
-      - uses: actions/checkout@v2
-      - name: npm install
-        run: npm install
-      - name: lint
-        run: npm run lint
-  test_server:
-    needs: setup
-    runs-on: ubuntu-18.04
-    timeout-minutes: 6 
-    defaults:
-      run:
-        working-directory: ./server
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
-        with:
-         node-version: '14.17.1'
-      - name: where am i?
-        run: pwd
-      - name: setup .env
-        run: echo "${{secrets.SERVER_ENV_STAGE }}" > .env
-      - name: npm install
-        run: npm install
-      - name: ls
-        run: ls -al
-      - name: lint
-        run: npm run lint
-      - name: test
-        run: npm run test
+  # test_client:
+  #   needs: setup
+  #   runs-on: ubuntu-18.04
+  #   timeout-minutes: 6 
+  #   defaults:
+  #     run:
+  #       working-directory: ./client
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #     - name: npm install
+  #       run: npm install
+  #     - name: lint
+  #       run: npm run lint
+  # test_server:
+  #   needs: setup
+  #   runs-on: ubuntu-18.04
+  #   timeout-minutes: 6 
+  #   defaults:
+  #     run:
+  #       working-directory: ./server
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #     - uses: actions/setup-node@v1
+  #       with:
+  #        node-version: '14.17.1'
+  #     - name: where am i?
+  #       run: pwd
+  #     - name: setup .env
+  #       run: echo "${{secrets.SERVER_ENV_STAGE }}" > .env
+  #     - name: npm install
+  #       run: npm install
+  #     - name: ls
+  #       run: ls -al
+  #     - name: lint
+  #       run: npm run lint
+  #     - name: test
+  #       run: npm run test
   deploy:
-      needs: [test_client, test_server]
+      needs: [setup] #[test_client, test_server]
       runs-on: ubuntu-18.04
       env:
         SHOULD_DEPLOY: ${{ github.event_name == 'push' && !contains(join(github.event.commits.*.message), '#skip') }}
@@ -73,15 +73,15 @@ jobs:
           healthcheck: "https://cosmos-md.herokuapp.com/health"         
           checkstring: "ok"
           appdir: "server"
-      - name: deploy client to netlify
-        if: ${{ github.event_name == 'push' && !contains(join(github.event.commits.*.message), '#skip') }}
-        uses: netlify/actions/build@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
-          NETLIFY_BASE: client   # Optional Directory to change to before starting build
-          NETLIFY_CMD: npm build
-          NETLIFY_DIR: client/build
+      # - name: deploy client to netlify
+      #   if: ${{ github.event_name == 'push' && !contains(join(github.event.commits.*.message), '#skip') }}
+      #   uses: netlify/actions/build@master
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #     NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+      #     NETLIFY_BASE: client   # Optional Directory to change to before starting build
+      #     NETLIFY_CMD: npm build
+      #     NETLIFY_DIR: client/build
 
 
   # integration_test:
