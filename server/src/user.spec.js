@@ -3,7 +3,7 @@ import mongoose from 'mongoose'
 import { REGISTER, LOGIN } from './queries.js'
 import startApolloServer from './startApolloServer'
 import supertest from 'supertest'
-import setupNotes from './setupNotes/setupNotes.js'
+// import setupNotes from './setupNotes/setupNotes.js'
 
 let httpServer, server, api
 
