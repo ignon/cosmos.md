@@ -35,7 +35,7 @@ const RegisterForm = ({ setOpen, open }) => {
       client.clearStore()
       client.resetStore()
       document.note = null
-      history.go(0)
+      history.push('/')
     }
   })
 

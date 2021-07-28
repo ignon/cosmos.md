@@ -24,7 +24,7 @@ const LoginForm = ({ open, setOpen }) => {
       client.clearStore()
       client.resetStore()
       document.note = null // Blocks sendBeacon from saving current note
-      history.go(0)
+      history.push('/')
     }
   })
 

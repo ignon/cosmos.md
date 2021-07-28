@@ -84,7 +84,7 @@ const TopBar = () => {
 
   const onLogout = () => {
     logout()
-    history.push(DEFAULT_NOTE)
+    history.push('/')
   }
 
   return (
