@@ -43,10 +43,10 @@ jobs:
          node-version: '14.17.1'
       - name: where am i?
         run: pwd
+      - name: setup .env
+        run: echo "${{secrets.WEBSITE_ENV_STAGE }}" > .env
       - name: npm install
         run: npm install
-      - name: setup .env
-        run: ${{secrets.WEBSITE_ENV_STAGE }}" > .env
       - name: ls
         run: ls -al
       - name: lint
