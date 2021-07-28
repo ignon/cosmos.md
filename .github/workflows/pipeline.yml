@@ -45,8 +45,8 @@ jobs:
   #     # - uses: actions/setup-node@v1
   #       # with:
   #       #  node-version: '12.x'
-  #     - name: where am i?
-  #       run: pwd
+      - name: where am i?
+        run: pwd
       - name: npm install
         run: npm install
       - name: lint
