@@ -5,6 +5,7 @@ import mongoose from 'mongoose'
 import Note from './models/Note.js'
 import User from './models/User.js'
 import { getNotesInDatabase } from './utils/test_helper.js'
+import setupNotes from './setupNotes/setupNotes.js'
 
 /**
  * There are multiple ways to test backend:
@@ -13,6 +14,7 @@ import { getNotesInDatabase } from './utils/test_helper.js'
  * 3. Ingegration tests with front end
  */
 
+jest.setTimeout(10000)
 
 const notes = [
   {
@@ -44,6 +46,7 @@ describe('database is empty', () => {
   beforeAll(async () => {
     await Note.deleteMany({})
     await User.deleteMany({})
+    await setupNotes()
     await serverExecute(REGISTER, { username: 'TestUser', password: 'Password' })
   })
 

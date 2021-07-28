@@ -45,9 +45,14 @@ const getUserId = async ({ userId }) => {
 }
 
 const getDefaultUserId = async () => {
+  if (TEST_MODE) {
+    return null
+  }
+
   if (!defaultUser) {
     defaultUser = await User.findOne({ username: 'defaultUser' })
   }
+
   if (!defaultUser) {
     throw new Error('defaultUser not set')
   }
@@ -65,7 +70,6 @@ const server = new ApolloServer({
     const userOrDefaultId = userId || defaultUserId
 
     console.log({ userId })
-
 
     return {
       userId,

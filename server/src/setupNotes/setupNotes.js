@@ -60,7 +60,6 @@ const setupNotes = async () => {
     })
 
     note.userId = defaultUserId
-    console.log({ name, text })
 
     await (new Note(note)).save()
   })

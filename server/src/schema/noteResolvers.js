@@ -12,16 +12,15 @@ import { dateScalar } from './customScalars.js'
 const sortLatestNotes = (notes) => {
   const maxLength = 10
 
-  const sortedNotes = __.sortBy(notes, n => ( 
-    n.modified || Number.MIN_VALUE
-  ))
-  
+  const sortedNotes = __.sortBy(notes, n => n.modified)
   return sortedNotes.reverse().slice(0, maxLength)
 }
 
 const updateRecentNotes = async (note, userId) => {
   const noteId = note._id
   if (!noteId) return
+
+  console.log({ userId })
 
   const recentNotes = await User.findByIdAndUpdate(userId, {
     $addToSet: { recentNotes: noteId }
@@ -142,9 +141,10 @@ const resolvers = {
   Mutation: {
     addNote: async (_, args, ctx) => {
       requireAuth(ctx)
+      const { userId } = ctx
 
       const note = parseNote(args.note)
-      note.userId = ctx.userId
+      note.userId = userId
 
       console.log('adding note', note.title)
 
@@ -152,7 +152,7 @@ const resolvers = {
         const newNote = new Note(note)
         const savedNote = await newNote.save()
 
-        updateRecentNotes(savedNote)
+        updateRecentNotes(savedNote, userId)
         return savedNote.toJSON()
       }
       catch(error) {

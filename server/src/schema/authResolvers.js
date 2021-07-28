@@ -21,6 +21,7 @@ const resolvers = {
 
       const user = new User({
         username,
+        recentNotes: [],
         passwordHash
       })
 

@@ -3,22 +3,25 @@ import mongoose from 'mongoose'
 import { REGISTER, LOGIN } from './queries.js'
 import startApolloServer from './startApolloServer'
 import supertest from 'supertest'
+import setupNotes from './setupNotes/setupNotes.js'
 
 let httpServer, server, api
 
+jest.setTimeout(10000)
 
 const executeQuery = async (query, variables) => {
   return await server.executeOperation({ query, variables })
 }
 
 beforeAll(async () => {
-  const apolloServer = await startApolloServer(3000)
-  server = apolloServer.server
-  httpServer = apolloServer.httpServer
+  const setup = await startApolloServer(3000)
+  server = setup.server
+  httpServer = setup.httpServer
 
   api = supertest(httpServer)
-
   await User.deleteMany({})
+  console.log('SETUP NOTES')
+  // await setupNotes()
 })
 
 describe('basics', () => {
@@ -50,14 +53,6 @@ describe('basics', () => {
     const token = result.data.login.token
 
     expect(typeof token).toBe('string')
-
-    const requestNoAuth = await api
-      .get('/graphql?query={allNotes{title}}')
-      .expect(200)
-      .expect('Content-Type', /application\/json/)
-    
-    const errorMessage = requestNoAuth.body.errors[0].message
-    expect(errorMessage).toMatch(/not logged in/)
 
     const requestWithAuth = await api
       .get('/graphql?query={allNotes{title}}')
