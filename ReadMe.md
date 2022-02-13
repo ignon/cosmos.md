@@ -1,6 +1,8 @@
+# Cosmos.md
+
 *Cosmos.md* is an online [markdown](https://en.wikipedia.org/wiki/Markdown) based [zettelkasten](https://en.wikipedia.org/wiki/Zettelkasten) note editor, inspired by Obsidian.md and Roam Research.
 
-The project and it's documentation is running in following url:
+The project and it's documentation is running in following url (it might take a while to load, the free database has to wake from hibernation):
 
 https://cosmos-md.netlify.app/
 
