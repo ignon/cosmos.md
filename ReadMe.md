@@ -6,7 +6,7 @@ The project and it's documentation is running in following url (it might take a 
 
 https://cosmos-md.netlify.app/
 
-The project is my final assigment for Fullstack Open course.
+The project is my final assigment for Fullstack Open course. The assigment review by course teacher can be read (in finnish) from [here](https://github.com/ignon/cosmos.md/issues/1).
 
 Time management:
 https://docs.google.com/spreadsheets/d/1BbYnBnlyr6MtLwF3hq7FCEfSATc5fhPEJBBomScwkmM/edit?usp=sharing
