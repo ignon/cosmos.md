@@ -1,13 +1,14 @@
+*Cosmos.md* is an online [markdown](https://en.wikipedia.org/wiki/Markdown) based [zettelkasten](https://en.wikipedia.org/wiki/Zettelkasten) note editor, inspired by Obsidian.md and Roam Research.
+
 The project and it's documentation is running in following url:
 
 https://cosmos-md.netlify.app/
 
+The project is my final assigment for Fullstack Open course.
 
-Työaikakirjanpito:
-
+Time management:
 https://docs.google.com/spreadsheets/d/1BbYnBnlyr6MtLwF3hq7FCEfSATc5fhPEJBBomScwkmM/edit?usp=sharing
 
 
-Työtuntien kokonaismäärä:
-
-178 tuntia
+Total work time:
+178 hours
