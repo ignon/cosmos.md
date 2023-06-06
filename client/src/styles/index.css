@@ -101,7 +101,6 @@ div:has(div.toastui-editor-defaultUI) {
   min-height: 100%;
   max-height: 100%;
   flex-grow: 1;
-  background-color: red;
 }
 
 #notelistContainer {
@@ -191,7 +190,7 @@ button {
   scrollbar-width: none;  /* Firefox */
 }
 
-#note-editor .toastui-editor-main::-webkit-scrollbar { 
+#note-editor .toastui-editor-main::-webkit-scrollbar {
   display: none;  /* Safari and Chrome */
 }
 
